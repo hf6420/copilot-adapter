@@ -1,8 +1,8 @@
 import type { Translation } from './types';
 
 export const zh: Translation = {
-  'provider.deepseek.detail': '通用对话与深度推理，2 个模型',
-  'provider.minimax.detail': '深度推理，支持超长上下文，7 个模型',
+  'provider.deepseek.detail': '通用对话与深度推理，{0} 个模型',
+  'provider.minimax.detail': '深度推理，支持超长上下文，{0} 个模型',
 
   'model.deepseek-v4-flash.detail': '快速通用模型',
   'model.deepseek-v4-pro.detail': '深度推理模型',

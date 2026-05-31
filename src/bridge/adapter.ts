@@ -201,7 +201,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       return;
     }
 
-    const items = ALL_PROVIDERS.map((p) => ({ label: p.label, description: p.id, detail: t(p.detailKey) }));
+    const items = ALL_PROVIDERS.map((p) => ({ label: p.label, description: p.id, detail: t(p.detailKey, String(p.models.length)) }));
     const picked = await vscode.window.showQuickPick(items, {
       title: t('auth.chooseProvider'),
       ignoreFocusOut: true,
@@ -226,7 +226,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     const configured: Array<{ label: string; description: string; detail: string }> = [];
     for (const p of ALL_PROVIDERS) {
       if (await this.keys.has(p.id)) {
-        configured.push({ label: p.label, description: p.id, detail: t(p.detailKey) });
+        configured.push({ label: p.label, description: p.id, detail: t(p.detailKey, String(p.models.length)) });
       }
     }
 

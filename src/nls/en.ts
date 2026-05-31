@@ -1,8 +1,8 @@
 import type { Translation } from './types';
 
 export const en: Translation = {
-  'provider.deepseek.detail': 'General-purpose & deep reasoning — 2 models',
-  'provider.minimax.detail': 'Deep reasoning with long context support — 7 models',
+  'provider.deepseek.detail': 'General-purpose & deep reasoning — {0} models',
+  'provider.minimax.detail': 'Deep reasoning with long context support — {0} models',
 
   'model.deepseek-v4-flash.detail': 'Fast, general-purpose model',
   'model.deepseek-v4-pro.detail': 'Deep reasoning model',

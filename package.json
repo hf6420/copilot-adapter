@@ -37,8 +37,8 @@
           "properties": {
             "apiKey": {
               "type": "string",
-              "title": "DeepSeek API Key",
-              "description": "Your DeepSeek API key. Keys start with 'sk-'.",
+              "title": "%copilot-adapter.provider.deepseek.apiKey.title%",
+              "description": "%copilot-adapter.provider.deepseek.apiKey.description%",
               "secret": true
             }
           }
@@ -53,8 +53,8 @@
           "properties": {
             "apiKey": {
               "type": "string",
-              "title": "MiniMax API Key",
-              "description": "Your MiniMax API key. Keys start with 'sk-'.",
+              "title": "%copilot-adapter.provider.minimax.apiKey.title%",
+              "description": "%copilot-adapter.provider.minimax.apiKey.description%",
               "secret": true
             }
           }
@@ -98,18 +98,15 @@
             "title": "%copilot-adapter.walkthrough.apiKey.title%",
             "description": "%copilot-adapter.walkthrough.apiKey.description%",
             "media": {
-              "markdown": "resources/walkthrough/set-api-key.md"
-            },
-            "completionEvents": [
-              "onCommand:copilot-adapter.addApiKey"
-            ]
+              "markdown": "%copilot-adapter.walkthrough.apiKey.media%"
+            }
           },
           {
             "id": "showModels",
             "title": "%copilot-adapter.walkthrough.showModels.title%",
             "description": "%copilot-adapter.walkthrough.showModels.description%",
             "media": {
-              "markdown": "resources/walkthrough/show-models.md"
+              "markdown": "%copilot-adapter.walkthrough.showModels.media%"
             }
           },
           {
@@ -117,7 +114,15 @@
             "title": "%copilot-adapter.walkthrough.advancedSettings.title%",
             "description": "%copilot-adapter.walkthrough.advancedSettings.description%",
             "media": {
-              "markdown": "resources/walkthrough/advanced-settings.md"
+              "markdown": "%copilot-adapter.walkthrough.advancedSettings.media%"
+            }
+          },
+          {
+            "id": "visionProxy",
+            "title": "%copilot-adapter.walkthrough.visionProxy.title%",
+            "description": "%copilot-adapter.walkthrough.visionProxy.description%",
+            "media": {
+              "markdown": "%copilot-adapter.walkthrough.visionProxy.media%"
             }
           }
         ]
@@ -177,7 +182,7 @@
         },
         "copilot-adapter.visionProxyModel": {
           "type": "string",
-          "default": "",
+          "default": "off",
           "markdownDescription": "%copilot-adapter.config.visionProxyModel.description%"
         },
         "copilot-adapter.visionPrompt": {
