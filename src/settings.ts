@@ -1,0 +1,96 @@
+import vscode from 'vscode';
+import { EXT_ID } from './defines';
+
+const LEVEL_OFF = 'off' as const;
+const LEVEL_INFO = 'info' as const;
+const LEVEL_VERBOSE = 'verbose' as const;
+
+const LEVELS = [LEVEL_OFF, LEVEL_INFO, LEVEL_VERBOSE] as const;
+export type DebugLevel = (typeof LEVELS)[number];
+
+function asLevel(v: unknown): DebugLevel | undefined {
+  return LEVELS.includes(v as DebugLevel) ? (v as DebugLevel) : undefined;
+}
+
+export class Settings {
+  private static section(): vscode.WorkspaceConfiguration {
+    return vscode.workspace.getConfiguration(EXT_ID);
+  }
+
+  static baseUrl(defaultUrl: string, providerId: string): string {
+    const map = this.section().get<Record<string, { baseUrl?: string }>>('providers') ?? {};
+    return map[providerId]?.baseUrl?.trim() || defaultUrl;
+  }
+
+  static providerEnabled(providerId: string): boolean {
+    const map = this.section().get<Record<string, { enabled?: boolean }>>('providers') ?? {};
+    return map[providerId]?.enabled !== false;
+  }
+
+  static tokenLimit(): number | undefined {
+    const n = this.section().get<number>('maxTokens', 0);
+    return n > 0 ? n : undefined;
+  }
+
+  private static activeLevel(): DebugLevel {
+    const scoped = this.section().inspect<unknown>('debugMode');
+    return asLevel(scoped?.workspaceValue) ?? asLevel(scoped?.globalValue) ?? LEVEL_OFF;
+  }
+
+  static loggingEnabled(): boolean {
+    return this.activeLevel() !== LEVEL_OFF;
+  }
+
+  static dumpEnabled(): boolean {
+    return this.activeLevel() === LEVEL_VERBOSE;
+  }
+
+  static visionModel(): string {
+    return this.section().get<string>('visionProxyModel', '').trim();
+  }
+
+  static visionPrompt(): string {
+    return this.section().get<string>('visionPrompt', '').trim();
+  }
+
+  static requestTimeout(): number {
+    return this.section().get<number>('requestTimeout', 60);
+  }
+
+  static requestRetries(): number {
+    return this.section().get<number>('requestRetries', 2);
+  }
+
+  static imageTokenEstimate(): number {
+    return this.section().get<number>('imageTokenEstimate', 1020);
+  }
+
+  static maxWarmupRounds(): number {
+    return this.section().get<number>('maxWarmupRounds', 3);
+  }
+
+  private static providerEntry(id: string): Record<string, unknown> {
+    const map = this.section().get<Record<string, Record<string, unknown>>>('providers') ?? {};
+    return map[id] ?? {};
+  }
+
+  static providerTokenRatio(id: string): number | undefined {
+    const v = this.providerEntry(id)['tokenRatio'];
+    return typeof v === 'number' && v > 0 ? v : undefined;
+  }
+
+  static providerTemperature(id: string): number | undefined {
+    const v = this.providerEntry(id)['temperature'];
+    return typeof v === 'number' ? v : undefined;
+  }
+
+  static providerTopP(id: string): number | undefined {
+    const v = this.providerEntry(id)['topP'];
+    return typeof v === 'number' ? v : undefined;
+  }
+
+  static providerStreamUsage(id: string): boolean | undefined {
+    const v = this.providerEntry(id)['streamUsage'];
+    return typeof v === 'boolean' ? v : undefined;
+  }
+}
