@@ -1,0 +1,95 @@
+import vscode from 'vscode';
+import { resolveImages } from '../vision/resolve';
+import type { VisionModelPicker } from '../vision/model';
+import { translateMessages, translateTools } from './translate';
+import { routeToolFlow, type GateAction } from './utils/router';
+import { resolveModelConfig } from './information';
+import type { Provider, Model } from '../providers/types';
+import type { ReqOptions } from './information';
+import type { ApiReq } from '../client/types';
+import { Settings } from '../settings';
+
+export interface ReadyReq {
+  endpoint: string;
+  apiKey: string;
+  body: ApiReq;
+  provider: Provider;
+  model: Model;
+  gate: GateAction;
+  visionText: string;
+}
+
+export interface PrepContext {
+  messages: readonly vscode.LanguageModelChatRequestMessage[];
+  options: ReqOptions;
+  provider: Provider;
+  model: Model;
+  apiKey: string;
+  token: vscode.CancellationToken;
+  picker: VisionModelPicker;
+  endpoint: string;
+}
+
+/**
+ * Transform raw VS Code chat request into a ready-to-send API request body.
+ * Handles: image resolution, tool routing, message translation, extras injection.
+ */
+export async function assembleChatReq(ctx: PrepContext): Promise<ReadyReq> {
+  const { provider, model, options, token } = ctx;
+  const modelConfig = resolveModelConfig(options);
+
+  let processedMessages = ctx.messages;
+  let visionText = '';
+  if (!model.ability.acceptsImages) {
+    const visionResult = await resolveImages(ctx.messages, token, ctx.picker);
+    processedMessages = visionResult.messages;
+    visionText = visionResult.newVisionText;
+  }
+
+  const gate = routeToolFlow(options.tools, processedMessages, model, provider);
+
+  let msgs: ReturnType<typeof translateMessages>;
+  let tools: ReturnType<typeof translateTools>;
+
+  if (gate.kind === 'proceed') {
+    msgs = translateMessages(gate.messages, provider.thinkingField);
+    tools = gate.tools ? (gate.tools as ReturnType<typeof translateTools>) : undefined;
+  } else if (gate.kind === 'warmup') {
+    msgs = translateMessages(processedMessages, provider.thinkingField);
+    tools = translateTools(options.tools);
+  } else {
+    msgs = translateMessages(processedMessages, provider.thinkingField);
+    tools = undefined;
+  }
+
+  const extras = provider.requestExtras?.(modelConfig, model) ?? {};
+
+  const maxOut = Settings.tokenLimit() ?? model.maxOutputTokens;
+
+  const temperature = Settings.providerTemperature(provider.id);
+  const topP = Settings.providerTopP(provider.id);
+  const streamUsage =
+    Settings.providerStreamUsage(provider.id) !== false && provider.supportsStreamUsage !== false;
+
+  const body: ApiReq = {
+    model: model.apiId,
+    messages: msgs,
+    max_tokens: maxOut,
+    stream: true,
+    ...(streamUsage ? { stream_options: { include_usage: true } } : {}),
+    ...(tools ? { tools } : {}),
+    ...(temperature !== undefined ? { temperature } : {}),
+    ...(topP !== undefined ? { top_p: topP } : {}),
+    ...extras,
+  };
+
+  return {
+    endpoint: ctx.endpoint,
+    apiKey: ctx.apiKey,
+    body,
+    provider,
+    model,
+    gate,
+    visionText,
+  };
+}
