@@ -37,9 +37,6 @@ export const en: Translation = {
   'vision.activeLabel': 'current',
   'vision.disableCmd': 'Disable Vision Proxy',
   'vision.offLabel': 'disabled',
-  'vision.proxyLabel': 'Vision proxy: {0}',
-  'vision.proxySkipped': 'No vision model available, images ignored.',
-  'vision.proxyFault': 'Vision proxy error: ',
   'vision.providerTag': 'Vendor: {0}',
 
   'err.http.401': 'Authentication failed (401).',

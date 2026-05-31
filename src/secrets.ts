@@ -55,8 +55,9 @@ export class KeyStore {
     });
     if (!input?.trim()) return false;
     await this.set(providerId, input.trim());
-    channel.info(t('auth.keyStored', providerLabel));
+    channel.info(`${providerLabel} API Key saved.`);
     vscode.window.showInformationMessage(t('auth.keyStored', providerLabel));
+    
     return true;
   }
 }

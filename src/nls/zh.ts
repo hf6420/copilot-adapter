@@ -27,19 +27,16 @@ export const zh: Translation = {
 
   'think.label': '思考模式',
   'think.none': '无',
-  'think.none.hint': '无推理步骤，输出最快',
+  'think.none.hint': '无推理步骤',
   'think.high': '高',
-  'think.high.hint': '适合日常编程任务',
+  'think.high.hint': '适合日常任务',
   'think.max': '最大',
-  'think.max.hint': '全力推理，复杂问题最佳',
+  'think.max.hint': '适合复杂问题',
 
   'vision.chooseProxy': '选择图像描述模型（默认 {0}）',
   'vision.activeLabel': '当前',
   'vision.disableCmd': '禁用视觉代理',
   'vision.offLabel': '已禁用',
-  'vision.proxyLabel': '视觉代理：{0}',
-  'vision.proxySkipped': '无可用视觉模型，图片已忽略。',
-  'vision.proxyFault': '视觉代理异常：',
   'vision.providerTag': '提供商：{0}',
 
   'err.http.401': '认证失败（401）。',

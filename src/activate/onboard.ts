@@ -21,7 +21,7 @@ export async function maybeShowWelcome(
     }
   }
 
-  channel.info(t('auth.firstRun'));
+  channel.info('First run: no API keys configured, opening walkthrough.');
 
   await context.globalState.update(WELCOME_KEY, true);
 
