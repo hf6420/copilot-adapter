@@ -11,23 +11,14 @@
   },
   "categories": [
     "AI",
-    "Chat",
-    "Programming Languages"
+    "Chat"
   ],
   "keywords": [
-    "copilot",
-    "github copilot",
     "copilot chat",
-    "ai",
-    "chat",
-    "agent",
+    "byok",
     "deepseek",
     "minimax",
-    "vision",
-    "byok",
-    "language model",
-    "thinking",
-    "reasoning"
+    "language model"
   ],
   "activationEvents": [
     "onUri",
