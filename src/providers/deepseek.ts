@@ -44,6 +44,7 @@ const DS_MODELS: readonly Model[] = [
 export const DEEPSEEK: Provider = {
   id: 'deepseek',
   label: 'DeepSeek',
+  detailKey: 'provider.deepseek.detail',
   defaultEndpoint: 'https://api.deepseek.com',
   models: DS_MODELS,
   tokenRatio: 4.0,

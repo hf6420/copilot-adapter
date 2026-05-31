@@ -61,7 +61,7 @@ export async function resolveImages(
       stats.currentMessages++;
       const visionModel = await picker.resolve();
       if (!visionModel) {
-        channel.warn(t('image.proxySkipped'));
+        channel.warn(t('vision.proxySkipped'));
         stats.unavailableMessages++;
         resolved.push(substituteImages(msg, DESC_UNAVAILABLE, stats));
         continue;
@@ -71,10 +71,10 @@ export async function resolveImages(
         newVisionText = description;
         visionModelId = visionModel.id;
         stats.generatedMessages++;
-        channel.info(t('image.proxyLabel', visionModel.name));
+        channel.info(t('vision.proxyLabel', visionModel.name));
         resolved.push(substituteImages(msg, formatDescription(description), stats));
       } catch (err) {
-        channel.warn(t('image.proxyFault'), err);
+        channel.warn(t('vision.proxyFault'), err);
         stats.failedMessages++;
         resolved.push(substituteImages(msg, DESC_UNAVAILABLE, stats));
       }

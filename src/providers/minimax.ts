@@ -108,6 +108,7 @@ const MM_MODELS: readonly Model[] = [
 export const MINIMAX: Provider = {
   id: 'minimax',
   label: 'MiniMax',
+  detailKey: 'provider.minimax.detail',
   defaultEndpoint: 'https://api.minimaxi.com/v1',
   models: MM_MODELS,
   tokenRatio: 4.0,

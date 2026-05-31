@@ -54,6 +54,8 @@ export interface Provider {
   readonly id: string;
   /** Human-readable display name. */
   readonly label: string;
+  /** NLS key for the detail line shown in the provider picker. */
+  readonly detailKey: string;
   /** Default API endpoint (no trailing slash). May include /v1 if needed. */
   readonly defaultEndpoint: string;
   readonly models: readonly Model[];

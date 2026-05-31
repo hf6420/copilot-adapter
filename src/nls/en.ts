@@ -1,6 +1,9 @@
 import type { Translation } from './types';
 
 export const en: Translation = {
+  'provider.deepseek.detail': 'General-purpose & deep reasoning — 2 models',
+  'provider.minimax.detail': 'Deep reasoning with long context support — 7 models',
+
   'model.deepseek-v4-flash.detail': 'Fast, general-purpose model',
   'model.deepseek-v4-pro.detail': 'Deep reasoning model',
   'model.minimax-text-01.detail': 'Long context with image support',
@@ -30,14 +33,14 @@ export const en: Translation = {
   'think.max': 'Max',
   'think.max.hint': 'Full reasoning depth for hard problems',
 
-  'image.chooseProxy': 'Select image description model (default {0})',
-  'image.activeLabel': 'current',
-  'image.disableCmd': 'Disable Vision Proxy',
-  'image.offLabel': 'disabled',
-  'image.proxyLabel': 'Vision proxy: {0}',
-  'image.proxySkipped': 'No vision model available, images ignored.',
-  'image.proxyFault': 'Vision proxy error: ',
-  'image.providerTag': 'Vendor: {0}',
+  'vision.chooseProxy': 'Select image description model (default {0})',
+  'vision.activeLabel': 'current',
+  'vision.disableCmd': 'Disable Vision Proxy',
+  'vision.offLabel': 'disabled',
+  'vision.proxyLabel': 'Vision proxy: {0}',
+  'vision.proxySkipped': 'No vision model available, images ignored.',
+  'vision.proxyFault': 'Vision proxy error: ',
+  'vision.providerTag': 'Vendor: {0}',
 
   'err.http.401': 'Authentication failed (401).',
   'err.http.402': 'Insufficient balance (402).',

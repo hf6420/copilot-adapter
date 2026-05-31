@@ -30,7 +30,7 @@
     "languageModelChatProviders": [
       {
         "vendor": "copilot-adapter-deepseek",
-        "displayName": "Copilot Adapter - DeepSeek",
+        "displayName": "DeepSeek",
         "configuration": {
           "type": "object",
           "required": ["apiKey"],
@@ -46,7 +46,7 @@
       },
       {
         "vendor": "copilot-adapter-minimax",
-        "displayName": "Copilot Adapter - MiniMax",
+        "displayName": "MiniMax",
         "configuration": {
           "type": "object",
           "required": ["apiKey"],

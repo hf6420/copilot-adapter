@@ -62,8 +62,8 @@ export class VisionModelPicker {
     const effectiveId = isOff ? '' : setting;
 
     const disableItem: PickItem = {
-      label: `$(circle-slash) ${t('image.disableCmd')}`,
-      description: isOff ? t('image.activeLabel') : undefined,
+      label: `$(circle-slash) ${t('vision.disableCmd')}`,
+      description: isOff ? t('vision.activeLabel') : undefined,
       id: VISION_OFF,
     };
 
@@ -71,8 +71,8 @@ export class VisionModelPicker {
       label: m.name,
       description:
         !isOff && (m.id === effectiveId || m.name === effectiveId)
-          ? t('image.activeLabel')
-          : t('image.providerTag', m.vendor),
+          ? t('vision.activeLabel')
+          : t('vision.providerTag', m.vendor),
       id: m.id,
     }));
 
@@ -85,8 +85,8 @@ export class VisionModelPicker {
     ];
 
     const title = isOff
-      ? t('image.chooseProxy', t('image.offLabel'))
-      : t('image.chooseProxy', effectiveId);
+      ? t('vision.chooseProxy', t('vision.offLabel'))
+      : t('vision.chooseProxy', effectiveId);
 
     const picked = await vscode.window.showQuickPick(items, {
       title,

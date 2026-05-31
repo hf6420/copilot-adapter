@@ -1,6 +1,9 @@
 import type { Translation } from './types';
 
 export const zh: Translation = {
+  'provider.deepseek.detail': '通用对话与深度推理，2 个模型',
+  'provider.minimax.detail': '深度推理，支持超长上下文，7 个模型',
+
   'model.deepseek-v4-flash.detail': '快速通用模型',
   'model.deepseek-v4-pro.detail': '深度推理模型',
   'model.minimax-text-01.detail': '超长上下文，支持图像',
@@ -30,14 +33,14 @@ export const zh: Translation = {
   'think.max': '最大',
   'think.max.hint': '全力推理，复杂问题最佳',
 
-  'image.chooseProxy': '选择图像描述模型（默认 {0}）',
-  'image.activeLabel': '当前',
-  'image.disableCmd': '禁用视觉代理',
-  'image.offLabel': '已禁用',
-  'image.proxyLabel': '视觉代理：{0}',
-  'image.proxySkipped': '无可用视觉模型，图片已忽略。',
-  'image.proxyFault': '视觉代理异常：',
-  'image.providerTag': '提供商：{0}',
+  'vision.chooseProxy': '选择图像描述模型（默认 {0}）',
+  'vision.activeLabel': '当前',
+  'vision.disableCmd': '禁用视觉代理',
+  'vision.offLabel': '已禁用',
+  'vision.proxyLabel': '视觉代理：{0}',
+  'vision.proxySkipped': '无可用视觉模型，图片已忽略。',
+  'vision.proxyFault': '视觉代理异常：',
+  'vision.providerTag': '提供商：{0}',
 
   'err.http.401': '认证失败（401）。',
   'err.http.402': '额度不足（402）。',
