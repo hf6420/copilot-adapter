@@ -1,10 +1,12 @@
-# Copilot Adapter
+<h1 align="center">Copilot Adapter</h1>
 
-[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code%20Marketplace-Install-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=Eowl.copilot-adapter)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![CI](https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml/badge.svg)](https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml)
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=Eowl.copilot-adapter"><img src="https://img.shields.io/badge/VS%20Code%20Marketplace-Install-blue?logo=visualstudiocode" alt="VS Code Marketplace"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml"><img src="https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
 
-Use third-party AI models directly inside VS Code Copilot Chat — the same native way VS Code manages any language model provider. Bring your own API keys; no Copilot subscription required for the models themselves, and no local proxy (e.g. Ollama) needed.
+Extend VS Code's native Copilot Chat with third-party AI models. Switch between DeepSeek, MiniMax, and more directly from the Copilot model selector — the same experience as built-in Copilot models, with your own API keys, no Copilot subscription, and no local proxy needed.
 
 [简体中文](README.zh-cn.md)
 
@@ -22,12 +24,10 @@ Use third-party AI models directly inside VS Code Copilot Chat — the same nati
 
 ## Providers
 
-| Provider | Models | Max Context | API Keys |
-|---|---|---|---|
-| [DeepSeek](https://platform.deepseek.com) | V4 Flash · V4 Pro | 1 M tokens | [platform.deepseek.com](https://platform.deepseek.com/api_keys) |
-| [MiniMax](https://www.minimax.io) | Text-01 · M1 · M2 · M2.1 · M2.5 · M2.7 (+ highspeed variants) | 1 M tokens | [minimax.io](https://www.minimax.io/platform/user-center/basic-information/interface-key) |
-
-All models support multi-turn tool calls and chain-of-thought reasoning. MiniMax Text-01 additionally accepts image attachments natively.
+| Provider | Models | API Keys |
+|---|---|---|
+| [DeepSeek](https://platform.deepseek.com) | V4 Flash · V4 Pro | [platform.deepseek.com](https://platform.deepseek.com/api_keys) |
+| [MiniMax](https://www.minimax.io) | Text-01 · M1 · M2 · M2.1 · M2.5 · M2.7 (+ highspeed variants) | [minimax.io](https://www.minimax.io/platform/user-center/basic-information/interface-key) |
 
 ---
 
@@ -67,6 +67,8 @@ Reasoning models (DeepSeek V4 Pro, MiniMax M-series) expose a configurable effor
 | **High** | Balanced depth, good for day-to-day tasks |
 | **Max** | Full reasoning budget for hard problems |
 
+*Levels shown are DeepSeek V4 as an example; option names may differ across providers.*
+
 ### Vision Proxy
 
 Text-only models cannot accept image attachments directly. When a vision proxy is configured, the extension automatically describes any attached images using a separate vision-capable model and injects those descriptions as text — so text-only models can handle image attachments seamlessly.
@@ -75,6 +77,8 @@ Set up via **Copilot Adapter: Set Vision Proxy Model** or the `copilot-adapter.v
 Disable at any time by setting the value to `off`.
 
 ### Per-Provider Settings
+
+> **Advanced customization — no configuration needed for normal use.**
 
 Each provider can be configured independently under `copilot-adapter.providers`:
 

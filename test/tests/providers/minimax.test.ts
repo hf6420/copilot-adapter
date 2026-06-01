@@ -4,18 +4,15 @@ import { MINIMAX } from '../../../src/providers/minimax';
 import { ThinkTagParser } from '../../../src/providers/parsers/tag';
 import type { Model } from '../../../src/providers/types';
 
-/** A reasoning-capable model stub */
 function reasoningModel(): Model {
   return MINIMAX.models.find((m) => m.ability.reasoning)! as Model;
 }
 
-/** A non-reasoning model stub */
 function nonReasoningModel(): Model {
   return MINIMAX.models.find((m) => !m.ability.reasoning)! as Model;
 }
 
 suite('providers/minimax — MINIMAX.requestExtras()', () => {
-  // requestExtras is defined on MINIMAX; the Provider interface marks it optional
   const requestExtras = MINIMAX.requestExtras!.bind(MINIMAX);
 
   test('tier "off" → thinking disabled', () => {

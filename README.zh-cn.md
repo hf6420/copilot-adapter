@@ -1,10 +1,12 @@
-# Copilot Adapter
+<h1 align="center">Copilot Adapter</h1>
 
-[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code%20Marketplace-安装-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=Eowl.copilot-adapter)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![CI](https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml/badge.svg)](https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml)
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=Eowl.copilot-adapter"><img src="https://img.shields.io/badge/VS%20Code%20Marketplace-安装-blue?logo=visualstudiocode" alt="VS Code Marketplace"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml"><img src="https://github.com/eowl/copilot-adapter/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
 
-以 VS Code 原生方式在 Copilot Chat 中直接使用第三方 AI 模型——与 VS Code 管理任何语言模型提供商的方式完全一致。使用自己的 API Key，无需 Copilot 订阅，也无需任何本地代理（如 Ollama）。
+让 VS Code 原生 Copilot Chat 无缝接入第三方 AI 模型。无需 Copilot 订阅，无需本地代理，使用自己的 API Key，即可在 Copilot Chat 的模型选择器中直接切换 DeepSeek、MiniMax 等第三方模型——体验与 Copilot 内置模型完全一致。
 
 [English](README.md)
 
@@ -22,12 +24,10 @@
 
 ## 支持的提供商
 
-| 提供商 | 模型 | 最大上下文 | API Keys |
-|---|---|---|---|
-| [DeepSeek](https://platform.deepseek.com) | V4 Flash · V4 Pro | 1 M tokens | [platform.deepseek.com](https://platform.deepseek.com/api_keys) |
-| [MiniMax](https://www.minimax.io) | Text-01 · M1 · M2 · M2.1 · M2.5 · M2.7（含高速版） | 1 M tokens | [minimax.io](https://www.minimax.io/platform/user-center/basic-information/interface-key) |
-
-所有模型均支持多轮工具调用和链式推理。MiniMax Text-01 原生支持图片附件输入。
+| 提供商 | 模型 | API Keys |
+|---|---|---|
+| [DeepSeek](https://platform.deepseek.com) | V4 Flash · V4 Pro | [platform.deepseek.com](https://platform.deepseek.com/api_keys) |
+| [MiniMax](https://www.minimax.io) | Text-01 · M1 · M2 · M2.1 · M2.5 · M2.7（含高速版） | [minimax.io](https://www.minimax.io/platform/user-center/basic-information/interface-key) |
 
 ---
 
@@ -67,6 +67,8 @@ API Key 仅存储于 [VS Code Secret Storage](https://code.visualstudio.com/api/
 | **High（高）** | 均衡深度，适合日常编程任务 |
 | **Max（最大）** | 全力推理，适合复杂问题 |
 
+*以上级别以 DeepSeek V4 为例；不同提供商的选项名称可能不同。*
+
 ### 视觉代理
 
 纯文本模型无法直接处理图片附件。配置视觉代理后，扩展会自动使用一个具备视觉能力的模型描述附件图片，并将描述以文本形式注入上下文，从而让纯文本模型也能无缝处理图片输入。
@@ -75,6 +77,8 @@ API Key 仅存储于 [VS Code Secret Storage](https://code.visualstudio.com/api/
 将值设为 `off` 即可随时禁用。
 
 ### 提供商独立配置
+
+> **进阶自定义用法，正常使用无需配置。**
 
 每个提供商可在 `copilot-adapter.providers` 下独立配置：
 
