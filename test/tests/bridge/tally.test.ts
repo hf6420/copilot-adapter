@@ -14,7 +14,6 @@ suite('bridge/tally', () => {
     });
 
     test('rounds up when not evenly divisible', () => {
-      // 5 chars / 4 = 1.25 → ceil → 2
       assert.equal(estimateTokens('abcde', 4), 2);
     });
 
@@ -30,7 +29,6 @@ suite('bridge/tally', () => {
         new vscode.LanguageModelTextPart('hello'), // 5
         new vscode.LanguageModelTextPart(' world'), // 6
       ]);
-      // 11 chars / 4 = 2.75 → ceil → 3
       assert.equal(estimateTokens(msg, 4), 3);
     });
 

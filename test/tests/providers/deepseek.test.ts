@@ -3,7 +3,6 @@ import { suite, test } from 'mocha';
 import { DEEPSEEK } from '../../../src/providers/deepseek';
 
 suite('providers/deepseek — DEEPSEEK.requestExtras()', () => {
-  // requestExtras is defined on DEEPSEEK; the Provider interface marks it optional
   const requestExtras = DEEPSEEK.requestExtras!.bind(DEEPSEEK);
 
   test('effort "none" → thinking disabled', () => {
