@@ -37,7 +37,9 @@
         "displayName": "DeepSeek",
         "configuration": {
           "type": "object",
-          "required": ["apiKey"],
+          "required": [
+            "apiKey"
+          ],
           "properties": {
             "apiKey": {
               "type": "string",
@@ -53,7 +55,9 @@
         "displayName": "MiniMax",
         "configuration": {
           "type": "object",
-          "required": ["apiKey"],
+          "required": [
+            "apiKey"
+          ],
           "properties": {
             "apiKey": {
               "type": "string",
@@ -256,14 +260,14 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.6.0",
-    "@types/vscode": "^1.121.0",
+    "@types/vscode": "^1.120.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.5.2",
-    "ts-node": "^10.9.2",
     "@vscode/vsce": "^3.9.1",
     "eslint": "^10.4.1",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.3",
+    "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.0"
   }
