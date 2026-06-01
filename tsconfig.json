@@ -15,8 +15,5 @@
     "declaration": true
   },
   "include": ["src", "vscode.proposed.languageModelThinkingPart.d.ts"],
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    { "path": "./tsconfig.test.json" }
-  ]
+  "exclude": ["node_modules", "dist"]
 }
