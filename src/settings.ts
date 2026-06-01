@@ -20,21 +20,25 @@ export class Settings {
 
   static baseUrl(defaultUrl: string, providerId: string): string {
     const map = this.section().get<Record<string, { baseUrl?: string }>>('providers') ?? {};
+
     return map[providerId]?.baseUrl?.trim() || defaultUrl;
   }
 
   static providerEnabled(providerId: string): boolean {
     const map = this.section().get<Record<string, { enabled?: boolean }>>('providers') ?? {};
+
     return map[providerId]?.enabled !== false;
   }
 
   static tokenLimit(): number | undefined {
     const n = this.section().get<number>('maxTokens', 0);
+
     return n > 0 ? n : undefined;
   }
 
   private static activeLevel(): DebugLevel {
     const scoped = this.section().inspect<unknown>('debugMode');
+
     return asLevel(scoped?.workspaceValue) ?? asLevel(scoped?.globalValue) ?? LEVEL_OFF;
   }
 
@@ -44,6 +48,7 @@ export class Settings {
 
   static metaEnabled(): boolean {
     const level = this.activeLevel();
+
     return level === LEVEL_META || level === LEVEL_VERBOSE;
   }
 
@@ -55,8 +60,8 @@ export class Settings {
     return this.section().get<string>('visionProxyModel', '').trim();
   }
 
-  static visionPrompt(): string {
-    return this.section().get<string>('visionPrompt', '').trim();
+  static visionProxyPrompt(): string {
+    return this.section().get<string>('visionProxyPrompt', '').trim();
   }
 
   static requestTimeout(): number {
@@ -77,26 +82,31 @@ export class Settings {
 
   private static providerEntry(id: string): Record<string, unknown> {
     const map = this.section().get<Record<string, Record<string, unknown>>>('providers') ?? {};
+
     return map[id] ?? {};
   }
 
   static providerTokenRatio(id: string): number | undefined {
     const v = this.providerEntry(id)['tokenRatio'];
+
     return typeof v === 'number' && v > 0 ? v : undefined;
   }
 
   static providerTemperature(id: string): number | undefined {
     const v = this.providerEntry(id)['temperature'];
+
     return typeof v === 'number' ? v : undefined;
   }
 
   static providerTopP(id: string): number | undefined {
     const v = this.providerEntry(id)['topP'];
+
     return typeof v === 'number' ? v : undefined;
   }
 
   static providerStreamUsage(id: string): boolean | undefined {
     const v = this.providerEntry(id)['streamUsage'];
+
     return typeof v === 'boolean' ? v : undefined;
   }
 }

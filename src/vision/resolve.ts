@@ -199,7 +199,7 @@ async function callVisionProxy(
   msg: vscode.LanguageModelChatRequestMessage,
   token: vscode.CancellationToken,
 ): Promise<string> {
-  const prompt = Settings.visionPrompt() || defaultVisionPrompt();
+  const prompt = Settings.visionProxyPrompt() || defaultVisionPrompt();
 
   // Only pass image data parts to the vision proxy — exclude original user text
   // which adds noise and may confuse the description task.

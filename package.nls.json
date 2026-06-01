@@ -36,7 +36,7 @@
   "copilot-adapter.config.debug.verbose.label": "Verbose",
   "copilot-adapter.config.debug.verbose.description": "Writes full request payloads and masked API keys to disk. Contains prompt content — keep local. [View Records →](command:copilot-adapter.openRequestRecordsFolder)",
   "copilot-adapter.config.visionProxyModel.description": "Vision proxy model for image attachments. Enter `off` to disable. [Choose from available models](command:copilot-adapter.setVisionProxyModel).",
-  "copilot-adapter.config.visionPrompt.description": "System prompt given to the vision proxy when converting image attachments to text descriptions.",
+  "copilot-adapter.config.visionProxyPrompt.description": "System prompt given to the vision proxy when converting image attachments to text descriptions.",
   "copilot-adapter.config.requestTimeout.description": "HTTP request timeout in seconds. Set to 0 to disable the timeout.",
   "copilot-adapter.config.requestRetries.description": "Number of automatic retries on rate-limited (429) or unavailable (503) responses. Retries use exponential back-off and only occur before any content is streamed.",
   "copilot-adapter.config.imageTokenEstimate.description": "Estimated token cost per image used when counting tokens for context-window tracking.",

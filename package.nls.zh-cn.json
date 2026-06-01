@@ -36,7 +36,7 @@
   "copilot-adapter.config.debug.verbose.label": "详细",
   "copilot-adapter.config.debug.verbose.description": "将完整请求体和掩码后的 API Key 写入磁盘。包含提示词内容，请勿公开分享。[查看请求记录 →](command:copilot-adapter.openRequestRecordsFolder)",
   "copilot-adapter.config.visionProxyModel.description": "图片附件的视觉代理模型。输入 `off` 可禁用视觉代理，[从可用模型中选择](command:copilot-adapter.setVisionProxyModel)。",
-  "copilot-adapter.config.visionPrompt.description": "将图片附件转换为文字描述时，传给视觉代理的系统提示词。",
+  "copilot-adapter.config.visionProxyPrompt.description": "将图片附件转换为文字描述时，传给视觉代理的系统提示词。",
   "copilot-adapter.config.requestTimeout.description": "HTTP 请求超时时间（秒）。设为 0 表示不超时。",
   "copilot-adapter.config.requestRetries.description": "遇到速率限制（429）或服务不可用（503）时的自动重试次数。重试采用指数退避策略，且仅在流式内容开始之前触发。",
   "copilot-adapter.config.imageTokenEstimate.description": "计算 token 数时每张图片的估算 token 消耗，用于上下文窗口追踪。",

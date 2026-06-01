@@ -193,11 +193,11 @@
           "default": "off",
           "markdownDescription": "%copilot-adapter.config.visionProxyModel.description%"
         },
-        "copilot-adapter.visionPrompt": {
+        "copilot-adapter.visionProxyPrompt": {
           "type": "string",
           "editPresentation": "multilineText",
           "default": "Task: produce an accurate, structured description of each image provided, for injection into a text-only language model conversation.\n\nCapture all visually significant content: text and code, UI layouts and controls, diagrams, charts, data tables, photographs, and spatial relationships.\n\nSingle image: write one cohesive description.\nMultiple images: label each \"Image 1:\", \"Image 2:\", etc., then add a \"Summary:\" section covering shared context and how the images relate.\n\nReport only what is clearly visible. Do not infer, guess, or embellish. Use concise neutral prose without addressing the user or narrating the process.",
-          "description": "%copilot-adapter.config.visionPrompt.description%"
+          "description": "%copilot-adapter.config.visionProxyPrompt.description%"
         },
         "copilot-adapter.requestTimeout": {
           "type": "number",
