@@ -8,7 +8,7 @@ This guide walks through adding a provider (using DeepSeek as an example) via th
 
 Click the model selector at the bottom of the Copilot Chat input. You'll see the currently available models. DeepSeek and MiniMax are not listed yet.
 
-![Model selector before adding a provider](../resources/images/en/add-model-step-01.png)
+![Model selector before adding a provider](../assets/images/en/add-model-step-01.png)
 
 ---
 
@@ -16,7 +16,7 @@ Click the model selector at the bottom of the Copilot Chat input. You'll see the
 
 Open the **Language Models** panel (`Ctrl/Cmd+Shift+P` → *Language Models*), then click **+ Add Models...** in the top-right corner. A dropdown lists all available providers. Select **DeepSeek** (or **MiniMax**).
 
-![Language Models panel with Add Models dropdown](../resources/images/en/add-model-step-02.png)
+![Language Models panel with Add Models dropdown](../assets/images/en/add-model-step-02.png)
 
 ---
 
@@ -24,7 +24,7 @@ Open the **Language Models** panel (`Ctrl/Cmd+Shift+P` → *Language Models*), t
 
 A prompt asks for a group name. The default is the provider name, but you can enter any name you like — as long as it doesn't conflict with an existing group. Press **Enter** to confirm.
 
-![Group name prompt](../resources/images/en/add-model-step-03.png)
+![Group name prompt](../assets/images/en/add-model-step-03.png)
 
 ---
 
@@ -36,7 +36,7 @@ Get your key from:
 - DeepSeek: [platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys)
 - MiniMax: [minimax.io — Interface Key](https://www.minimax.io/platform/user-center/basic-information/interface-key)
 
-![API key input prompt](../resources/images/en/add-model-step-04.png)
+![API key input prompt](../assets/images/en/add-model-step-04.png)
 
 ---
 
@@ -44,7 +44,7 @@ Get your key from:
 
 The Language Models panel now shows the DeepSeek group with both models listed. Click the ⚙ icon next to the group name to change the API key or adjust settings at any time.
 
-![Language Models panel with DeepSeek added](../resources/images/en/add-model-step-05.png)
+![Language Models panel with DeepSeek added](../assets/images/en/add-model-step-05.png)
 
 ---
 
@@ -52,4 +52,4 @@ The Language Models panel now shows the DeepSeek group with both models listed. 
 
 Open the model selector in Copilot Chat again. DeepSeek V4 Flash and DeepSeek V4 Pro now appear under **Other Models**. Select one to start chatting.
 
-![Model selector showing DeepSeek models](../resources/images/en/add-model-step-06.png)
+![Model selector showing DeepSeek models](../assets/images/en/add-model-step-06.png)
