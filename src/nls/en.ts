@@ -6,8 +6,6 @@ export const en: Translation = {
 
   'model.deepseek-v4-flash.detail': 'Fast, general-purpose model',
   'model.deepseek-v4-pro.detail': 'Deep reasoning model',
-  'model.minimax-text-01.detail': 'Long context with image support',
-  'model.minimax-m1.detail': 'Deep reasoning model',
   'model.minimax-m2.detail': 'Deep reasoning model',
   'model.minimax-m2.1.detail': 'Deep reasoning model',
   'model.minimax-m2.1-highspeed.detail': 'Deep reasoning, high-speed',

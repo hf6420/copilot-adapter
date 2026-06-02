@@ -6,8 +6,6 @@ export const zh: Translation = {
 
   'model.deepseek-v4-flash.detail': '快速通用模型',
   'model.deepseek-v4-pro.detail': '深度推理模型',
-  'model.minimax-text-01.detail': '超长上下文，支持图像',
-  'model.minimax-m1.detail': '深度推理模型',
   'model.minimax-m2.detail': '深度推理模型',
   'model.minimax-m2.1.detail': '深度推理模型',
   'model.minimax-m2.1-highspeed.detail': '深度推理，高速版',
