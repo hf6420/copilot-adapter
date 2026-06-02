@@ -38,9 +38,11 @@ export interface Model {
   readonly detailKey: string;
   readonly provider: Provider;
 
+  maxTokensField?: string;
   requestExtras?(modelConfig: Record<string, unknown> | undefined): Record<string, unknown>;
   configSchema?(): Record<string, unknown> | undefined;
   createContentParser?(): ContentParser | undefined;
+  formatImagePart?(data: Uint8Array, mimeType: string): Record<string, unknown>;
 }
 
 export interface Provider {
