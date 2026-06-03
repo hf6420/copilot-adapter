@@ -8,7 +8,7 @@ export const en: Translation = {
 
   'model.deepseek-v4-flash.detail': 'Fast, general-purpose model',
   'model.deepseek-v4-pro.detail': 'Deep reasoning model',
-  
+
   'model.minimax-m2.detail': 'Deep reasoning model',
   'model.minimax-m2.1.detail': 'Deep reasoning model',
   'model.minimax-m2.1-highspeed.detail': 'Deep reasoning, high-speed',
@@ -45,11 +45,14 @@ export const en: Translation = {
   'model.glm-4.5-flash.detail': 'Free model with deep-thinking mode (deprecated soon)',
   'model.glm-4-flash-250414.detail': 'Free model — long-context, multilingual, tool calls',
   'model.glm-5v-turbo.detail': 'Multimodal coding base — vision + complex visual reasoning',
-  'model.glm-4.6v.detail': 'Vision reasoning — native tool calls, long context, frontend reproduction',
+  'model.glm-4.6v.detail':
+    'Vision reasoning — native tool calls, long context, frontend reproduction',
   'model.glm-ocr.detail': 'Lightweight OCR — SOTA accuracy, supports complex documents',
-  'model.glm-4.1v-thinking-flashx.detail': 'Lightweight visual reasoning — multi-step analysis, high concurrency',
+  'model.glm-4.1v-thinking-flashx.detail':
+    'Lightweight visual reasoning — multi-step analysis, high concurrency',
   'model.glm-4.6v-flash.detail': 'Free vision model — tool calls and toggleable thinking mode',
-  'model.glm-4.1v-thinking-flash.detail': 'Free visual reasoning — complex scenes, multi-step analysis',
+  'model.glm-4.1v-thinking-flash.detail':
+    'Free visual reasoning — complex scenes, multi-step analysis',
   'model.glm-4v-flash.detail': 'Free model — image understanding, multilingual',
 
   'auth.keyInput': 'Enter {0} API Key',

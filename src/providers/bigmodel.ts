@@ -306,4 +306,3 @@ export const BM_MODELS: readonly Model[] = [
     detailKey: 'model.glm-4v-flash.detail',
   },
 ];
-

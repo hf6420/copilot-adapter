@@ -25,7 +25,7 @@ export const ALL_PROVIDERS: readonly Provider[] = (() => {
       result.push(m.provider);
     }
   }
-  
+
   return result;
 })();
 

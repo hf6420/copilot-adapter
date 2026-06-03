@@ -118,7 +118,7 @@ export async function forwardStream(
           attempt++;
           const delayMs = Math.min(1000 * 2 ** (attempt - 1), 30_000);
           await new Promise<void>((r) => setTimeout(r, delayMs));
-          
+
           continue;
         }
 

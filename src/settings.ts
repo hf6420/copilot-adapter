@@ -71,7 +71,7 @@ export class Settings {
   static providerEndpoint(providerId: string): string | undefined {
     const map = this.section().get<Record<string, unknown>>('providerEndpoints', {});
     const raw = map?.[providerId];
-    
+
     if (typeof raw !== 'string') return undefined;
     const trimmed = raw.trim();
 
