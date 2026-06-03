@@ -32,7 +32,7 @@ export function buildChatInfo(model: Model, hasKey: boolean, hasVisionProxy = fa
       imageInput: model.ability.acceptsImages || hasVisionProxy,
       toolCalling: model.ability.maxTools ?? (model.ability.maxTools === undefined ? true : false),
     },
-    tooltip: detail,
+    tooltip: notConfigured ? t('auth.noKeyTooltip', provider.label) : detail,
     detail: detail,
     statusIcon: notConfigured ? new vscode.ThemeIcon('warning') : undefined,
     configurationSchema: schema,
