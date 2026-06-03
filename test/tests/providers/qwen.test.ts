@@ -46,7 +46,28 @@ suite('providers/qwen — model.requestExtras()', () => {
   test('QWEN exposes the expected model ids', () => {
     assert.deepEqual(
       QWEN_MODELS.map((m) => m.id),
-      ['qwen3-max', 'qwen-plus', 'qwen-turbo', 'qwen3-coder-plus'],
+      [
+        'qwen3.7-max',
+        'qwen3.7-plus',
+        'qwen3.6-max',
+        'qwen3.6-plus',
+        'qwen3.6-flash',
+        'qwen3.5-plus',
+        'qwen3.5-flash',
+        'qwen3-max',
+        'qwen3-coder-plus',
+        'qwen3-coder-flash',
+        'qwen-plus-us',
+        'qwen-flash-us',
+      ],
     );
+  });
+
+  test('US-only models carry the "(US only)" label suffix', () => {
+    const usOnly = QWEN_MODELS.filter((m) => m.id.endsWith('-us'));
+    assert.equal(usOnly.length, 2);
+    for (const m of usOnly) {
+      assert.match(m.label, /\(US only\)/);
+    }
   });
 });
