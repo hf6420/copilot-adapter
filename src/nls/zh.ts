@@ -21,10 +21,11 @@ export const zh: Translation = {
   'auth.keyRequired': '请输入有效的 API Key',
   'auth.keyStored': '{0} API Key 已安全保存。',
   'auth.chooseProvider': '选择提供商',
-  'auth.chooseClearTarget': '选择要清除 API Key 的提供商',
-  'auth.noKeysFound': '当前没有已配置的 API Key',
   'auth.noKey': '{0} 未配置 API Key。',
   'auth.noKeyTooltip': '{0} 未配置 API Key，请在语言模型面板中添加。',
+  'auth.removeViaUI': 'API Key 由 VS Code 统一管理。请打开语言模型面板，点击对应提供商分组旁的齿轮菜单进行删除。',
+  'auth.seedFailed': '无法自动保存 {0} 的 API Key，可以通过语言模型面板手动添加。',
+  'action.openManageUI': '打开语言模型面板',
 
   'think.label': '思考模式',
   'think.none': '无',
