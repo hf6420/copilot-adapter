@@ -23,8 +23,10 @@ export const en: Translation = {
   'auth.chooseProvider': 'Select a provider',
   'auth.noKey': 'No API key configured for {0}.',
   'auth.noKeyTooltip': 'No API key configured for {0}. Add one via the Language Models panel.',
-  'auth.removeViaUI': 'API keys are managed by VS Code. Open the Language Models panel and use the gear menu next to a provider group to remove its key.',
-  'auth.seedFailed': 'Could not save the {0} API key automatically. You can add it manually via the Language Models panel.',
+  'auth.removeViaUI':
+    'API keys are managed by VS Code. Open the Language Models panel and use the gear menu next to a provider group to remove its key.',
+  'auth.seedFailed':
+    'Could not save the {0} API key automatically. You can add it manually via the Language Models panel.',
   'action.openManageUI': 'Open Language Models',
 
   'think.label': 'Thinking Mode',

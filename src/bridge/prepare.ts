@@ -50,7 +50,10 @@ export async function assembleChatReq(ctx: PrepContext): Promise<ReadyReq> {
   let msgs: ReturnType<typeof translateMessages>;
   let tools: ReturnType<typeof translateTools>;
 
-  const translateOpts = { thinkingField: provider.thinkingField, formatImagePart: model.formatImagePart };
+  const translateOpts = {
+    thinkingField: provider.thinkingField,
+    formatImagePart: model.formatImagePart,
+  };
 
   if (gate.kind === 'proceed') {
     msgs = translateMessages(gate.messages, translateOpts);

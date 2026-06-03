@@ -108,10 +108,12 @@ export function translateTools(
         ? schema
         : { type: 'object', properties: {} };
 
-    return [{
-      type: 'function' as const,
-      function: { name: t.name, description: t.description || t.name, parameters },
-    }];
+    return [
+      {
+        type: 'function' as const,
+        function: { name: t.name, description: t.description || t.name, parameters },
+      },
+    ];
   });
 
   return result.length > 0 ? result : undefined;
@@ -148,6 +150,6 @@ function isThinkingPart(part: unknown): part is vscode.LanguageModelThinkingPart
 
 function extractThinkingText(part: vscode.LanguageModelThinkingPart): string {
   const v = part.value;
-  
+
   return Array.isArray(v) ? v.join('') : v;
 }

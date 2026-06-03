@@ -10,12 +10,14 @@ function parseEffort(raw: unknown): ThinkingEffort {
   return 'high';
 }
 
-function dsRequestExtras(modelConfig: Record<string, unknown> | undefined): Record<string, unknown> {
+function dsRequestExtras(
+  modelConfig: Record<string, unknown> | undefined,
+): Record<string, unknown> {
   const effort = parseEffort(modelConfig?.reasoningEffort);
   if (effort === 'none') {
     return { thinking: { type: 'disabled' } };
   }
-  
+
   return {
     thinking: { type: 'enabled' },
     reasoning_effort: effort === 'max' ? 'max' : 'high',

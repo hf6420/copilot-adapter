@@ -6,7 +6,9 @@ function mmCreateContentParser(): ContentParser {
   return new ThinkTagParser('think');
 }
 
-function m3RequestExtras(modelConfig: Record<string, unknown> | undefined): Record<string, unknown> {
+function m3RequestExtras(
+  modelConfig: Record<string, unknown> | undefined,
+): Record<string, unknown> {
   if (modelConfig?.thinkingMode === 'disabled') {
     return { thinking: { type: 'disabled' } };
   }

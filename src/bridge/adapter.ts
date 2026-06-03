@@ -72,7 +72,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
   async refreshVisionProxy(): Promise<void> {
     const model = await this.picker.resolve();
     const available = model !== undefined;
-    
+
     if (available !== this.visionProxyAvailable) {
       this.visionProxyAvailable = available;
       this.changeEmitter.fire();

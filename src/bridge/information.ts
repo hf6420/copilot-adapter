@@ -15,11 +15,7 @@ export interface ReqOptions extends vscode.ProvideLanguageModelChatResponseOptio
   configuration?: Record<string, unknown>;
 }
 
-export function buildChatInfo(
-  model: Model,
-  hasKey: boolean,
-  hasVisionProxy = false,
-): ChatInfo {
+export function buildChatInfo(model: Model, hasKey: boolean, hasVisionProxy = false): ChatInfo {
   const provider = model.provider;
   const schema = model.configSchema?.();
   const notConfigured = !hasKey;

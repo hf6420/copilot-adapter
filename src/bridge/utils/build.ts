@@ -28,10 +28,12 @@ export function buildToolList(
       schema && typeof schema === 'object' && Object.keys(schema).length > 0
         ? schema
         : { type: 'object', properties: {} };
-    return [{
-      type: 'function' as const,
-      function: { name: tool.name, description: tool.description || tool.name, parameters },
-    }];
+    return [
+      {
+        type: 'function' as const,
+        function: { name: tool.name, description: tool.description || tool.name, parameters },
+      },
+    ];
   });
   return result.length > 0 ? result : undefined;
 }
