@@ -49,7 +49,6 @@ suite('bridge/tally', () => {
           new vscode.LanguageModelTextPart('done!'), // 5
         ]),
       ]);
-      // callId='call-1' (6) + 'done!' (5) = 11 chars / 5 = 2.2 → ceil = 3
       assert.equal(estimateTokens(msg, 5), 3);
     });
 

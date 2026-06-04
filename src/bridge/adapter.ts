@@ -35,6 +35,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
   private readonly storageUri: vscode.Uri;
 
   private groupApiKey: string | undefined;
+  private groupApiEndpoint: string | undefined;
   private visionProxyAvailable = true;
 
   readonly onDidChangeLanguageModelChatInformation: vscode.Event<void>;
@@ -92,12 +93,16 @@ export class Adapter implements vscode.LanguageModelChatProvider {
 
     if (groupCfg === undefined) {
       this.groupApiKey = undefined;
+      this.groupApiEndpoint = undefined;
 
       return [];
     }
 
     const apiKey = typeof groupCfg['apiKey'] === 'string' ? (groupCfg['apiKey'] as string) : '';
     this.groupApiKey = apiKey.length > 0 ? apiKey : undefined;
+    const apiEndpoint =
+      typeof groupCfg['apiEndpoint'] === 'string' ? (groupCfg['apiEndpoint'] as string) : '';
+    this.groupApiEndpoint = apiEndpoint.length > 0 ? apiEndpoint : undefined;
     const hasKey = this.groupApiKey !== undefined;
 
     return providerModels.map(
@@ -123,7 +128,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       throw new Error(t('auth.noKey', provider.label));
     }
 
-    const endpoint = getEndpoint(provider);
+    const endpoint = getEndpoint(provider, this.groupApiEndpoint);
     const session = Session.fromMessages(messages);
 
     channel.info(
