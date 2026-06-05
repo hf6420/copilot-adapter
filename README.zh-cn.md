@@ -16,7 +16,6 @@
 - [功能特性](#功能特性)
   - [思考模式](#思考模式)
   - [视觉代理](#视觉代理)
-  - [提供商独立配置](#提供商独立配置)
 - [配置参考](#配置参考)
 - [命令](#命令)
 
@@ -31,6 +30,8 @@
 | **Qwen** | `CN` `US` `Singapore` `EU (Frankfurt)` | `Qwen3.7 Max` `Qwen3.7 Plus` `Qwen3.6 Max` `Qwen3.6 Plus` `Qwen3.6 Flash` `Qwen3.5 Plus` `Qwen3.5 Flash` `Qwen3 Max` `Qwen3 Coder Plus` `Qwen3 Coder Flash` `Qwen Plus (US)` `Qwen Flash (US)` |
 | **智谱 (GLM)** | `open.bigmodel.cn` `api.z.ai`（标准版与 Coding Plan） | `GLM-5.1` `GLM-5` `GLM-5-Turbo` `GLM-4.7` `GLM-4.7-FlashX` `GLM-4.6` `GLM-4.5-Air` `GLM-4.5-AirX` `GLM-4-Long` `GLM-4-FlashX-250414` `GLM-4.7-Flash` `GLM-4.5-Flash` `GLM-4-Flash-250414` `GLM-5V-Turbo` `GLM-4.6V` `GLM-OCR` `GLM-4.1V-Thinking-FlashX` `GLM-4.6V-Flash` `GLM-4.1V-Thinking-Flash` `GLM-4V-Flash` |
 | **Moonshot (Kimi)** | `api.moonshot.cn` `api.moonshot.ai` | `Kimi K2.6` `Kimi K2.5` |
+
+> 请至各提供商官网注册并获取 API Key。
 
 ---
 
@@ -62,7 +63,7 @@ API Key 仅存储于 [VS Code Secret Storage](https://code.visualstudio.com/api/
 
 ### 思考模式
 
-推理模型（DeepSeek V4 Pro、MiniMax M 系列）支持配置推理深度，可在 Language Models 面板的模型设置中调整：
+推理模型（DeepSeek V4 系列、MiniMax M 系列、Qwen3、GLM、Kimi K2）支持配置推理深度，可在 Language Models 面板的模型设置中调整：
 
 | 级别 | 说明 |
 |---|---|

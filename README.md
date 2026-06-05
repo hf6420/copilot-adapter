@@ -16,7 +16,6 @@ Extend VS Code's native Copilot Chat with third-party AI models. Switch between 
 - [Features](#features)
   - [Thinking Modes](#thinking-modes)
   - [Vision Proxy](#vision-proxy)
-  - [Per-Provider Settings](#per-provider-settings)
 - [Configuration Reference](#configuration-reference)
 - [Commands](#commands)
 
@@ -31,6 +30,8 @@ Extend VS Code's native Copilot Chat with third-party AI models. Switch between 
 | **Qwen** | `CN` `US` `Singapore` `EU (Frankfurt)` | `Qwen3.7 Max` `Qwen3.7 Plus` `Qwen3.6 Max` `Qwen3.6 Plus` `Qwen3.6 Flash` `Qwen3.5 Plus` `Qwen3.5 Flash` `Qwen3 Max` `Qwen3 Coder Plus` `Qwen3 Coder Flash` `Qwen Plus (US)` `Qwen Flash (US)` |
 | **Zhipu (GLM)** | `open.bigmodel.cn` `api.z.ai` (std & coding) | `GLM-5.1` `GLM-5` `GLM-5-Turbo` `GLM-4.7` `GLM-4.7-FlashX` `GLM-4.6` `GLM-4.5-Air` `GLM-4.5-AirX` `GLM-4-Long` `GLM-4-FlashX-250414` `GLM-4.7-Flash` `GLM-4.5-Flash` `GLM-4-Flash-250414` `GLM-5V-Turbo` `GLM-4.6V` `GLM-OCR` `GLM-4.1V-Thinking-FlashX` `GLM-4.6V-Flash` `GLM-4.1V-Thinking-Flash` `GLM-4V-Flash` |
 | **Moonshot (Kimi)** | `api.moonshot.cn` `api.moonshot.ai` | `Kimi K2.6` `Kimi K2.5` |
+
+> See each provider's website for API key registration and billing details.
 
 ---
 
@@ -62,7 +63,7 @@ API keys are stored exclusively in [VS Code's Secret Storage](https://code.visua
 
 ### Thinking Modes
 
-Reasoning models (DeepSeek V4 Pro, MiniMax M-series) expose a configurable effort level, accessible in the model's settings inside the Language Models panel:
+Reasoning models (DeepSeek V4 series, MiniMax M-series, Qwen3, GLM, Kimi K2) expose a configurable thinking level accessible in the model's settings inside the Language Models panel:
 
 | Level | Description |
 |---|---|
