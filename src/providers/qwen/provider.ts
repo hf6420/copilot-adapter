@@ -1,0 +1,18 @@
+import { DEFAULT_ENDPOINTS } from '../endpoints';
+import type { Provider } from '../types';
+
+export const QWEN: Provider = {
+  id: 'qwen',
+  label: 'Qwen',
+  detailKey: 'provider.qwen.detail',
+  endpoint: DEFAULT_ENDPOINTS.qwen,
+  tokenRatio: 4.0,
+  thinkingField: 'reasoning_content',
+  apiKeyHint: 'sk-...',
+  links: {
+    apiHost: 'dashscope.aliyuncs.com',
+    apiKeys: 'https://bailian.console.aliyun.com/?apiKey=1',
+    usage: 'https://bailian.console.aliyun.com/#/expense',
+    status: 'https://status.aliyun.com',
+  },
+};

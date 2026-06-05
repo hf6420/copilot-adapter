@@ -1,7 +1,7 @@
-import { t } from '../nls';
-import { DEFAULT_ENDPOINTS } from './endpoints';
-import type { Model, Provider, ReasoningAbility, Service } from './types';
-import { imagePart, composeService } from './utils';
+import { t } from '../../nls';
+import type { Model, ReasoningAbility } from '../types';
+import { imagePart } from '../utils';
+import { MOONSHOT } from './provider';
 
 function msRequestExtras(
   modelConfig: Record<string, unknown> | undefined,
@@ -51,33 +51,13 @@ function msK26ConfigSchema(): Record<string, unknown> {
         title: t('think.label'),
         enum: ['enabled', 'enabled_keep', 'disabled'],
         enumItemLabels: [t('think.enabled'), t('think.enabledKeep'), t('think.disabled')],
-        enumDescriptions: [
-          t('think.enabled.hint'),
-          t('think.enabledKeep.hint'),
-          t('think.disabled.hint'),
-        ],
+        enumDescriptions: [t('think.enabled.hint'), t('think.enabledKeep.hint'), t('think.disabled.hint')],
         default: 'enabled',
         group: 'navigation',
       },
     },
   } as const;
 }
-
-export const MOONSHOT: Provider = {
-  id: 'moonshot',
-  label: 'Moonshot',
-  detailKey: 'provider.moonshot.detail',
-  endpoint: DEFAULT_ENDPOINTS.moonshot,
-  tokenRatio: 4.0,
-  thinkingField: 'reasoning_content',
-  apiKeyHint: 'sk-...',
-  links: {
-    apiHost: 'api.moonshot.cn',
-    apiKeys: 'https://platform.kimi.com/console/api-keys',
-    usage: 'https://platform.kimi.com/console/billing',
-    status: 'https://platform.kimi.com',
-  },
-};
 
 const MS_ABILITY: ReasoningAbility = {
   maxTools: 128,
@@ -118,9 +98,4 @@ export const MS_MODELS: readonly Model[] = [
     maxOutputTokens: 128_000,
     detailKey: 'model.kimi-k2.5.detail',
   },
-];
-
-export const MOONSHOT_SERVICE_DEFS: readonly Service[] = [
-  composeService({ key: 'moonshot.cn', label: 'api.moonshot.cn', endpoint: 'https://api.moonshot.cn/v1' }, MS_MODELS),
-  composeService({ key: 'moonshot.ai', label: 'api.moonshot.ai', endpoint: 'https://api.moonshot.ai/v1' }, MS_MODELS),
 ];

@@ -1,6 +1,6 @@
-import { t } from '../nls';
-import { DEFAULT_ENDPOINTS } from './endpoints';
-import type { Model, Provider, ReasoningAbility, Service } from './types';
+import { t } from '../../nls';
+import type { Model, ReasoningAbility } from '../types'
+import { DEEPSEEK } from './provider';
 
 type ThinkingEffort = 'none' | 'high' | 'max';
 
@@ -41,22 +41,6 @@ function dsConfigSchema(): Record<string, unknown> {
   } as const;
 }
 
-export const DEEPSEEK: Provider = {
-  id: 'deepseek',
-  label: 'DeepSeek',
-  detailKey: 'provider.deepseek.detail',
-  endpoint: DEFAULT_ENDPOINTS.deepseek,
-  tokenRatio: 4.0,
-  thinkingField: 'reasoning_content',
-  apiKeyHint: 'sk-...',
-  links: {
-    apiHost: 'api.deepseek.com',
-    apiKeys: 'https://platform.deepseek.com/api_keys',
-    usage: 'https://platform.deepseek.com/usage',
-    status: 'https://status.deepseek.com',
-  },
-};
-
 const DS_ABILITY: ReasoningAbility = {
   maxTools: 128,
   acceptsImages: false,
@@ -92,12 +76,4 @@ export const DS_MODELS: readonly Model[] = [
     requestExtras: dsRequestExtras,
     configSchema: dsConfigSchema,
   },
-];
-
-import { composeService } from './utils';
-
-// ... (model arrays remain above)
-
-export const DEEPSEEK_SERVICE_DEFS: readonly Service[] = [
-  composeService({ key: 'deepseek', label: 'DeepSeek', endpoint: 'https://api.deepseek.com' }, DS_MODELS),
 ];
