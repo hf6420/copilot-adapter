@@ -40,14 +40,14 @@ export interface Provider extends ApiTraits {
   readonly supportsStreamUsage?: boolean;
   readonly links?: ProviderLinks;
   readonly apiKeyHint?: string;
-  
+
   services?: Service[];
 }
 
 export interface Service extends ApiTraits {
   readonly key: string;
   readonly label: string;
-  readonly matchUrl?: string;
+  readonly matchStr?: string;
 
   provider?: Provider;
   models?: readonly Model[];

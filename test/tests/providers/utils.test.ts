@@ -43,7 +43,6 @@ interface EndpointCase {
 }
 
 const cases: EndpointCase[] = [
-  // No overrides → first service endpoint (which mirrors DEFAULT_ENDPOINTS)
   {
     label: 'MiniMax: no overrides returns first service endpoint',
     provider: MINIMAX,
@@ -70,7 +69,6 @@ const cases: EndpointCase[] = [
     expected: DEFAULT_ENDPOINTS.deepseek,
   },
 
-  // apiEndpoint matches a Service.key → that service's endpoint
   {
     label: 'MiniMax: apiEndpoint minimaxi.com resolves via service key',
     provider: MINIMAX,
@@ -120,9 +118,9 @@ const cases: EndpointCase[] = [
     expected: 'https://api.moonshot.ai/v1',
   },
 
-  // Qwen text-input mode: URL containing `dashscope-us` should match the US service via matchUrl
+  // Qwen text-input mode: URL containing `dashscope-us` should match the US service via `match`
   {
-    label: 'Qwen: full US URL matches US service via matchUrl',
+    label: 'Qwen: full US URL matches US service via matchStr',
     provider: QWEN,
     apiEndpoint: 'https://dashscope-us.aliyuncs.com/compatible-mode/v1',
     expected: 'https://dashscope-us.aliyuncs.com/compatible-mode/v1',
@@ -190,9 +188,24 @@ suite('resolveService', () => {
     assert.equal(svc?.endpoint, 'https://api.z.ai/api/coding/paas/v4');
   });
 
-  test('returns Service by matchUrl substring (Qwen US)', () => {
+  test('returns Qwen US service by match', () => {
     const svc = resolveService(QWEN, 'https://dashscope-us.aliyuncs.com/compatible-mode/v1');
     assert.equal(svc?.key, 'us');
+  });
+
+  test('returns Qwen SGP service by match', () => {
+    const svc = resolveService(QWEN, 'https://abc.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1');
+    assert.equal(svc?.key, 'sgp');
+  });
+
+  test('returns Qwen EU service by match', () => {
+    const svc = resolveService(QWEN, 'https://xyz.eu-central-1.maas.aliyuncs.com/compatible-mode/v1');
+    assert.equal(svc?.key, 'eu');
+  });
+
+  test('returns Qwen CN service by match', () => {
+    const svc = resolveService(QWEN, 'https://dashscope.aliyuncs.com/compatible-mode/v1');
+    assert.equal(svc?.key, 'cn');
   });
 
   test('returns undefined when no service matches', () => {
@@ -240,7 +253,7 @@ suite('Service.models — visibility', () => {
   });
 
   test('Qwen CN service does NOT include US-only models', () => {
-    const cn = QWEN.services?.find((s) => s.key === '');
+    const cn = QWEN.services?.find((s) => s.key === 'cn');
     const cnIds = cn?.models!.map((m) => m.id) ?? [];
     assert.ok(!cnIds.includes('qwen-plus-us'), 'CN service should not contain qwen-plus-us');
     assert.ok(!cnIds.includes('qwen-flash-us'), 'CN service should not contain qwen-flash-us');

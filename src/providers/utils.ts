@@ -9,9 +9,15 @@ export function getEndpoint(provider: Provider, apiEndpoint?: string): string {
   const globalOverride = Settings.providerEndpoint(provider.id);
   if (globalOverride) return globalOverride;
 
-  if (apiEndpoint && provider.services) {
-    const svc = resolveService(provider, apiEndpoint);
-    if (svc) return svc.endpoint!;
+  if (apiEndpoint) {
+    // Text-input mode (Qwen): user typed a full URL then use it directly
+    if (apiEndpoint.includes('://')) return apiEndpoint;
+
+    // Dropdown mode: match by service key
+    if (provider.services) {
+      const svc = provider.services.find((s) => s.key === apiEndpoint);
+      if (svc) return svc.endpoint!;
+    }
   }
 
   return provider.services?.[0]?.endpoint ?? provider.endpoint;
@@ -23,7 +29,7 @@ export function resolveService(provider: Provider, apiEndpoint: string): Service
   const exact = provider.services.find((s) => s.key === apiEndpoint);
   if (exact) return exact;
 
-  return provider.services.find((s) => s.matchUrl && apiEndpoint.includes(s.matchUrl));
+  return provider.services.find((s) => s.matchStr && apiEndpoint.includes(s.matchStr));
 }
 
 export function composeProvider(provider: Provider, services: readonly Service[]): void {
