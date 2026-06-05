@@ -1,6 +1,6 @@
 import { t } from '../nls';
 import { DEFAULT_ENDPOINTS } from './endpoints';
-import type { Model, Provider, ReasoningAbility } from './types';
+import type { Model, Provider, ReasoningAbility, Service } from './types';
 
 type ThinkingEffort = 'none' | 'high' | 'max';
 
@@ -92,4 +92,12 @@ export const DS_MODELS: readonly Model[] = [
     requestExtras: dsRequestExtras,
     configSchema: dsConfigSchema,
   },
+];
+
+import { composeService } from './utils';
+
+// ... (model arrays remain above)
+
+export const DEEPSEEK_SERVICE_DEFS: readonly Service[] = [
+  composeService({ key: 'deepseek', label: 'DeepSeek', endpoint: 'https://api.deepseek.com' }, DS_MODELS),
 ];

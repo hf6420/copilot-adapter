@@ -3,7 +3,11 @@ import { EXT_ID } from '../defines';
 import { channel } from '../logger';
 import { t } from '../nls';
 import { ALL_MODELS, ALL_PROVIDERS, modelById } from '../providers';
-import { resolveTrait, getEndpoint } from '../providers/utils';
+import {
+  resolveTrait,
+  getEndpoint,
+  resolveService,
+} from '../providers/utils';
 import { Settings } from '../settings';
 import { buildChatInfo, type ChatInfo, type ReqOptions } from './information';
 import { Session } from './session';
@@ -105,7 +109,13 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     this.groupApiEndpoint = apiEndpoint.length > 0 ? apiEndpoint : undefined;
     const hasKey = this.groupApiKey !== undefined;
 
-    return providerModels.map(
+    const modelProvider = providerModels[0]?.provider;
+    const activeService = this.groupApiEndpoint
+      ? resolveService(modelProvider, this.groupApiEndpoint)
+      : undefined;
+    const visibleModels = activeService?.models!.filter((m) => m.provider.id === this.filteredProviderId) ?? providerModels;
+
+    return visibleModels.map(
       (model) => buildChatInfo(model, hasKey, this.visionProxyAvailable) as ChatInfo,
     );
   }

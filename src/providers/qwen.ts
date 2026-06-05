@@ -1,6 +1,6 @@
 import { t } from '../nls';
 import { DEFAULT_ENDPOINTS } from './endpoints';
-import type { Model, Provider, ReasoningAbility } from './types';
+import type { Model, Provider, ReasoningAbility, Service } from './types';
 
 function qwenRequestExtras(
   modelConfig: Record<string, unknown> | undefined,
@@ -59,7 +59,7 @@ const QWEN_BASE = {
   configSchema: qwenConfigSchema,
 };
 
-export const QWEN_MODELS: readonly Model[] = [
+export const QWEN_BASE_MODELS: readonly Model[] = [
   {
     ...QWEN_BASE,
     id: 'qwen3.7-max',
@@ -160,6 +160,9 @@ export const QWEN_MODELS: readonly Model[] = [
     maxOutputTokens: 65_536,
     detailKey: 'model.qwen3-coder-flash.detail',
   },
+];
+
+export const QWEN_US_MODELS: readonly Model[] = [
   {
     ...QWEN_BASE,
     id: 'qwen-plus-us',
@@ -180,4 +183,13 @@ export const QWEN_MODELS: readonly Model[] = [
     maxOutputTokens: 65_536,
     detailKey: 'model.qwen-flash-us.detail',
   },
+];
+
+import { composeService } from './utils';
+
+// ... (model arrays remain above)
+
+export const QWEN_SERVICE_DEFS: readonly Service[] = [
+  composeService({ key: '',  label: 'CN Beijing (Default)', endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1' }, QWEN_BASE_MODELS),
+  composeService({ key: 'us', label: 'US', endpoint: 'https://dashscope-us.aliyuncs.com/compatible-mode/v1', matchUrl: 'dashscope-us' }, [...QWEN_BASE_MODELS, ...QWEN_US_MODELS]),
 ];

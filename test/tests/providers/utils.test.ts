@@ -1,15 +1,15 @@
 import assert from 'node:assert/strict';
 import { suite, test, afterEach } from 'mocha';
 import * as vscode from 'vscode';
-import { getEndpoint, resolveTrait } from '../../../src/providers/utils';
-import { API_ENDPOINT_URLS, DEFAULT_ENDPOINTS } from '../../../src/providers/endpoints';
+import { composeProvider, composeService, getEndpoint, resolveService, resolveTrait } from '../../../src/providers/utils';
+import { DEFAULT_ENDPOINTS } from '../../../src/providers/endpoints';
 import { MINIMAX } from '../../../src/providers/minimax';
 import { BIGMODEL } from '../../../src/providers/bigmodel';
 import { MOONSHOT } from '../../../src/providers/moonshot';
 import { QWEN } from '../../../src/providers/qwen';
 import { DEEPSEEK } from '../../../src/providers/deepseek';
 import { stub } from '../../helpers/stubs';
-import type { Provider } from '../../../src/providers/types';
+import type { Model, Provider } from '../../../src/providers/types';
 
 function stubProviderEndpoint(value: string | undefined, providerId: string): () => void {
   const mockConfig = {
@@ -34,7 +34,7 @@ function stubNoGlobalOverride(): () => void {
   return stubProviderEndpoint('', 'any');
 }
 
-interface TestCase {
+interface EndpointCase {
   label: string;
   provider: Provider;
   apiEndpoint?: string;
@@ -42,98 +42,107 @@ interface TestCase {
   expected: string;
 }
 
-const cases: TestCase[] = [
+const cases: EndpointCase[] = [
+  // No overrides → first service endpoint (which mirrors DEFAULT_ENDPOINTS)
   {
-    label: 'MiniMax: no overrides returns default endpoint',
+    label: 'MiniMax: no overrides returns first service endpoint',
     provider: MINIMAX,
     expected: DEFAULT_ENDPOINTS.minimax,
   },
   {
-    label: 'BigModel: no overrides returns default endpoint',
+    label: 'BigModel: no overrides returns first service endpoint',
     provider: BIGMODEL,
     expected: DEFAULT_ENDPOINTS.bigmodel,
   },
   {
-    label: 'Moonshot: no overrides returns default endpoint',
+    label: 'Moonshot: no overrides returns first service endpoint',
     provider: MOONSHOT,
     expected: DEFAULT_ENDPOINTS.moonshot,
   },
   {
-    label: 'Qwen: no overrides returns default endpoint',
+    label: 'Qwen: no overrides returns first service endpoint',
     provider: QWEN,
     expected: DEFAULT_ENDPOINTS.qwen,
   },
   {
-    label: 'DeepSeek: no overrides returns default endpoint',
+    label: 'DeepSeek: no overrides returns first service endpoint',
     provider: DEEPSEEK,
     expected: DEFAULT_ENDPOINTS.deepseek,
   },
+
+  // apiEndpoint matches a Service.key → that service's endpoint
   {
-    label: 'MiniMax: apiEndpoint minimaxi.com resolves to mapped URL',
+    label: 'MiniMax: apiEndpoint minimaxi.com resolves via service key',
     provider: MINIMAX,
     apiEndpoint: 'minimaxi.com',
-    expected: API_ENDPOINT_URLS.minimax['minimaxi.com'],
+    expected: 'https://api.minimaxi.com/v1',
   },
   {
-    label: 'MiniMax: apiEndpoint minimax.io resolves to mapped URL',
+    label: 'MiniMax: apiEndpoint minimax.io resolves via service key',
     provider: MINIMAX,
     apiEndpoint: 'minimax.io',
-    expected: API_ENDPOINT_URLS.minimax['minimax.io'],
+    expected: 'https://api.minimax.io/v1',
   },
   {
-    label: 'BigModel: apiEndpoint bigmodel resolves to mapped URL',
+    label: 'BigModel: apiEndpoint bigmodel resolves via service key',
     provider: BIGMODEL,
     apiEndpoint: 'bigmodel',
-    expected: API_ENDPOINT_URLS.bigmodel.bigmodel,
+    expected: 'https://open.bigmodel.cn/api/paas/v4',
   },
   {
-    label: 'BigModel: apiEndpoint bigmodel-coding resolves to mapped URL',
+    label: 'BigModel: apiEndpoint bigmodel-coding resolves via service key',
     provider: BIGMODEL,
     apiEndpoint: 'bigmodel-coding',
-    expected: API_ENDPOINT_URLS.bigmodel['bigmodel-coding'],
+    expected: 'https://open.bigmodel.cn/api/coding/paas/v4',
   },
   {
-    label: 'BigModel: apiEndpoint z.ai resolves to mapped URL',
+    label: 'BigModel: apiEndpoint z.ai resolves via service key',
     provider: BIGMODEL,
     apiEndpoint: 'z.ai',
-    expected: API_ENDPOINT_URLS.bigmodel['z.ai'],
+    expected: 'https://api.z.ai/api/paas/v4',
   },
   {
-    label: 'BigModel: apiEndpoint z.ai-coding resolves to mapped URL',
+    label: 'BigModel: apiEndpoint z.ai-coding resolves via service key',
     provider: BIGMODEL,
     apiEndpoint: 'z.ai-coding',
-    expected: API_ENDPOINT_URLS.bigmodel['z.ai-coding'],
+    expected: 'https://api.z.ai/api/coding/paas/v4',
   },
   {
-    label: 'Moonshot: apiEndpoint moonshot.cn resolves to mapped URL',
+    label: 'Moonshot: apiEndpoint moonshot.cn resolves via service key',
     provider: MOONSHOT,
     apiEndpoint: 'moonshot.cn',
-    expected: API_ENDPOINT_URLS.moonshot['moonshot.cn'],
+    expected: 'https://api.moonshot.cn/v1',
   },
   {
-    label: 'Moonshot: apiEndpoint moonshot.ai resolves to mapped URL',
+    label: 'Moonshot: apiEndpoint moonshot.ai resolves via service key',
     provider: MOONSHOT,
     apiEndpoint: 'moonshot.ai',
-    expected: API_ENDPOINT_URLS.moonshot['moonshot.ai'],
+    expected: 'https://api.moonshot.ai/v1',
   },
+
+  // Qwen text-input mode: URL containing `dashscope-us` should match the US service via matchUrl
   {
-    label: 'Qwen: apiEndpoint URL is used directly',
+    label: 'Qwen: full US URL matches US service via matchUrl',
     provider: QWEN,
     apiEndpoint: 'https://dashscope-us.aliyuncs.com/compatible-mode/v1',
     expected: 'https://dashscope-us.aliyuncs.com/compatible-mode/v1',
   },
+
+  // Unknown / empty apiEndpoint falls back to first service endpoint
   {
-    label: 'MiniMax: unknown apiEndpoint key falls back to default',
+    label: 'MiniMax: unknown apiEndpoint falls back to first service endpoint',
     provider: MINIMAX,
     apiEndpoint: 'unknown-entry',
     expected: DEFAULT_ENDPOINTS.minimax,
   },
   {
-    label: 'MiniMax: empty apiEndpoint falls back to default',
+    label: 'MiniMax: empty apiEndpoint falls back to first service endpoint',
     provider: MINIMAX,
     apiEndpoint: '',
     expected: DEFAULT_ENDPOINTS.minimax,
   },
+
+  // Global providerEndpoints override beats everything
   {
     label: 'MiniMax: global override wins over apiEndpoint',
     provider: MINIMAX,
@@ -174,34 +183,144 @@ suite('getEndpoint — priority resolution', () => {
   }
 });
 
-suite('API_ENDPOINT_URLS — mapping integrity', () => {
-  test('MiniMax has 2 entries', () => {
-    assert.equal(Object.keys(API_ENDPOINT_URLS.minimax).length, 2);
+suite('resolveService', () => {
+  test('returns Service by exact key match (BigModel)', () => {
+    const svc = resolveService(BIGMODEL, 'z.ai-coding');
+    assert.equal(svc?.key, 'z.ai-coding');
+    assert.equal(svc?.endpoint, 'https://api.z.ai/api/coding/paas/v4');
   });
 
-  test('BigModel has 4 entries', () => {
-    assert.equal(Object.keys(API_ENDPOINT_URLS.bigmodel).length, 4);
+  test('returns Service by matchUrl substring (Qwen US)', () => {
+    const svc = resolveService(QWEN, 'https://dashscope-us.aliyuncs.com/compatible-mode/v1');
+    assert.equal(svc?.key, 'us');
   });
 
-  test('Moonshot has 2 entries', () => {
-    assert.equal(Object.keys(API_ENDPOINT_URLS.moonshot).length, 2);
+  test('returns undefined when no service matches', () => {
+    const svc = resolveService(MINIMAX, 'totally-unknown');
+    assert.equal(svc, undefined);
   });
 
-  test('DeepSeek has no mapping', () => {
-    assert.equal(API_ENDPOINT_URLS.deepseek, undefined);
-  });
-
-  test('Qwen has no mapping', () => {
-    assert.equal(API_ENDPOINT_URLS.qwen, undefined);
+  test('returns undefined when provider has no services', () => {
+    const fake = { id: 'x', services: undefined } as unknown as Provider;
+    assert.equal(resolveService(fake, 'whatever'), undefined);
   });
 });
 
-suite('resolveTrait', () => {
-  test('returns model value when defined', () => {
-    const result = resolveTrait(
-      { tokenRatio: 2.0 } as unknown as Parameters<typeof resolveTrait>[0],
-      'tokenRatio',
+suite('composeProvider / composeService', () => {
+  test('composeService returns Service with model back-refs', () => {
+    const m1 = { id: 'm1' } as unknown as Model;
+    const m2 = { id: 'm2' } as unknown as Model;
+    const svc = composeService(
+      { key: 'a', label: 'A', endpoint: 'https://a.example.com' },
+      [m1, m2],
     );
-    assert.equal(result, 2.0);
+    assert.equal(svc.models!.length, 2);
+    assert.equal(m1.service?.key, 'a');
+    assert.equal(m2.service?.key, 'a');
+  });
+
+  test('composeProvider wires services with provider back-refs', () => {
+    const provider = { id: 'fake' } as unknown as Provider;
+    const m = { id: 'm1' } as unknown as Model;
+    const svc = composeService({ key: 'a', label: 'A', endpoint: 'https://a.example.com' }, [m]);
+
+    composeProvider(provider, [svc]);
+
+    assert.equal(provider.services?.length, 1);
+    assert.equal(provider.services?.[0].provider, provider);
+  });
+});
+
+suite('Service.models — visibility', () => {
+  test('Qwen US service includes US-only models', () => {
+    const us = QWEN.services?.find((s) => s.key === 'us');
+    const usIds = us?.models!.map((m) => m.id) ?? [];
+    assert.ok(usIds.includes('qwen-plus-us'), 'US service should contain qwen-plus-us');
+    assert.ok(usIds.includes('qwen-flash-us'), 'US service should contain qwen-flash-us');
+  });
+
+  test('Qwen CN service does NOT include US-only models', () => {
+    const cn = QWEN.services?.find((s) => s.key === '');
+    const cnIds = cn?.models!.map((m) => m.id) ?? [];
+    assert.ok(!cnIds.includes('qwen-plus-us'), 'CN service should not contain qwen-plus-us');
+    assert.ok(!cnIds.includes('qwen-flash-us'), 'CN service should not contain qwen-flash-us');
+    assert.ok(cnIds.length > 0, 'CN service should have base models');
+  });
+
+  test('Qwen US service includes base models', () => {
+    const us = QWEN.services?.find((s) => s.key === 'us');
+    const usIds = us?.models!.map((m) => m.id) ?? [];
+    assert.ok(usIds.includes('qwen3.7-max'), 'US service should contain shared base model');
+  });
+});
+
+suite('resolveTrait — model > service > provider chain', () => {
+  test('returns model value when defined on model', () => {
+    const provider = { tokenRatio: 1.0 } as unknown as Provider;
+    const service = { tokenRatio: 2.0 } as unknown as Model['service'];
+    const model = { tokenRatio: 3.0, provider, service } as unknown as Model;
+    assert.equal(resolveTrait(model, 'tokenRatio'), 3.0);
+  });
+
+  test('falls back to service when model lacks the trait', () => {
+    const provider = { tokenRatio: 1.0 } as unknown as Provider;
+    const service = { tokenRatio: 2.0 } as unknown as Model['service'];
+    const model = { provider, service } as unknown as Model;
+    assert.equal(resolveTrait(model, 'tokenRatio'), 2.0);
+  });
+
+  test('falls back to provider when neither model nor service defines the trait', () => {
+    const provider = { tokenRatio: 1.0 } as unknown as Provider;
+    const service = {} as unknown as Model['service'];
+    const model = { provider, service } as unknown as Model;
+    assert.equal(resolveTrait(model, 'tokenRatio'), 1.0);
+  });
+
+  test('returns undefined when no level defines the trait', () => {
+    const provider = {} as unknown as Provider;
+    const service = {} as unknown as Model['service'];
+    const model = { provider, service } as unknown as Model;
+    assert.equal(resolveTrait(model, 'tokenRatio'), undefined);
+  });
+});
+
+suite('Provider/Service composition — invariants', () => {
+  test('every model has a service back-reference', () => {
+    for (const p of [MINIMAX, MOONSHOT, BIGMODEL, QWEN, DEEPSEEK]) {
+      for (const svc of p.services ?? []) {
+        for (const m of svc.models!) {
+          assert.ok(m.service, `${m.id} must have a service back-reference`);
+        }
+      }
+    }
+  });
+
+  test('MiniMax services share identical models', () => {
+    const ids0 = MINIMAX.services?.[0].models!.map((m) => m.id);
+    const ids1 = MINIMAX.services?.[1].models!.map((m) => m.id);
+    assert.deepEqual(ids0, ids1);
+  });
+
+  test('every service has provider back-reference', () => {
+    for (const p of [MINIMAX, MOONSHOT, BIGMODEL, QWEN, DEEPSEEK]) {
+      for (const svc of p.services ?? []) {
+        assert.equal(svc.provider, p, `service ${svc.key}.provider must point at owner`);
+      }
+    }
+  });
+
+  test('every model has provider set by composeProvider', () => {
+    for (const p of [MINIMAX, MOONSHOT, BIGMODEL, QWEN, DEEPSEEK]) {
+      for (const svc of p.services ?? []) {
+        for (const m of svc.models!) {
+          assert.equal(m.provider, p, `${m.id}.provider must equal its owning provider`);
+        }
+      }
+    }
+  });
+
+  test('DeepSeek has a single service even though it has no variants', () => {
+    assert.equal(DEEPSEEK.services?.length, 1);
+    assert.equal(DEEPSEEK.services?.[0].key, 'deepseek');
   });
 });

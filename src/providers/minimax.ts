@@ -1,8 +1,8 @@
 import { t } from '../nls';
 import { DEFAULT_ENDPOINTS } from './endpoints';
-import type { ContentParser, Model, Provider, ReasoningAbility } from './types';
+import type { ContentParser, Model, Provider, ReasoningAbility, Service } from './types';
 import { ThinkTagParser } from './parsers/tag';
-import { imagePart } from './utils';
+import { imagePart, composeService } from './utils';
 
 function mmCreateContentParser(): ContentParser {
   return new ThinkTagParser('think');
@@ -148,4 +148,9 @@ export const MM_MODELS: readonly Model[] = [
     createContentParser: mmCreateContentParser,
     formatImagePart: imagePart(),
   },
+];
+
+export const MINIMAX_SERVICE_DEFS: readonly Service[] = [
+  composeService({ key: 'minimaxi.com', label: 'api.minimaxi.com', endpoint: 'https://api.minimaxi.com/v1' }, MM_MODELS),
+  composeService({ key: 'minimax.io',   label: 'api.minimax.io',   endpoint: 'https://api.minimax.io/v1' },   MM_MODELS),
 ];

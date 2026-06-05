@@ -1,7 +1,7 @@
 import { t } from '../nls';
 import { DEFAULT_ENDPOINTS } from './endpoints';
-import type { Model, NonReasoningAbility, Provider, ReasoningAbility } from './types';
-import { imagePart } from './utils';
+import type { Model, NonReasoningAbility, Provider, ReasoningAbility, Service } from './types';
+import { imagePart, composeService } from './utils';
 
 function bmRequestExtras(
   modelConfig: Record<string, unknown> | undefined,
@@ -300,4 +300,11 @@ export const BM_MODELS: readonly Model[] = [
     maxOutputTokens: 1_024,
     detailKey: 'model.glm-4v-flash.detail',
   },
+];
+
+export const BIGMODEL_SERVICE_DEFS: readonly Service[] = [
+  composeService({ key: 'bigmodel',        label: 'open.bigmodel.cn (standard)',    endpoint: 'https://open.bigmodel.cn/api/paas/v4'      }, BM_MODELS),
+  composeService({ key: 'bigmodel-coding', label: 'open.bigmodel.cn (coding plan)', endpoint: 'https://open.bigmodel.cn/api/coding/paas/v4' }, BM_MODELS),
+  composeService({ key: 'z.ai',            label: 'api.z.ai (standard)',            endpoint: 'https://api.z.ai/api/paas/v4'                }, BM_MODELS),
+  composeService({ key: 'z.ai-coding',     label: 'api.z.ai (coding plan)',         endpoint: 'https://api.z.ai/api/coding/paas/v4'         }, BM_MODELS),
 ];
