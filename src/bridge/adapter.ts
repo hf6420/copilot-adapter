@@ -129,9 +129,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       secrets.apiEndpoint = apiEndpoint.length > 0 ? apiEndpoint : undefined;
     }
 
-    const activeEndpoint = apiEndpoint
-      ? resolveEndpoint(modelProvider, apiEndpoint)
-      : undefined;
+    const activeEndpoint = apiEndpoint ? resolveEndpoint(modelProvider, apiEndpoint) : undefined;
     const visibleModels =
       activeEndpoint?.models!.filter((m) => m.provider.id === this.filteredProviderId) ??
       providerModels;
@@ -139,13 +137,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     const idPrefix = secrets.prefix;
 
     const result = visibleModels.map(
-      (model) =>
-        buildChatInfo(
-          model,
-          hasKey,
-          this.visionProxyAvailable,
-          idPrefix,
-        ) as ChatInfo,
+      (model) => buildChatInfo(model, hasKey, this.visionProxyAvailable, idPrefix) as ChatInfo,
     );
     channel.debug(
       `provideLanguageModelChatInformation: apiKey=${apiKey.slice(0, 6)}... prefix="${idPrefix}" models=[${result.map((m) => m.id).join(', ')}]`,
@@ -180,7 +172,9 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     );
     if (Settings.metaEnabled()) {
       channel.info(`Model: id=${model.id} | apiId=${model.apiId}`);
-      channel.info(`Endpoint: ${getEndpoint(modelProvider, secrets.apiEndpoint)} | Key: ${resolvedKey.slice(0, 6)}...`);
+      channel.info(
+        `Endpoint: ${getEndpoint(modelProvider, secrets.apiEndpoint)} | Key: ${resolvedKey.slice(0, 6)}...`,
+      );
     }
 
     const apiUrl = getEndpoint(modelProvider, secrets.apiEndpoint);
