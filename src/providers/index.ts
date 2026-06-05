@@ -15,13 +15,7 @@ composeModelProvider(MOONSHOT, MOONSHOT_ENDPOINTS);
 composeModelProvider(QWEN, QWEN_ENDPOINTS);
 composeModelProvider(ZHIPU, ZHIPU_ENDPOINTS);
 
-export const ALL_PROVIDERS: readonly ModelProvider[] = [
-  DEEPSEEK,
-  MINIMAX,
-  MOONSHOT,
-  QWEN,
-  ZHIPU,
-];
+export const ALL_PROVIDERS: readonly ModelProvider[] = [DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU];
 
 export const ALL_MODELS: readonly ModelItem[] = (() => {
   const seen = new Set<string>();
