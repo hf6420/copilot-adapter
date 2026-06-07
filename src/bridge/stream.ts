@@ -55,14 +55,13 @@ export async function forwardStream(
 
         for await (const event of gen) {
           if (token.isCancellationRequested) break;
-
           switch (event.kind) {
             case 'content':
               if (event.text) {
                 yieldedContent = true;
                 progress.report(new vscode.LanguageModelTextPart(event.text));
               }
-              
+
               break;
 
             case 'thinking':

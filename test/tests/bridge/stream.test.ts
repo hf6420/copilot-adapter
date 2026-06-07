@@ -72,6 +72,21 @@ suite('bridge/stream usage', () => {
     test('returns 0 for non-number value', () => {
       assert.equal(readPath({ prompt_tokens: 'abc' }, 'prompt_tokens'), 0);
     });
+
+    test('returns 0 when obj is null or undefined', () => {
+      assert.equal(readPath(null, 'prompt_tokens'), 0);
+      assert.equal(readPath(undefined, 'prompt_tokens'), 0);
+    });
+
+    test('returns 0 when obj is a primitive', () => {
+      assert.equal(readPath(123, 'prompt_tokens'), 0);
+      assert.equal(readPath('string', 'prompt_tokens'), 0);
+    });
+
+    test('returns 0 when intermediate path is not an object', () => {
+      assert.equal(readPath({ a: 1 }, 'a.b.c'), 0);
+      assert.equal(readPath({ a: 'str' }, 'a.b'), 0);
+    });
   });
 
   suite('applyUsageSchema', () => {
@@ -156,6 +171,64 @@ suite('bridge/stream usage', () => {
       const result = buildUsage(undefined, raw);
       assert.equal(result.prompt_tokens, 0);
       assert.equal(result.completion_tokens, 0);
+    });
+
+    test('schema has fields but rawUsage is empty', () => {
+      const result = buildUsage(DEEPSEEK_SCHEMA, {});
+      assert.equal(result.prompt_tokens, 0);
+      assert.equal(result.completion_tokens, 0);
+      assert.equal(result.total_tokens, 0);
+      assert.equal(result.prompt_tokens_details?.cached_tokens, 0);
+      assert.equal(result.prompt_tokens_details?.cache_miss, 0);
+      assert.equal(result.completion_tokens_details?.reasoning_tokens, 0);
+    });
+
+    test('nested details missing in rawUsage fall to zero (DeepSeek schema)', () => {
+      const raw = { prompt_tokens: 100, completion_tokens: 50, total_tokens: 150 };
+      const result = buildUsage(DEEPSEEK_SCHEMA, raw);
+      assert.equal(result.prompt_tokens, 100);
+      assert.equal(result.completion_tokens, 50);
+      assert.equal(result.prompt_tokens_details?.cached_tokens, 0);
+      assert.equal(result.prompt_tokens_details?.cache_miss, 0);
+      assert.equal(result.completion_tokens_details?.reasoning_tokens, 0);
+    });
+
+    test('schema and rawUsage keys structurally different', () => {
+      const raw = { input_tokens: 500, output_tokens: 300, cost: 0.01 };
+      const result = buildUsage(DEEPSEEK_SCHEMA, raw);
+      assert.equal(result.prompt_tokens, 0);
+      assert.equal(result.completion_tokens, 0);
+      assert.equal(result.total_tokens, 0);
+      assert.equal(result.prompt_tokens_details?.cached_tokens, 0);
+    });
+
+    test('rawUsage field value is null', () => {
+      const raw = { prompt_tokens: null, completion_tokens: 50, total_tokens: 50 };
+      const result = buildUsage(MOONSHOT_SCHEMA, raw);
+      assert.equal(result.prompt_tokens, 0);
+      assert.equal(result.completion_tokens, 50);
+    });
+
+    test('rawUsage field value is non-number string', () => {
+      const raw = { prompt_tokens: 'not-a-number', completion_tokens: 50, total_tokens: 50 };
+      const result = buildUsage(MOONSHOT_SCHEMA, raw);
+      assert.equal(result.prompt_tokens, 0);
+      assert.equal(result.completion_tokens, 50);
+    });
+
+    test('rawUsage has extra fields schema does not map', () => {
+      // Extra fields should be silently ignored, mapped fields still work
+      const raw = {
+        prompt_tokens: 100,
+        completion_tokens: 50,
+        total_tokens: 150,
+        extra_field: 999,
+        another_extra: { nested: 42 },
+      };
+      const result = buildUsage(MOONSHOT_SCHEMA, raw);
+      assert.equal(result.prompt_tokens, 100);
+      assert.equal(result.completion_tokens, 50);
+      assert.equal(result.prompt_tokens_details, undefined);
     });
   });
 
@@ -257,6 +330,32 @@ suite('bridge/stream usage', () => {
 
       const log = buildUsageLog('test-model', usage);
       assert.match(log, /cache: hit=500 miss=500 rate=50%/);
+    });
+
+    test('all-zero usage (schema mismatch result) — only model name', () => {
+      const usage: UsagePayload = {
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        total_tokens: 0,
+      };
+
+      const log = buildUsageLog('minimax-m2.5', usage);
+      // Should only contain model name, no tokens or cache segments
+      assert.equal(log, 'model: minimax-m2.5');
+    });
+
+    test('only completion_tokens > 0, prompt_tokens = 0', () => {
+      const usage: UsagePayload = {
+        prompt_tokens: 0,
+        completion_tokens: 300,
+        total_tokens: 300,
+      };
+
+      const log = buildUsageLog('test-model', usage);
+      assert.match(log, /model: test-model/);
+      assert.match(log, /tokens: completion=300$/);
+      assert.ok(!log.includes('prompt='));
+      assert.ok(!log.includes('cache:'));
     });
   });
 });
