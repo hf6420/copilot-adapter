@@ -8,6 +8,7 @@ import type { ModelItem } from '../providers/types';
 import type { ReqOptions } from './information';
 import type { ApiReq } from '../client/types';
 import { Settings } from '../settings';
+import { countMessageChars } from './tally';
 
 export interface ReadyReq {
   url: string;
@@ -16,6 +17,7 @@ export interface ReadyReq {
   model: ModelItem;
   gate: GateAction;
   visionText: string;
+  promptChars: number;
 }
 
 export interface PrepContext {
@@ -89,5 +91,6 @@ export async function assembleChatReq(ctx: PrepContext): Promise<ReadyReq> {
     model,
     gate,
     visionText,
+    promptChars: countMessageChars(ctx.messages),
   };
 }

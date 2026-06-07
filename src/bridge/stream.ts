@@ -7,6 +7,7 @@ import { Settings } from '../settings';
 import { resolveTrait } from '../providers/utils';
 import type { UsagePayload } from './types';
 import { applyUsageSchema, buildUsageLog } from './usage';
+import { DEFAULT_CHARS_PER_TOKEN } from './tally';
 import { channel } from '../logger';
 import type { ReadyReq } from './prepare';
 
@@ -22,6 +23,7 @@ export async function forwardStream(
   const modelProvider = model.provider;
 
   let reasoningText = '';
+  let contentText = '';
   let promptTokens = 0;
 
   const abortCtrl = new AbortController();
@@ -58,6 +60,7 @@ export async function forwardStream(
           switch (event.kind) {
             case 'content':
               if (event.text) {
+                contentText += event.text;
                 yieldedContent = true;
                 progress.report(new vscode.LanguageModelTextPart(event.text));
               }
@@ -123,6 +126,43 @@ export async function forwardStream(
   const marker = encodeMarker(payload, segmentId);
   progress.report(new vscode.LanguageModelDataPart(marker.data, marker.mimeType));
 
+  // Fallback usage estimation when the API does not return usage data (e.g. MiniMax).
+  if (promptTokens === 0 && (contentText || reasoningText)) {
+    channel.info(
+      `Using fallback usage estimation (API returned no usage data) — ` +
+      `prompt chars: ${ready.promptChars}, response chars: ${(contentText + reasoningText).length}`,
+    );
+
+    const charsPerToken = resolveTrait(ready.model, 'tokenRatio') ?? DEFAULT_CHARS_PER_TOKEN;
+    const usage: UsagePayload = {
+      prompt_tokens: Math.ceil(ready.promptChars / charsPerToken),
+      completion_tokens: Math.ceil((contentText + reasoningText).length / charsPerToken),
+      total_tokens: 0,
+    };
+    usage.total_tokens = usage.prompt_tokens + usage.completion_tokens;
+
+    try {
+      progress.report(
+        new vscode.LanguageModelDataPart(
+          new TextEncoder().encode(JSON.stringify(usage)),
+          'usage',
+        ),
+      );
+    } catch (err) {
+      channel.error('Failed to report fallback usage:', err);
+    }
+
+    try {
+      channel.info(buildUsageLog(model.apiId, usage, ready.promptChars));
+    } catch (err) {
+      channel.error('Failed to build fallback usage log:', err);
+    }
+
+    // Fallback usage is an estimate, not real API data.
+    // Do NOT set promptTokens — keeping it 0 prevents adapter.ts
+    // from incorrectly calibrating ratio for providers without API usage.
+  }
+
   return { newReasoningText: reasoningText, promptTokens };
 }
 
@@ -155,7 +195,7 @@ function reportUsage(
   }
 
   try {
-    channel.info(buildUsageLog(modelApiId, usage));
+    channel.info(buildUsageLog(modelApiId, usage, ready.promptChars));
   } catch (err) {
     channel.error(`Failed to build usage log:`, err);
   }

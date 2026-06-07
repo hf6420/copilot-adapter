@@ -1,6 +1,11 @@
 import vscode from 'vscode';
 import { Settings } from '../settings';
 
+export const DEFAULT_CHARS_PER_TOKEN = 4.0;
+
+/** Minimum relative change required to update a calibrated ratio (10%). */
+export const CALIBRATION_THRESHOLD = 0.1;
+
 const MARKER_MIME = 'stateful_marker';
 
 /**
@@ -8,7 +13,7 @@ const MARKER_MIME = 'stateful_marker';
  * Returns characters, which the caller divides by charsPerToken.
  * Image and marker parts are NOT handled here — see estimateTokens.
  */
-function estimatePartChars(part: unknown): number {
+export function estimatePartChars(part: unknown): number {
   if (part instanceof vscode.LanguageModelTextPart) {
     return part.value.length;
   }
@@ -74,6 +79,7 @@ function estimatePartChars(part: unknown): number {
   return 0;
 }
 
+
 /**
  * Estimate the token count for a VS Code chat message or plain string.
  * Uses a chars-per-token ratio that is calibrated over time from actual API usage.
@@ -108,7 +114,7 @@ export function estimateTokens(
   return Math.ceil(chars / charsPerToken) + bonusTokens;
 }
 
-/** Update EMA of chars-per-token using actual API usage data. */
+
 export function refineRatio(
   totalRequestChars: number,
   promptTokens: number,
@@ -120,9 +126,65 @@ export function refineRatio(
   return currentRatio * 0.8 + observed * 0.2;
 }
 
+const calibratedRatios = new Map<string, number>();
+
+/**
+ * Returns the calibrated chars-per-token ratio for a provider,
+ * falling back to the static default when no calibration data exists.
+ */
+export function getCalibratedRatio(providerId: string, defaultRatio: number): number {
+  return calibratedRatios.get(providerId) ?? defaultRatio;
+}
+
+/**
+ * Update the calibrated ratio for a provider using actual API usage data.
+ * Uses EMA smoothing (80% old, 20% new) so a single outlier doesn't skew the estimate.
+ */
+export function calibrateRatio(
+  providerId: string,
+  promptChars: number,
+  promptTokens: number,
+  defaultRatio: number,
+): { newRatio: number; changed: boolean } {
+  const current = calibratedRatios.get(providerId) ?? defaultRatio;
+  const next = refineRatio(promptChars, promptTokens, current);
+
+  // Only update if the change exceeds the threshold to avoid noise
+  const relativeChange = Math.abs(next - current) / current;
+  if (relativeChange >= CALIBRATION_THRESHOLD) {
+    calibratedRatios.set(providerId, next);
+
+    return { newRatio: next, changed: true };
+  }
+
+  return { newRatio: next, changed: false };
+}
+
+/**
+ * Calculate the total character count for an array of VS Code chat messages.
+ * Uses the same estimation logic as estimatePartChars.
+ */
+export function countMessageChars(
+  messages: readonly vscode.LanguageModelChatRequestMessage[],
+): number {
+  let chars = 0;
+  for (const msg of messages) {
+    for (const part of msg.content) {
+      if (part instanceof vscode.LanguageModelDataPart) {
+        if (part.mimeType === MARKER_MIME) continue;
+        if (part.mimeType.startsWith('image/')) continue;
+      }
+      chars += estimatePartChars(part);
+    }
+  }
+
+  return chars;
+}
+
 function isThinkingPart(part: unknown): boolean {
   return (
     typeof vscode.LanguageModelThinkingPart === 'function' &&
     part instanceof vscode.LanguageModelThinkingPart
   );
 }
+

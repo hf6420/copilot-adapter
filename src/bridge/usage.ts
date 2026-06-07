@@ -42,7 +42,7 @@ export function applyUsageSchema(
 }
 
 /** Build a concise one-line usage summary for logging. */
-export function buildUsageLog(modelApiId: string, usage: UsagePayload): string {
+export function buildUsageLog(modelApiId: string, usage: UsagePayload, promptChars?: number): string {
   const segments: string[] = [`model: ${modelApiId}`];
 
   const tokenSegments: string[] = [];
@@ -70,6 +70,9 @@ export function buildUsageLog(modelApiId: string, usage: UsagePayload): string {
 
   if (tokenSegments.length > 0) segments.push(`tokens: ${tokenSegments.join(' ')}`);
   if (cacheSegments.length > 0) segments.push(`cache: ${cacheSegments.join(' ')}`);
+  if (promptChars !== undefined && usage.prompt_tokens > 0) {
+    segments.push(`chars/token=${(promptChars / usage.prompt_tokens).toFixed(1)}`);
+  }
 
   return segments.join(', ');
 }
