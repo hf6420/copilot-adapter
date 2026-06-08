@@ -16,6 +16,8 @@ Extend VS Code's native Copilot Chat with third-party AI models. Switch between 
 - [Features](#features)
   - [Thinking Modes](#thinking-modes)
   - [Vision Proxy](#vision-proxy)
+  - [Prefix Cache](#prefix-cache)
+  - [Token Usage Reporting](#token-usage-reporting)
 - [Configuration Reference](#configuration-reference)
 - [Commands](#commands)
 
@@ -23,13 +25,13 @@ Extend VS Code's native Copilot Chat with third-party AI models. Switch between 
 
 ## Models
 
-| Provider | Endpoints | Models |
+| Provider | Endpoint Platform | Models |
 |---|---|---|
-| **DeepSeek** | `api.deepseek.com` | `V4 Flash` `V4 Pro` |
-| **MiniMax** | `api.minimaxi.com` `api.minimax.io` | `M2` `M2.1` `M2.1 Highspeed` `M2.5` `M2.5 Highspeed` `M2.7` `M2.7 Highspeed` `M3` |
-| **Qwen** | `CN` `US` `Singapore` `EU (Frankfurt)` | `Qwen3.7 Max` `Qwen3.7 Plus` `Qwen3.6 Max` `Qwen3.6 Plus` `Qwen3.6 Flash` `Qwen3.5 Plus` `Qwen3.5 Flash` `Qwen3 Max` `Qwen3 Coder Plus` `Qwen3 Coder Flash` `Qwen Plus (US)` `Qwen Flash (US)` |
-| **Zhipu (GLM)** | `open.bigmodel.cn` `api.z.ai` (std & coding) | `GLM-5.1` `GLM-5` `GLM-5-Turbo` `GLM-4.7` `GLM-4.7-FlashX` `GLM-4.6` `GLM-4.5-Air` `GLM-4.5-AirX` `GLM-4-Long` `GLM-4-FlashX-250414` `GLM-4.7-Flash` `GLM-4.5-Flash` `GLM-4-Flash-250414` `GLM-5V-Turbo` `GLM-4.6V` `GLM-OCR` `GLM-4.1V-Thinking-FlashX` `GLM-4.6V-Flash` `GLM-4.1V-Thinking-Flash` `GLM-4V-Flash` |
-| **Moonshot (Kimi)** | `api.moonshot.cn` `api.moonshot.ai` | `Kimi K2.6` `Kimi K2.5` |
+| **DeepSeek** | [`platform.deepseek.com`](https://platform.deepseek.com) | `V4 Flash` `V4 Pro` |
+| **MiniMax** | [`minimaxi.com`](https://www.minimaxi.com/) [`minimax.io`](https://www.minimax.io/) | `M2` `M2.1` `M2.1 Highspeed` `M2.5` `M2.5 Highspeed` `M2.7` `M2.7 Highspeed` `M3` |
+| **Moonshot (Kimi)** | [`platform.moonshot.cn`](https://platform.moonshot.cn/) [`platform.moonshot.ai`](https://platform.moonshot.ai/) | `Kimi K2.6` `Kimi K2.5` |
+| **Qwen** | [`bailian.console.aliyun.com`](https://bailian.console.aliyun.com/) | `Qwen3.7 Max` `Qwen3.7 Plus` `Qwen3.6 Max` `Qwen3.6 Plus` `Qwen3.6 Flash` `Qwen3.5 Plus` `Qwen3.5 Flash` `Qwen3 Max` `Qwen3 Coder Plus` `Qwen3 Coder Flash` `Qwen Plus (US)` `Qwen Flash (US)` |
+| **Zhipu (GLM)** | [`open.bigmodel.cn`](https://open.bigmodel.cn/) [`api.z.ai`](https://api.z.ai/) | `GLM-5.1` `GLM-5` `GLM-5-Turbo` `GLM-4.7` `GLM-4.7-FlashX` `GLM-4.6` `GLM-4.5-Air` `GLM-4.5-AirX` `GLM-4-Long` `GLM-4-FlashX-250414` `GLM-4.7-Flash` `GLM-4.5-Flash` `GLM-4-Flash-250414` `GLM-5V-Turbo` `GLM-4.6V` `GLM-OCR` `GLM-4.1V-Thinking-FlashX` `GLM-4.6V-Flash` `GLM-4.1V-Thinking-Flash` `GLM-4V-Flash` |
 
 > See each provider's website for API key registration and billing details.
 
@@ -80,6 +82,36 @@ Text-only models cannot accept image attachments directly. When a vision proxy i
 Set up via **Copilot Adapter: Set Vision Proxy Model** or the `copilot-adapter.visionProxyModel` setting.  
 Disable at any time by setting the value to `off`.
 
+### Prefix Cache
+
+The extension reorders messages in a conversation so that cacheable content appears first, boosting the cache-hit rate for models with prefix caching or automatic caching (DeepSeek, Qwen, Zhipu).  When debug mode is `info` or above, the output channel logs per-request cache details:
+
+```
+model: deepseek-v4-pro, tokens: prompt=18576 reasoning=40 completion=57, cache: hit=12160 miss=6516 rate=65%
+```
+
+### Token Usage Reporting
+
+The extension reports token usage to VS Code for every request, using one of two strategies:
+
+- **API-reported usage** (DeepSeek, Qwen, Zhipu, Moonshot) — the model returns exact `prompt_tokens` and `completion_tokens` in the streaming response.  This is the primary path and requires no estimation.
+
+- **Fallback estimation** (MiniMax and other providers that don't return streaming usage) — when the API does not include usage data, the extension estimates tokens from the character count of the request and response text.  The log will indicate fallback mode:
+
+  ```
+  Using fallback usage estimation (API returned no usage data) — prompt chars: 15234, response chars: 487
+  ```
+
+#### Dynamic Ratio Calibration
+
+The chars-to-token ratio used by `provideTokenCount` (VS Code's context-window calculation) starts at a default of **4.0** and is automatically calibrated from real API usage data over time.  Each request that returns exact usage updates the ratio using EMA smoothing (80% old, 20% new).  Only changes ≥ 10% are persisted to avoid noise:
+
+```
+Chars-per-token ratio calibrated for deepseek: 4.00 → 3.38 (based on API usage: 63200 chars / 18703 tokens)
+```
+
+Providers without exact usage data (e.g. MiniMax) keep the static default ratio.
+
 ---
 
 ## Configuration Reference
@@ -112,6 +144,7 @@ Disable at any time by setting the value to `off`.
 | *Copilot Adapter: Set Vision Proxy Model* | Choose the model to use as vision proxy |
 | *Copilot Adapter: Open Settings* | Jump to extension settings |
 | *Copilot Adapter: Show Logs* | Open the output channel |
+| *Copilot Adapter: View Request Records* | Open the folder where request dumps are stored |
 
 ---
 

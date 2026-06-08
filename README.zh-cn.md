@@ -16,6 +16,8 @@
 - [功能特性](#功能特性)
   - [思考模式](#思考模式)
   - [视觉代理](#视觉代理)
+  - [前缀缓存](#前缀缓存)
+  - [Token 用量上报](#token-用量上报)
 - [配置参考](#配置参考)
 - [命令](#命令)
 
@@ -23,13 +25,13 @@
 
 ## 模型
 
-| 提供商 | 端点 | 模型 |
+| 提供商 | 端点平台 | 模型 |
 |---|---|---|
-| **DeepSeek** | `api.deepseek.com` | `V4 Flash` `V4 Pro` |
-| **MiniMax** | `api.minimaxi.com` `api.minimax.io` | `M2` `M2.1` `M2.1 Highspeed` `M2.5` `M2.5 Highspeed` `M2.7` `M2.7 Highspeed` `M3` |
-| **Qwen** | `CN` `US` `Singapore` `EU (Frankfurt)` | `Qwen3.7 Max` `Qwen3.7 Plus` `Qwen3.6 Max` `Qwen3.6 Plus` `Qwen3.6 Flash` `Qwen3.5 Plus` `Qwen3.5 Flash` `Qwen3 Max` `Qwen3 Coder Plus` `Qwen3 Coder Flash` `Qwen Plus (US)` `Qwen Flash (US)` |
-| **智谱 (GLM)** | `open.bigmodel.cn` `api.z.ai`（标准版与 Coding Plan） | `GLM-5.1` `GLM-5` `GLM-5-Turbo` `GLM-4.7` `GLM-4.7-FlashX` `GLM-4.6` `GLM-4.5-Air` `GLM-4.5-AirX` `GLM-4-Long` `GLM-4-FlashX-250414` `GLM-4.7-Flash` `GLM-4.5-Flash` `GLM-4-Flash-250414` `GLM-5V-Turbo` `GLM-4.6V` `GLM-OCR` `GLM-4.1V-Thinking-FlashX` `GLM-4.6V-Flash` `GLM-4.1V-Thinking-Flash` `GLM-4V-Flash` |
-| **Moonshot (Kimi)** | `api.moonshot.cn` `api.moonshot.ai` | `Kimi K2.6` `Kimi K2.5` |
+| **DeepSeek** | [`platform.deepseek.com`](https://platform.deepseek.com) | `V4 Flash` `V4 Pro` |
+| **MiniMax** | [`minimaxi.com`](https://www.minimaxi.com/) [`minimax.io`](https://www.minimax.io/) | `M2` `M2.1` `M2.1 Highspeed` `M2.5` `M2.5 Highspeed` `M2.7` `M2.7 Highspeed` `M3` |
+| **Moonshot (Kimi)** | [`platform.moonshot.cn`](https://platform.moonshot.cn/) [`platform.moonshot.ai`](https://platform.moonshot.ai/) | `Kimi K2.6` `Kimi K2.5` |
+| **Qwen** | [`bailian.console.aliyun.com`](https://bailian.console.aliyun.com/) | `Qwen3.7 Max` `Qwen3.7 Plus` `Qwen3.6 Max` `Qwen3.6 Plus` `Qwen3.6 Flash` `Qwen3.5 Plus` `Qwen3.5 Flash` `Qwen3 Max` `Qwen3 Coder Plus` `Qwen3 Coder Flash` `Qwen Plus (US)` `Qwen Flash (US)` |
+| **智谱 (GLM)** | [`open.bigmodel.cn`](https://open.bigmodel.cn/) [`api.z.ai`](https://api.z.ai/) | `GLM-5.1` `GLM-5` `GLM-5-Turbo` `GLM-4.7` `GLM-4.7-FlashX` `GLM-4.6` `GLM-4.5-Air` `GLM-4.5-AirX` `GLM-4-Long` `GLM-4-FlashX-250414` `GLM-4.7-Flash` `GLM-4.5-Flash` `GLM-4-Flash-250414` `GLM-5V-Turbo` `GLM-4.6V` `GLM-OCR` `GLM-4.1V-Thinking-FlashX` `GLM-4.6V-Flash` `GLM-4.1V-Thinking-Flash` `GLM-4V-Flash` |
 
 > 请至各提供商官网注册并获取 API Key。
 
@@ -80,6 +82,36 @@ API Key 仅存储于 [VS Code Secret Storage](https://code.visualstudio.com/api/
 通过命令 **Copilot Adapter: Set Vision Proxy Model** 或设置项 `copilot-adapter.visionProxyModel` 进行配置。  
 将值设为 `off` 即可随时禁用。
 
+### 前缀缓存
+
+扩展会调整连续对话中消息的顺序，优先将可以被缓存的内容放在前面，以提升支持前缀缓存和主动缓存的模型（DeepSeek、Qwen、Zhipu）的缓存命中率。在日志级别为 `info` 或更高时，输出频道中会记录每次请求的缓存命中详情：
+
+```
+model: deepseek-v4-pro, tokens: prompt=18576 reasoning=40 completion=57, cache: hit=12160 miss=6516 rate=65%
+```
+
+### Token 用量上报
+
+扩展会为每次请求向 VS Code 上报 Token 用量，具体策略分为两种：
+
+- **API 返回用量**（DeepSeek、Qwen、Zhipu、Moonshot）—— 模型在流式响应中返回精确的 `prompt_tokens` 和 `completion_tokens`。这是主要路径，无需估算。
+
+- **降级估算**（MiniMax 等不返回流式用量的提供商）—— 当 API 未包含用量数据时，扩展通过请求和响应文本的字符数估算 Token 用量。日志中会标明降级模式：
+
+  ```
+  Using fallback usage estimation (API returned no usage data) — prompt chars: 15234, response chars: 487
+  ```
+
+#### 动态比例校准
+
+`provideTokenCount`（VS Code 的上下文窗口计算）使用的字符/Token 比例初始为 **4.0**，会根据每次 API 返回的真实用量自动校准。每次返回精确用量的请求都会用 EMA 平滑方式（旧值 80%、新值 20%）更新比例。为避免噪声，仅当变化 ≥ 10% 时才会存储：
+
+```
+Chars-per-token ratio calibrated for deepseek: 4.00 → 3.38 (based on API usage: 63200 chars / 18703 tokens)
+```
+
+无法获取精确用量的提供商（如 MiniMax）保持静态默认比例。
+
 ---
 
 ## 配置参考
@@ -112,6 +144,7 @@ API Key 仅存储于 [VS Code Secret Storage](https://code.visualstudio.com/api/
 | *Copilot Adapter: Set Vision Proxy Model* | 选择视觉代理使用的模型 |
 | *Copilot Adapter: Open Settings* | 跳转至扩展设置页 |
 | *Copilot Adapter: Show Logs* | 打开输出频道 |
+| *Copilot Adapter: View Request Records* | 打开请求 dump 文件所在的文件夹 |
 
 ---
 

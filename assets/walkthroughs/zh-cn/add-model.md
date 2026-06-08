@@ -9,16 +9,19 @@
 1. 打开语言模型面板：
    [打开语言模型管理](command:workbench.action.chat.manage)
 
-2. 在 **Language Model Providers** 下找到 **DeepSeek** 或 **MiniMax**。
+2. 在 **Language Model Providers** 下找到 **DeepSeek**、**MiniMax**、**Moonshot**、**Qwen**、**Zhipu**。
 
 3. 点击 **Configure** 按钮，按提示输入你的 API Key。
 
 在此获取 API Key：
 
-- **DeepSeek** — [platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys)
-- **MiniMax** — [minimax.io · 接口密钥](https://www.minimax.io/platform/user-center/basic-information/interface-key)
+- **DeepSeek** - [platform.deepseek.com](https://platform.deepseek.com)
+- **MiniMax** - [minimaxi.com](https://www.minimaxi.com/) | [minimax.io](https://www.minimax.io/) 
+- **Moonshot (Kimi)** - [platform.moonshot.cn](https://platform.moonshot.cn/) | [platform.moonshot.ai](https://platform.moonshot.ai/) 
+- **Qwen** - [bailian.console.aliyun.com](https://bailian.console.aliyun.com/)
+- **Zhipu (GLM)** - [open.bigmodel.cn](https://open.bigmodel.cn/) | [api.z.ai](https://api.z.ai/) 
 
-> 密钥由 VS Code 安全存储，并自动传递给扩展，无需手动管理。
+> 密钥由 VS Code 安全存储，并自动传递给扩展，无需手动管理。详见[安全性](https://github.com/eowl/copilot-adapter#security)。
 
 ---
 
