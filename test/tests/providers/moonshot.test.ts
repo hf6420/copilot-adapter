@@ -25,7 +25,7 @@ suite('providers/moonshot', () => {
     assert.equal(k26.thinking!.default, 'enabled');
     assert.equal(k26.thinking!.options.length, 3);
 
-    // enabled_keep → thinking with keep:all
+    // enabled_keep to thinking with keep:all
     const result = k26.requestExtras!({ thinkingMode: 'enabled_keep' });
     assert.deepEqual(result, { thinking: { type: 'enabled', keep: 'all' } });
   });

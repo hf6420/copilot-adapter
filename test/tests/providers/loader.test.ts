@@ -107,21 +107,21 @@ suite('providers/loader ThinkingConfig — multi-value (DeepSeek style)', () => 
     ],
   };
 
-  test('high → thinking enabled + reasoning_effort high', () => {
+  test('high to thinking enabled + reasoning_effort high', () => {
     const m = makeModel({ thinking: dsThinking });
     backfillModel(m);
     assert.deepEqual(m.requestExtras!({ thinkingMode: 'high' }),
       { thinking: { type: 'enabled' }, reasoning_effort: 'high' });
   });
 
-  test('max → thinking enabled + reasoning_effort max', () => {
+  test('max to thinking enabled + reasoning_effort max', () => {
     const m = makeModel({ thinking: dsThinking });
     backfillModel(m);
     assert.deepEqual(m.requestExtras!({ thinkingMode: 'max' }),
       { thinking: { type: 'enabled' }, reasoning_effort: 'max' });
   });
 
-  test('none → thinking disabled', () => {
+  test('none to thinking disabled', () => {
     const m = makeModel({ thinking: dsThinking });
     backfillModel(m);
     assert.deepEqual(m.requestExtras!({ thinkingMode: 'none' }),
@@ -142,14 +142,14 @@ suite('providers/loader ThinkingConfig — three-value (Moonshot K2.6 style)', (
     ],
   };
 
-  test('enabled_keep → thinking enabled with keep:all', () => {
+  test('enabled_keep to thinking enabled with keep:all', () => {
     const m = makeModel({ thinking: k26Thinking });
     backfillModel(m);
     assert.deepEqual(m.requestExtras!({ thinkingMode: 'enabled_keep' }),
       { thinking: { type: 'enabled', keep: 'all' } });
   });
 
-  test('disabled → thinking disabled', () => {
+  test('disabled to thinking disabled', () => {
     const m = makeModel({ thinking: k26Thinking });
     backfillModel(m);
     assert.deepEqual(m.requestExtras!({ thinkingMode: 'disabled' }),

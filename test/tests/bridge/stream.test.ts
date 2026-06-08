@@ -532,28 +532,28 @@ suite('bridge/stream fallback usage', () => {
     }
 
     test('updates when change exceeds 10%', () => {
-      // 4.0 → 3.5 = 12.5% change → should update
+      // 4.0 to 3.5 = 12.5% change, should update
       assert.equal(shouldUpdate(4.0, 3.5), true);
-      // 4.0 → 4.5 = 12.5% change → should update
+      // 4.0 to 4.5 = 12.5% change, should update
       assert.equal(shouldUpdate(4.0, 4.5), true);
     });
 
     test('skips update when change is below 10%', () => {
-      // 4.0 → 4.3 = 7.5% change → should NOT update
+      // 4.0 to 4.3 = 7.5% change, should NOT update
       assert.equal(shouldUpdate(4.0, 4.3), false);
-      // 4.0 → 3.7 = 7.5% change → should NOT update
+      // 4.0 to 3.7 = 7.5% change, should NOT update
       assert.equal(shouldUpdate(4.0, 3.7), false);
     });
 
     test('boundary: exactly 10% change triggers update', () => {
-      // 4.0 → 3.6 = 10% (floating-point: 0.399.../4 = 0.09999..., close enough)
+      // 4.0 to 3.6 = 10% (floating-point: 0.399.../4 = 0.09999..., close enough)
       assert.ok(Math.abs(3.6 - 4.0) / 4.0 >= 0.099, 'barely below 0.1 due to FP');
-      // 4.0 → 3.5 = 12.5% → definitely triggers
+      // 4.0 to 3.5 = 12.5%, definitely triggers
       assert.equal(shouldUpdate(4.0, 3.5), true);
     });
 
-    test('tiny drift (4.04 → 4.03) is below threshold', () => {
-      // |4.03 - 4.04| / 4.04 = 0.0025 = 0.25% → skip
+    test('tiny drift (4.04 to 4.03) is below threshold', () => {
+      // |4.03 - 4.04| / 4.04 = 0.0025 = 0.25%, skip
       assert.equal(shouldUpdate(4.04, 4.03), false);
     });
 

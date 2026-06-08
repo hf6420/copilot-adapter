@@ -32,7 +32,7 @@ suite('bridge/adapter multi-group', () => {
         provider: DEEPSEEK,
       };
 
-      // No prefix → id is qualified with provider suffix
+      // No prefix to id is qualified with provider suffix
       const info = buildChatInfo(model, true);
       assert.equal(info.id, 'deepseek-v4-flash-deepseek');
       assert.ok(!info.id.includes('::'));
@@ -98,7 +98,7 @@ suite('bridge/adapter multi-group', () => {
 
       // Simulate the resolveModelIdentity logic from adapter.ts
       const sepIdx = modelId.indexOf('::');
-      assert.equal(sepIdx, -1); // No separator → default group
+      assert.equal(sepIdx, -1); // No separator to default group
 
       const resolvedModelId = sepIdx === -1 ? modelId : modelId.slice(sepIdx + 2);
       assert.equal(resolvedModelId, 'deepseek-v4-flash-deepseek');
