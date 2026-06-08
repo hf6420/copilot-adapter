@@ -8,7 +8,7 @@ const MM_THINKING: ThinkingConfig = {
       value: 'adaptive',
       label: 'think.adaptive',
       hint: 'think.adaptive.hint',
-      requestFields: { thinking: { type: 'enabled' } },
+      requestFields: { thinking: { type: 'adaptive' } },
     },
     {
       value: 'disabled',
