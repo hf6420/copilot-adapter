@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { suite, test } from 'mocha';
-import { ZHIPU, ZP_MODELS } from '../../../src/providers/bigmodel';
+import { ZHIPU, ZP_MODELS } from '../../../src/providers/zhipu';
 
-suite('providers/bigmodel', () => {
+suite('providers/zhipu', () => {
   const thinkingModel = ZP_MODELS.find((m) => m.label === 'GLM-5.1')!;
   const plainModel = ZP_MODELS.find((m) => m.label === 'GLM-4.5-Air')!;
 
