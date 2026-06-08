@@ -70,7 +70,7 @@ export function backfillModel(item: ModelItem): void {
 
 export interface ModelJsonModule {
   readonly providerId: string;
-  readonly endpointKey: string;
+  readonly endpointId: string;
   readonly thinking?: ThinkingConfig;
   readonly models: readonly ModelItemJson[];
 }
@@ -85,13 +85,13 @@ export function loadModelsFromJson(module: ModelJsonModule, reg: Registries): Mo
   if (!provider) {
     throw new Error(`Unknown providerId "${module.providerId}"`);
   }
-  const targetEndpoint = reg.endpointById.get(module.endpointKey);
+  const targetEndpoint = reg.endpointById.get(module.endpointId);
   if (!targetEndpoint) {
-    throw new Error(`Unknown endpointKey "${module.endpointKey}"`);
+    throw new Error(`Unknown endpointId "${module.endpointId}"`);
   }
-  const belongs = provider.endpoints?.some((ep) => ep.key === module.endpointKey) ?? false;
+  const belongs = provider.endpoints?.some((ep) => ep.id === module.endpointId) ?? false;
   if (!belongs) {
-    throw new Error(`Endpoint "${module.endpointKey}" not under provider "${module.providerId}"`);
+    throw new Error(`Endpoint "${module.endpointId}" not under provider "${module.providerId}"`);
   }
 
   const topThinking = module.thinking;

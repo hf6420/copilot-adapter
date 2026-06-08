@@ -184,28 +184,28 @@ suite('getEndpoint priority resolution', () => {
 suite('resolveEndpoint', () => {
   test('returns ModelEndpoint by exact key match (BigModel)', () => {
     const ep = resolveEndpoint(ZHIPU, 'z.ai-coding');
-    assert.equal(ep?.key, 'z.ai-coding');
+    assert.equal(ep?.id, 'z.ai-coding');
     assert.equal(ep?.url, 'https://api.z.ai/api/coding/paas/v4');
   });
 
   test('returns Qwen US endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://dashscope-us.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'us');
+    assert.equal(ep?.id, 'us');
   });
 
   test('returns Qwen SGP endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://abc.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'sgp');
+    assert.equal(ep?.id, 'sgp');
   });
 
   test('returns Qwen EU endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://xyz.eu-central-1.maas.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'eu');
+    assert.equal(ep?.id, 'eu');
   });
 
   test('returns Qwen CN endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://dashscope.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'cn');
+    assert.equal(ep?.id, 'cn');
   });
 
   test('returns undefined when no endpoint matches', () => {
@@ -224,18 +224,18 @@ suite('composeModelProvider / composeModelEndpoint', () => {
     const m1 = { id: 'm1' } as unknown as ModelItem;
     const m2 = { id: 'm2' } as unknown as ModelItem;
     const ep = composeModelEndpoint(
-      { key: 'a', label: 'A', url: 'https://a.example.com' },
+      { id: 'a', label: 'A', url: 'https://a.example.com' },
       [m1, m2],
     );
     assert.equal(ep.models!.length, 2);
-    assert.equal(m1.endpoint?.key, 'a');
-    assert.equal(m2.endpoint?.key, 'a');
+    assert.equal(m1.endpoint?.id, 'a');
+    assert.equal(m2.endpoint?.id, 'a');
   });
 
   test('composeModelProvider wires endpoints with provider back-refs', () => {
     const modelProvider = { id: 'fake' } as unknown as ModelProvider;
     const m = { id: 'm1' } as unknown as ModelItem;
-    const ep = composeModelEndpoint({ key: 'a', label: 'A', url: 'https://a.example.com' }, [m]);
+    const ep = composeModelEndpoint({ id: 'a', label: 'A', url: 'https://a.example.com' }, [m]);
 
     composeModelProvider(modelProvider, [ep]);
 
@@ -246,14 +246,14 @@ suite('composeModelProvider / composeModelEndpoint', () => {
 
 suite('Endpoint.models visibility', () => {
   test('Qwen US endpoint includes US-only models', () => {
-    const us = QWEN.endpoints?.find((s) => s.key === 'us');
+    const us = QWEN.endpoints?.find((s) => s.id === 'us');
     const usIds = us?.models!.map((m) => m.id) ?? [];
     assert.ok(usIds.includes('qwen-plus-us'), 'US endpoint should contain qwen-plus-us');
     assert.ok(usIds.includes('qwen-flash-us'), 'US endpoint should contain qwen-flash-us');
   });
 
   test('Qwen CN endpoint does NOT include US-only models', () => {
-    const cn = QWEN.endpoints?.find((s) => s.key === 'cn');
+    const cn = QWEN.endpoints?.find((s) => s.id === 'cn');
     const cnIds = cn?.models!.map((m) => m.id) ?? [];
     assert.ok(!cnIds.includes('qwen-plus-us'), 'CN endpoint should not contain qwen-plus-us');
     assert.ok(!cnIds.includes('qwen-flash-us'), 'CN endpoint should not contain qwen-flash-us');
@@ -261,7 +261,7 @@ suite('Endpoint.models visibility', () => {
   });
 
   test('Qwen US endpoint includes base models', () => {
-    const us = QWEN.endpoints?.find((s) => s.key === 'us');
+    const us = QWEN.endpoints?.find((s) => s.id === 'us');
     const usIds = us?.models!.map((m) => m.id) ?? [];
     assert.ok(usIds.includes('qwen3.7-max'), 'US endpoint should contain shared base model');
   });
@@ -317,7 +317,7 @@ suite('ModelProvider/ModelEndpoint composition invariants', () => {
   test('every endpoint has provider back-reference', () => {
     for (const mp of [MINIMAX, MOONSHOT, ZHIPU, QWEN, DEEPSEEK]) {
       for (const me of mp.endpoints ?? []) {
-        assert.equal(me.provider, mp, `endpoint ${me.key}.provider must point at owner`);
+        assert.equal(me.provider, mp, `endpoint ${me.id}.provider must point at owner`);
       }
     }
   });
@@ -334,7 +334,7 @@ suite('ModelProvider/ModelEndpoint composition invariants', () => {
 
   test('DeepSeek has a single endpoint even though it has no variants', () => {
     assert.equal(DEEPSEEK.endpoints?.length, 1);
-    assert.equal(DEEPSEEK.endpoints?.[0].key, 'deepseek');
+    assert.equal(DEEPSEEK.endpoints?.[0].id, 'deepseek');
   });
 });
 

@@ -1,6 +1,6 @@
 {
   "providerId": "qwen",
-  "endpointKey": "cn",
+  "endpointId": "cn",
   "thinking": {
     "default": "high",
     "options": [

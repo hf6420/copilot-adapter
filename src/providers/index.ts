@@ -20,7 +20,7 @@ export const ALL_PROVIDERS: readonly ModelProvider[] = [DEEPSEEK, MINIMAX, MOONS
 export const providerById = new Map<string, ModelProvider>(ALL_PROVIDERS.map((mp) => [mp.id, mp]));
 
 export const endpointById = new Map<string, ModelEndpoint>(
-  ALL_PROVIDERS.flatMap((mp) => mp.endpoints ?? []).map((me) => [me.key, me]),
+  ALL_PROVIDERS.flatMap((mp) => mp.endpoints ?? []).map((me) => [me.id, me]),
 );
 
 export const ALL_MODELS: readonly ModelItem[] = (() => {

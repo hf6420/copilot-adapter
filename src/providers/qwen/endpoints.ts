@@ -5,7 +5,7 @@ import { QWEN_BASE_MODELS, QWEN_US_MODELS } from './models';
 export const QWEN_ENDPOINTS: readonly ModelEndpoint[] = [
   composeModelEndpoint(
     {
-      key: 'cn',
+      id: 'cn',
       label: 'CN Beijing',
       url: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
       matchStr: 'dashscope.aliyuncs.com',
@@ -14,7 +14,7 @@ export const QWEN_ENDPOINTS: readonly ModelEndpoint[] = [
   ),
   composeModelEndpoint(
     {
-      key: 'us',
+      id: 'us',
       label: 'US',
       url: 'https://dashscope-us.aliyuncs.com/compatible-mode/v1',
       matchStr: 'dashscope-us.aliyuncs.com',
@@ -23,7 +23,7 @@ export const QWEN_ENDPOINTS: readonly ModelEndpoint[] = [
   ),
   composeModelEndpoint(
     {
-      key: 'sgp',
+      id: 'sgp',
       label: 'Singapore',
       url: 'https://{workspace}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1',
       matchStr: 'ap-southeast-1.maas.aliyuncs.com',
@@ -32,7 +32,7 @@ export const QWEN_ENDPOINTS: readonly ModelEndpoint[] = [
   ),
   composeModelEndpoint(
     {
-      key: 'eu',
+      id: 'eu',
       label: 'EU (Frankfurt)',
       url: 'https://{workspace}.eu-central-1.maas.aliyuncs.com/compatible-mode/v1',
       matchStr: 'eu-central-1.maas.aliyuncs.com',

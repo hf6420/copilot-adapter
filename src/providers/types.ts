@@ -53,7 +53,7 @@ export interface ModelProvider extends ApiTraits {
 }
 
 export interface ModelEndpoint extends ApiTraits {
-  readonly key: string;
+  readonly id: string;
   readonly label: string;
   readonly matchStr?: string;
 
@@ -101,7 +101,7 @@ export interface ThinkingConfig {
 
 export interface ModelItemJson extends Partial<Omit<ModelItem, 'requestExtras' | 'configSchema' | 'createContentParser' | 'formatImagePart' | 'provider' | 'endpoint'>> {
   readonly providerId?: string;
-  readonly endpointKey?: string;
+  readonly endpointId?: string;
   readonly thinking?: ThinkingConfig;
   readonly contentTag?: string;
 }

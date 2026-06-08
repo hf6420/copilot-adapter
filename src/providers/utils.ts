@@ -3,8 +3,7 @@ import type { ApiTraits, ModelItem, ModelProvider, ModelEndpoint } from './types
 
 /** Build the provider- and endpoint-qualified unique key for a model. */
 export function modelKey(mi: ModelItem): string {
-  const ep = mi.endpoint?.key ?? '';
-  
+  const ep = mi.endpoint?.id ?? '';
   return `${mi.id}-${mi.provider.id}${ep ? `-${ep}` : ''}`;
 }
 
@@ -29,7 +28,7 @@ export function getEndpoint(modelProvider: ModelProvider, apiEndpoint?: string):
 
     // Dropdown mode: match by endpoint key
     if (modelProvider.endpoints) {
-      const ep = modelProvider.endpoints.find((s) => s.key === apiEndpoint);
+      const ep = modelProvider.endpoints.find((s) => s.id === apiEndpoint);
       if (ep) return ep.url!;
     }
   }
@@ -43,7 +42,7 @@ export function resolveEndpoint(
 ): ModelEndpoint | undefined {
   if (!modelProvider.endpoints) return undefined;
 
-  const exact = modelProvider.endpoints.find((s) => s.key === apiEndpoint);
+  const exact = modelProvider.endpoints.find((s) => s.id === apiEndpoint);
   if (exact) return exact;
 
   return modelProvider.endpoints.find((s) => s.matchStr && apiEndpoint.includes(s.matchStr));
