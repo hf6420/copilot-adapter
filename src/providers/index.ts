@@ -30,7 +30,9 @@ export const ALL_MODELS: readonly ModelItem[] = (() => {
   // JSON models first (lazy-loaded to avoid module-init issues)
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { loadAllJsonModels } = require('./loader') as typeof import('./loader');
-  for (const mi of loadAllJsonModels('../../models', { providerById, endpointById })) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const modelsDir = require('node:path').join(__dirname, '..', '..', 'models');
+  for (const mi of loadAllJsonModels(modelsDir, { providerById, endpointById })) {
     if (!seen.has(mi.id)) {
       seen.add(mi.id);
       result.push(mi);

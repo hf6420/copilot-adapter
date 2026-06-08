@@ -15,7 +15,7 @@
   },
   "models": [
     {
-      "id": "deepseek-v4-pro-x",
+      "id": "deepseek-v4-pro",
       "label": "DeepSeek V4 Pro",
       "apiId": "deepseek-v4-pro",
       "family": "deepseek",

@@ -90,6 +90,7 @@ export function loadModelsFromJson(module: ModelJsonModule, reg: Registries): Mo
 
     const item = {
       ...raw,
+      id: `${raw.id}-${module.providerId}`,
       detailKey: raw.detailKey ?? '',
       provider,
       endpoint: targetEndpoint,
