@@ -76,6 +76,8 @@ export interface ModelItem extends ApiTraits {
   endpoint?: ModelEndpoint;
   maxTokensField?: string;
 
+  imageField?: string;
+
   requestExtras?(modelConfig: Record<string, unknown> | undefined): Record<string, unknown>;
   configSchema?(): Record<string, unknown> | undefined;
   createContentParser?(): ContentParser | undefined;

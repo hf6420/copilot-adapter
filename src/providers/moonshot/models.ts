@@ -1,6 +1,5 @@
 import { t } from '../../nls';
 import type { ModelItem, ReasoningAbility } from '../types';
-import { imagePart } from '../utils';
 import { MOONSHOT } from './provider';
 
 function msRequestExtras(
@@ -76,7 +75,6 @@ const MS_BASE = {
   requestExtras: msRequestExtras,
   configSchema: msConfigSchema,
   maxTokensField: 'max_completion_tokens',
-  formatImagePart: imagePart(),
 };
 
 export const MS_MODELS: readonly ModelItem[] = [

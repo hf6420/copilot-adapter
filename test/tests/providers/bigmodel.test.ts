@@ -101,7 +101,7 @@ suite('providers/bigmodel', () => {
       ]);
     });
 
-    test('vision models accept images and provide formatImagePart', () => {
+    test('vision models accept images', () => {
       const visionIds = [
         'glm-5v-turbo',
         'glm-4.6v',
@@ -114,7 +114,38 @@ suite('providers/bigmodel', () => {
       for (const id of visionIds) {
         const m = ZP_MODELS.find((x) => x.id === id)!;
         assert.equal(m.ability.acceptsImages, true, `${id} acceptsImages`);
-        assert.equal(typeof m.formatImagePart, 'function', `${id} formatImagePart`);
+      }
+    });
+
+    test('vision models do NOT have explicit formatImagePart (auto-provided by prepare.ts)', () => {
+      const visionIds = [
+        'glm-5v-turbo',
+        'glm-4.6v',
+        'glm-ocr',
+        'glm-4.1v-thinking-flashx',
+        'glm-4.6v-flash',
+        'glm-4.1v-thinking-flash',
+        'glm-4v-flash',
+      ];
+      for (const id of visionIds) {
+        const m = ZP_MODELS.find((x) => x.id === id)!;
+        assert.equal(m.formatImagePart, undefined, `${id} formatImagePart should be undefined (auto-fallback)`);
+      }
+    });
+
+    test('vision models have imageField undefined (defaults to \"image_url\")', () => {
+      const visionIds = [
+        'glm-5v-turbo',
+        'glm-4.6v',
+        'glm-ocr',
+        'glm-4.1v-thinking-flashx',
+        'glm-4.6v-flash',
+        'glm-4.1v-thinking-flash',
+        'glm-4v-flash',
+      ];
+      for (const id of visionIds) {
+        const m = ZP_MODELS.find((x) => x.id === id)!;
+        assert.equal((m as any).imageField, undefined, `${id} imageField defaults to undefined`);
       }
     });
 

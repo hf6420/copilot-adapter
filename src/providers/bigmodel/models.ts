@@ -1,6 +1,5 @@
 import { t } from '../../nls';
 import type { ModelItem, NonReasoningAbility, ReasoningAbility } from '../types';
-import { imagePart } from '../utils';
 import { ZHIPU } from './provider';
 
 function bmRequestExtras(
@@ -73,14 +72,12 @@ const BM_VISION_THINK_BASE = {
   provider: ZHIPU,
   requestExtras: bmRequestExtras,
   configSchema: bmConfigSchema,
-  formatImagePart: imagePart(),
 };
 
 const BM_VISION_PLAIN_BASE = {
   family: 'glm' as const,
   ability: BM_VISION_PLAIN_ABILITY,
   provider: ZHIPU,
-  formatImagePart: imagePart(),
 };
 
 export const ZP_MODELS: readonly ModelItem[] = [

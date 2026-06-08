@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { suite, test, afterEach } from 'mocha';
 import * as vscode from 'vscode';
-import { composeModelProvider, composeModelEndpoint, getEndpoint, resolveEndpoint, resolveTrait } from '../../../src/providers/utils';
+import { composeModelProvider, composeModelEndpoint, getEndpoint, resolveEndpoint, resolveTrait, imagePart } from '../../../src/providers/utils';
 import { DEFAULT_ENDPOINT_URLS } from '../../../src/providers/endpoints';
 import { MINIMAX } from '../../../src/providers/minimax';
 import { ZHIPU } from '../../../src/providers/bigmodel';
@@ -335,5 +335,61 @@ suite('ModelProvider/ModelEndpoint composition invariants', () => {
   test('DeepSeek has a single endpoint even though it has no variants', () => {
     assert.equal(DEEPSEEK.endpoints?.length, 1);
     assert.equal(DEEPSEEK.endpoints?.[0].key, 'deepseek');
+  });
+});
+
+suite('imagePart()', () => {
+  const fakeData = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
+  const fakeMime = 'image/png';
+
+  test('default imageField is "image_url"', () => {
+    const fn = imagePart();
+    const result = fn(fakeData, fakeMime);
+    assert.equal(result.type, 'image_url');
+    assert.ok(typeof (result as any).image_url?.url === 'string');
+    assert.match((result as any).image_url.url, /^data:image\/png;base64,/);
+  });
+
+  test('custom imageField "image"', () => {
+    const fn = imagePart('image');
+    const result = fn(fakeData, fakeMime);
+    assert.equal(result.type, 'image');
+    assert.ok(typeof (result as any).image?.url === 'string');
+    assert.match((result as any).image.url, /^data:image\/png;base64,/);
+  });
+
+  test('base64 encodes correctly', () => {
+    const data = new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]); // "Hello"
+    const fn = imagePart();
+    const result = fn(data, 'text/plain');
+    assert.ok((result as any).image_url.url.includes('SGVsbG8='));
+  });
+
+  test('different mimetypes produce correct data URIs', () => {
+    const data = new Uint8Array([0x42]); // 'B'
+
+    const pngFn = imagePart();
+    const pngResult = pngFn(data, 'image/png');
+    assert.match((pngResult as any).image_url.url, /^data:image\/png;base64,/);
+
+    const jpgResult = pngFn(data, 'image/jpeg');
+    assert.match((jpgResult as any).image_url.url, /^data:image\/jpeg;base64,/);
+  });
+
+  test('returns a NEW function each call (stateless)', () => {
+    const fn1 = imagePart();
+    const fn2 = imagePart();
+    assert.notStrictEqual(fn1, fn2);
+
+    const data = new Uint8Array([0x00]);
+    const r1 = fn1(data, 'image/gif');
+    const r2 = fn2(data, 'image/gif');
+    assert.deepEqual(r1, r2);
+  });
+
+  test('empty data produces valid base64 empty string', () => {
+    const fn = imagePart();
+    const result = fn(new Uint8Array(0), 'image/png');
+    assert.equal((result as any).image_url.url, 'data:image/png;base64,');
   });
 });

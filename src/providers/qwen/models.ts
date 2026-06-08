@@ -34,10 +34,25 @@ const QWEN_ABILITY: ReasoningAbility = {
   reasoning: true,
 };
 
+const QWEN_VISION_ABILITY: ReasoningAbility = {
+  maxTools: 128,
+  acceptsImages: true,
+  reasoning: true,
+};
+
 const QWEN_BASE = {
   family: 'qwen' as const,
   maxTokensField: 'max_completion_tokens',
   ability: QWEN_ABILITY,
+  provider: QWEN,
+  requestExtras: qwenRequestExtras,
+  configSchema: qwenConfigSchema
+};
+
+const QWEN_VISION_BASE = {
+  family: 'qwen' as const,
+  maxTokensField: 'max_completion_tokens',
+  ability: QWEN_VISION_ABILITY,
   provider: QWEN,
   requestExtras: qwenRequestExtras,
   configSchema: qwenConfigSchema,
@@ -55,7 +70,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.7-max.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.7-plus',
     label: 'Qwen3.7 Plus',
     apiId: 'qwen3.7-plus',
@@ -75,7 +90,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.6-max.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.6-plus',
     label: 'Qwen3.6 Plus',
     apiId: 'qwen3.6-plus',
@@ -85,7 +100,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.6-plus.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.6-flash',
     label: 'Qwen3.6 Flash',
     apiId: 'qwen3.6-flash',
@@ -95,7 +110,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.6-flash.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.5-plus',
     label: 'Qwen3.5 Plus',
     apiId: 'qwen3.5-plus',
@@ -105,7 +120,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.5-plus.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.5-flash',
     label: 'Qwen3.5 Flash',
     apiId: 'qwen3.5-flash',

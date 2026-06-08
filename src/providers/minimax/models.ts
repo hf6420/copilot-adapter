@@ -1,7 +1,6 @@
 import { t } from '../../nls';
 import type { ContentParser, ModelItem, ReasoningAbility } from '../types';
 import { ThinkTagParser } from '../parsers/tag';
-import { imagePart } from '../utils';
 import { MINIMAX } from './provider';
 
 function mmCreateContentParser(): ContentParser {
@@ -129,6 +128,5 @@ export const MM_MODELS: readonly ModelItem[] = [
     requestExtras: m3RequestExtras,
     configSchema: m3ConfigSchema,
     createContentParser: mmCreateContentParser,
-    formatImagePart: imagePart(),
   },
 ];

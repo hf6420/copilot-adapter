@@ -9,6 +9,8 @@ import type { ReqOptions } from './information';
 import type { ApiReq } from '../client/types';
 import { Settings } from '../settings';
 import { countMessageChars } from './tally';
+import { imagePart } from '../providers/utils';
+import { DEFAULT_IMAGE_FIELD } from './defines';
 
 export interface ReadyReq {
   url: string;
@@ -54,7 +56,9 @@ export async function assembleChatReq(ctx: PrepContext): Promise<ReadyReq> {
 
   const translateOpts = {
     thinkingField: modelProvider.thinkingField,
-    formatImagePart: model.formatImagePart,
+    formatImagePart:
+      model.formatImagePart ??
+      (model.ability.acceptsImages ? imagePart(model.imageField ?? DEFAULT_IMAGE_FIELD) : undefined),
   };
 
   if (gate.kind === 'proceed') {

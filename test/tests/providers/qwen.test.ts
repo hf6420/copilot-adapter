@@ -74,4 +74,58 @@ suite('providers/qwen model.requestExtras()', () => {
       assert.match(m.label, /\(US only\)/);
     }
   });
+
+  test('US-only models do not accept images', () => {
+    for (const m of QWEN_US_MODELS) {
+      assert.equal(m.ability.acceptsImages, false, `${m.id} acceptsImages`);
+    }
+  });
+
+  suite('vision models', () => {
+    const visionIds = [
+      'qwen3.7-plus',
+      'qwen3.6-plus',
+      'qwen3.6-flash',
+      'qwen3.5-plus',
+      'qwen3.5-flash',
+    ];
+
+    test('accept images', () => {
+      for (const id of visionIds) {
+        const m = QWEN_BASE_MODELS.find((x) => x.id === id)!;
+        assert.equal(m.ability.acceptsImages, true, `${id} acceptsImages`);
+      }
+    });
+
+    test('do NOT have explicit formatImagePart (auto-provided by prepare.ts)', () => {
+      for (const id of visionIds) {
+        const m = QWEN_BASE_MODELS.find((x) => x.id === id)!;
+        assert.equal(m.formatImagePart, undefined, `${id} formatImagePart should be undefined (auto-fallback)`);
+      }
+    });
+
+    test('have default imageField (undefined, defaults to \"image_url\" in fallback)', () => {
+      for (const id of visionIds) {
+        const m = QWEN_BASE_MODELS.find((x) => x.id === id)!;
+        assert.equal((m as any).imageField, undefined, `${id} imageField defaults to undefined`);
+      }
+    });
+  });
+
+  suite('non-vision models', () => {
+    const nonVisionIds = [
+      'qwen3.7-max',
+      'qwen3.6-max',
+      'qwen3-max',
+      'qwen3-coder-plus',
+      'qwen3-coder-flash',
+    ];
+
+    test('do NOT accept images', () => {
+      for (const id of nonVisionIds) {
+        const m = QWEN_BASE_MODELS.find((x) => x.id === id)!;
+        assert.equal(m.ability.acceptsImages, false, `${id} acceptsImages`);
+      }
+    });
+  });
 });
