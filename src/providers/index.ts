@@ -17,9 +17,26 @@ composeModelProvider(ZHIPU, ZHIPU_ENDPOINTS);
 
 export const ALL_PROVIDERS: readonly ModelProvider[] = [DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU];
 
+export const providerById = new Map<string, ModelProvider>(ALL_PROVIDERS.map((mp) => [mp.id, mp]));
+
+export const endpointById = new Map<string, ModelEndpoint>(
+  ALL_PROVIDERS.flatMap((mp) => mp.endpoints ?? []).map((me) => [me.key, me]),
+);
+
 export const ALL_MODELS: readonly ModelItem[] = (() => {
   const seen = new Set<string>();
   const result: ModelItem[] = [];
+
+  // JSON models first (lazy-loaded to avoid module-init issues)
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { loadAllJsonModels } = require('./loader') as typeof import('./loader');
+  for (const mi of loadAllJsonModels('../../models', { providerById, endpointById })) {
+    if (!seen.has(mi.id)) {
+      seen.add(mi.id);
+      result.push(mi);
+    }
+  }
+
   for (const mp of ALL_PROVIDERS) {
     for (const me of mp.endpoints ?? []) {
       for (const mi of me.models ?? []) {
@@ -35,9 +52,3 @@ export const ALL_MODELS: readonly ModelItem[] = (() => {
 })();
 
 export const modelById = new Map<string, ModelItem>(ALL_MODELS.map((mi) => [mi.id, mi]));
-
-export const providerById = new Map<string, ModelProvider>(ALL_PROVIDERS.map((mp) => [mp.id, mp]));
-
-export const endpointById = new Map<string, ModelEndpoint>(
-  ALL_PROVIDERS.flatMap((mp) => mp.endpoints ?? []).map((me) => [me.key, me]),
-);

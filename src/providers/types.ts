@@ -83,3 +83,23 @@ export interface ModelItem extends ApiTraits {
   createContentParser?(): ContentParser | undefined;
   formatImagePart?(data: Uint8Array, mimeType: string): Record<string, unknown>;
 }
+
+export interface ThinkingOption {
+  readonly value: string;
+  readonly labelKey: string;
+  readonly hintKey: string;
+  readonly requestFields?: Record<string, unknown>;
+}
+
+export interface ThinkingConfig {
+  readonly field: string;
+  readonly default: string;
+  readonly options: readonly ThinkingOption[];
+}
+
+export interface ModelItemJson extends Partial<Omit<ModelItem, 'requestExtras' | 'configSchema' | 'createContentParser' | 'formatImagePart' | 'provider' | 'endpoint'>> {
+  readonly providerId?: string;
+  readonly endpointKey?: string;
+  readonly thinking?: ThinkingConfig;
+  readonly contentTag?: string;
+}

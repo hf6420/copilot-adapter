@@ -1,0 +1,29 @@
+{
+  "providerId": "deepseek",
+  "endpointKey": "deepseek",
+  "thinking": {
+    "field": "reasoningEffort",
+    "default": "high",
+    "options": [
+      { "value": "high", "labelKey": "think.high", "hintKey": "think.high.hint",
+        "requestFields": { "thinking": { "type": "enabled" }, "reasoning_effort": "high" } },
+      { "value": "max",  "labelKey": "think.max",  "hintKey": "think.max.hint",
+        "requestFields": { "thinking": { "type": "enabled" }, "reasoning_effort": "max" } },
+      { "value": "none", "labelKey": "think.none", "hintKey": "think.none.hint",
+        "requestFields": { "thinking": { "type": "disabled" } } }
+    ]
+  },
+  "models": [
+    {
+      "id": "deepseek-v5-demo",
+      "label": "DeepSeek V5 (JSON Demo)",
+      "apiId": "deepseek-v5-demo",
+      "family": "deepseek",
+      "version": "5",
+      "maxInputTokens": 800000,
+      "maxOutputTokens": 400000,
+      "detailKey": "model.deepseek-v4-pro.detail",
+      "ability": { "maxTools": 128, "acceptsImages": false, "reasoning": true }
+    }
+  ]
+}
