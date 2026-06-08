@@ -22,4 +22,5 @@ Set a vision-capable model (e.g. a GPT-4o or Claude model available in Copilot C
 
 - **off** — no output
 - **info** — request metadata only (safe to share)
+- **meta** — request metadata plus model & endpoint IDs (no payloads)
 - **verbose** — full payloads written to disk (keep local)
