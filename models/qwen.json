@@ -1,0 +1,28 @@
+{
+  "providerId": "qwen",
+  "endpointId": "cn",
+  "thinking": {
+    "default": "high",
+    "options": [
+      { "value": "high", "label": "think.high", "hint": "think.high.hint",
+        "requestFields": { "thinking": { "type": "enabled" }, "reasoning_effort": "high" } },
+      { "value": "max",  "label": "think.max",  "hint": "think.max.hint",
+        "requestFields": { "thinking": { "type": "enabled" }, "reasoning_effort": "max" } },
+      { "value": "none", "label": "think.none", "hint": "think.none.hint",
+        "requestFields": { "thinking": { "type": "disabled" } } }
+    ]
+  },
+  "models": [
+    {
+      "id": "deepseek-v4-pro",
+      "label": "DeepSeek V4 Pro",
+      "apiId": "deepseek-v4-pro",
+      "family": "deepseek",
+      "version": "4",
+      "maxInputTokens": 800000,
+      "maxOutputTokens": 400000,
+      "detailKey": "model.deepseek-v4-pro.detail",
+      "ability": { "maxTools": 128, "acceptsImages": false, "reasoning": true }
+    }
+  ]
+}

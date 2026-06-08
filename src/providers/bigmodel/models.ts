@@ -1,33 +1,23 @@
-import { t } from '../../nls';
-import type { ModelItem, NonReasoningAbility, ReasoningAbility } from '../types';
-import { imagePart } from '../utils';
+import type { ModelItem, NonReasoningAbility, ReasoningAbility, ThinkingConfig } from '../types';
 import { ZHIPU } from './provider';
 
-function bmRequestExtras(
-  modelConfig: Record<string, unknown> | undefined,
-): Record<string, unknown> {
-  if (modelConfig?.thinkingMode === 'disabled') {
-    return { thinking: { type: 'disabled' } };
-  }
-
-  return { thinking: { type: 'enabled' } };
-}
-
-function bmConfigSchema(): Record<string, unknown> {
-  return {
-    properties: {
-      thinkingMode: {
-        type: 'string',
-        title: t('think.label'),
-        enum: ['adaptive', 'disabled'],
-        enumItemLabels: [t('think.adaptive'), t('think.none')],
-        enumDescriptions: [t('think.adaptive.hint'), t('think.none.hint')],
-        default: 'adaptive',
-        group: 'navigation',
-      },
+const BM_THINKING: ThinkingConfig = {
+  default: 'adaptive',
+  options: [
+    {
+      value: 'adaptive',
+      label: 'think.adaptive',
+      hint: 'think.adaptive.hint',
+      requestFields: { thinking: { type: 'enabled' } },
     },
-  } as const;
-}
+    {
+      value: 'disabled',
+      label: 'think.none',
+      hint: 'think.none.hint',
+      requestFields: { thinking: { type: 'disabled' } },
+    },
+  ],
+};
 
 const BM_REASONING_ABILITY: ReasoningAbility = {
   maxTools: 128,
@@ -57,8 +47,7 @@ const BM_THINK_BASE = {
   family: 'glm' as const,
   ability: BM_REASONING_ABILITY,
   provider: ZHIPU,
-  requestExtras: bmRequestExtras,
-  configSchema: bmConfigSchema,
+  thinking: BM_THINKING,
 };
 
 const BM_PLAIN_BASE = {
@@ -71,16 +60,13 @@ const BM_VISION_THINK_BASE = {
   family: 'glm' as const,
   ability: BM_VISION_REASONING_ABILITY,
   provider: ZHIPU,
-  requestExtras: bmRequestExtras,
-  configSchema: bmConfigSchema,
-  formatImagePart: imagePart(),
+  thinking: BM_THINKING,
 };
 
 const BM_VISION_PLAIN_BASE = {
   family: 'glm' as const,
   ability: BM_VISION_PLAIN_ABILITY,
   provider: ZHIPU,
-  formatImagePart: imagePart(),
 };
 
 export const ZP_MODELS: readonly ModelItem[] = [

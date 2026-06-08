@@ -1,36 +1,33 @@
-import { t } from '../../nls';
-import type { ModelItem, ReasoningAbility } from '../types';
+import type { ModelItem, ReasoningAbility, ThinkingConfig } from '../types';
 import { QWEN } from './provider';
 
-function qwenRequestExtras(
-  modelConfig: Record<string, unknown> | undefined,
-): Record<string, unknown> {
-  if (modelConfig?.thinkingMode === 'disabled') {
-    return { enable_thinking: false };
-  }
-
-  return { enable_thinking: true };
-}
-
-function qwenConfigSchema(): Record<string, unknown> {
-  return {
-    properties: {
-      thinkingMode: {
-        type: 'string',
-        title: t('think.label'),
-        enum: ['adaptive', 'disabled'],
-        enumItemLabels: [t('think.adaptive'), t('think.none')],
-        enumDescriptions: [t('think.adaptive.hint'), t('think.none.hint')],
-        default: 'adaptive',
-        group: 'navigation',
-      },
+const QWEN_THINKING: ThinkingConfig = {
+  default: 'adaptive',
+  options: [
+    {
+      value: 'adaptive',
+      label: 'think.adaptive',
+      hint: 'think.adaptive.hint',
+      requestFields: { enable_thinking: true },
     },
-  } as const;
-}
+    {
+      value: 'disabled',
+      label: 'think.none',
+      hint: 'think.none.hint',
+      requestFields: { enable_thinking: false },
+    },
+  ],
+};
 
 const QWEN_ABILITY: ReasoningAbility = {
   maxTools: 128,
   acceptsImages: false,
+  reasoning: true,
+};
+
+const QWEN_VISION_ABILITY: ReasoningAbility = {
+  maxTools: 128,
+  acceptsImages: true,
   reasoning: true,
 };
 
@@ -39,8 +36,15 @@ const QWEN_BASE = {
   maxTokensField: 'max_completion_tokens',
   ability: QWEN_ABILITY,
   provider: QWEN,
-  requestExtras: qwenRequestExtras,
-  configSchema: qwenConfigSchema,
+  thinking: QWEN_THINKING,
+};
+
+const QWEN_VISION_BASE = {
+  family: 'qwen' as const,
+  maxTokensField: 'max_completion_tokens',
+  ability: QWEN_VISION_ABILITY,
+  provider: QWEN,
+  thinking: QWEN_THINKING,
 };
 
 export const QWEN_BASE_MODELS: readonly ModelItem[] = [
@@ -55,7 +59,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.7-max.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.7-plus',
     label: 'Qwen3.7 Plus',
     apiId: 'qwen3.7-plus',
@@ -75,7 +79,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.6-max.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.6-plus',
     label: 'Qwen3.6 Plus',
     apiId: 'qwen3.6-plus',
@@ -85,7 +89,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.6-plus.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.6-flash',
     label: 'Qwen3.6 Flash',
     apiId: 'qwen3.6-flash',
@@ -95,7 +99,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.6-flash.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.5-plus',
     label: 'Qwen3.5 Plus',
     apiId: 'qwen3.5-plus',
@@ -105,7 +109,7 @@ export const QWEN_BASE_MODELS: readonly ModelItem[] = [
     detailKey: 'model.qwen3.5-plus.detail',
   },
   {
-    ...QWEN_BASE,
+    ...QWEN_VISION_BASE,
     id: 'qwen3.5-flash',
     label: 'Qwen3.5 Flash',
     apiId: 'qwen3.5-flash',

@@ -3,10 +3,19 @@ import { suite, test } from 'mocha';
 import { ZHIPU, ZP_MODELS } from '../../../src/providers/bigmodel';
 
 suite('providers/bigmodel', () => {
-  const thinkingModel = ZP_MODELS.find((m) => m.id === 'glm-5.1')!;
-  const plainModel = ZP_MODELS.find((m) => m.id === 'glm-4.5-air')!;
+  const thinkingModel = ZP_MODELS.find((m) => m.label === 'GLM-5.1')!;
+  const plainModel = ZP_MODELS.find((m) => m.label === 'GLM-4.5-Air')!;
 
   suite('thinking-capable models requestExtras()', () => {
+    test('thinking model has thinking config', () => {
+      assert.ok(thinkingModel.thinking !== undefined);
+      assert.equal(thinkingModel.thinking!.default, 'adaptive');
+    });
+
+    test('plain model has no thinking config', () => {
+      assert.equal(plainModel.thinking, undefined);
+    });
+
     const requestExtras = thinkingModel.requestExtras!;
 
     test('thinkingMode "disabled": thinking type disabled', () => {
@@ -101,7 +110,7 @@ suite('providers/bigmodel', () => {
       ]);
     });
 
-    test('vision models accept images and provide formatImagePart', () => {
+    test('vision models accept images', () => {
       const visionIds = [
         'glm-5v-turbo',
         'glm-4.6v',
@@ -114,7 +123,38 @@ suite('providers/bigmodel', () => {
       for (const id of visionIds) {
         const m = ZP_MODELS.find((x) => x.id === id)!;
         assert.equal(m.ability.acceptsImages, true, `${id} acceptsImages`);
-        assert.equal(typeof m.formatImagePart, 'function', `${id} formatImagePart`);
+      }
+    });
+
+    test('vision models do NOT have explicit formatImagePart (auto-provided by prepare.ts)', () => {
+      const visionIds = [
+        'glm-5v-turbo',
+        'glm-4.6v',
+        'glm-ocr',
+        'glm-4.1v-thinking-flashx',
+        'glm-4.6v-flash',
+        'glm-4.1v-thinking-flash',
+        'glm-4v-flash',
+      ];
+      for (const id of visionIds) {
+        const m = ZP_MODELS.find((x) => x.id === id)!;
+        assert.equal(m.formatImagePart, undefined, `${id} formatImagePart should be undefined (auto-fallback)`);
+      }
+    });
+
+    test('vision models have imageField undefined (defaults to \"image_url\")', () => {
+      const visionIds = [
+        'glm-5v-turbo',
+        'glm-4.6v',
+        'glm-ocr',
+        'glm-4.1v-thinking-flashx',
+        'glm-4.6v-flash',
+        'glm-4.1v-thinking-flash',
+        'glm-4v-flash',
+      ];
+      for (const id of visionIds) {
+        const m = ZP_MODELS.find((x) => x.id === id)!;
+        assert.equal((m as any).imageField, undefined, `${id} imageField defaults to undefined`);
       }
     });
 

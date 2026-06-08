@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { suite, test, afterEach } from 'mocha';
 import * as vscode from 'vscode';
-import { composeModelProvider, composeModelEndpoint, getEndpoint, resolveEndpoint, resolveTrait } from '../../../src/providers/utils';
+import { composeModelProvider, composeModelEndpoint, getEndpoint, resolveEndpoint, resolveTrait, imagePart } from '../../../src/providers/utils';
 import { DEFAULT_ENDPOINT_URLS } from '../../../src/providers/endpoints';
 import { MINIMAX } from '../../../src/providers/minimax';
 import { ZHIPU } from '../../../src/providers/bigmodel';
@@ -184,28 +184,28 @@ suite('getEndpoint priority resolution', () => {
 suite('resolveEndpoint', () => {
   test('returns ModelEndpoint by exact key match (BigModel)', () => {
     const ep = resolveEndpoint(ZHIPU, 'z.ai-coding');
-    assert.equal(ep?.key, 'z.ai-coding');
+    assert.equal(ep?.id, 'z.ai-coding');
     assert.equal(ep?.url, 'https://api.z.ai/api/coding/paas/v4');
   });
 
   test('returns Qwen US endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://dashscope-us.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'us');
+    assert.equal(ep?.id, 'us');
   });
 
   test('returns Qwen SGP endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://abc.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'sgp');
+    assert.equal(ep?.id, 'sgp');
   });
 
   test('returns Qwen EU endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://xyz.eu-central-1.maas.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'eu');
+    assert.equal(ep?.id, 'eu');
   });
 
   test('returns Qwen CN endpoint by match', () => {
     const ep = resolveEndpoint(QWEN, 'https://dashscope.aliyuncs.com/compatible-mode/v1');
-    assert.equal(ep?.key, 'cn');
+    assert.equal(ep?.id, 'cn');
   });
 
   test('returns undefined when no endpoint matches', () => {
@@ -224,18 +224,18 @@ suite('composeModelProvider / composeModelEndpoint', () => {
     const m1 = { id: 'm1' } as unknown as ModelItem;
     const m2 = { id: 'm2' } as unknown as ModelItem;
     const ep = composeModelEndpoint(
-      { key: 'a', label: 'A', url: 'https://a.example.com' },
+      { id: 'a', label: 'A', url: 'https://a.example.com' },
       [m1, m2],
     );
     assert.equal(ep.models!.length, 2);
-    assert.equal(m1.endpoint?.key, 'a');
-    assert.equal(m2.endpoint?.key, 'a');
+    assert.equal(m1.endpoint?.id, 'a');
+    assert.equal(m2.endpoint?.id, 'a');
   });
 
   test('composeModelProvider wires endpoints with provider back-refs', () => {
     const modelProvider = { id: 'fake' } as unknown as ModelProvider;
     const m = { id: 'm1' } as unknown as ModelItem;
-    const ep = composeModelEndpoint({ key: 'a', label: 'A', url: 'https://a.example.com' }, [m]);
+    const ep = composeModelEndpoint({ id: 'a', label: 'A', url: 'https://a.example.com' }, [m]);
 
     composeModelProvider(modelProvider, [ep]);
 
@@ -246,14 +246,14 @@ suite('composeModelProvider / composeModelEndpoint', () => {
 
 suite('Endpoint.models visibility', () => {
   test('Qwen US endpoint includes US-only models', () => {
-    const us = QWEN.endpoints?.find((s) => s.key === 'us');
+    const us = QWEN.endpoints?.find((s) => s.id === 'us');
     const usIds = us?.models!.map((m) => m.id) ?? [];
     assert.ok(usIds.includes('qwen-plus-us'), 'US endpoint should contain qwen-plus-us');
     assert.ok(usIds.includes('qwen-flash-us'), 'US endpoint should contain qwen-flash-us');
   });
 
   test('Qwen CN endpoint does NOT include US-only models', () => {
-    const cn = QWEN.endpoints?.find((s) => s.key === 'cn');
+    const cn = QWEN.endpoints?.find((s) => s.id === 'cn');
     const cnIds = cn?.models!.map((m) => m.id) ?? [];
     assert.ok(!cnIds.includes('qwen-plus-us'), 'CN endpoint should not contain qwen-plus-us');
     assert.ok(!cnIds.includes('qwen-flash-us'), 'CN endpoint should not contain qwen-flash-us');
@@ -261,7 +261,7 @@ suite('Endpoint.models visibility', () => {
   });
 
   test('Qwen US endpoint includes base models', () => {
-    const us = QWEN.endpoints?.find((s) => s.key === 'us');
+    const us = QWEN.endpoints?.find((s) => s.id === 'us');
     const usIds = us?.models!.map((m) => m.id) ?? [];
     assert.ok(usIds.includes('qwen3.7-max'), 'US endpoint should contain shared base model');
   });
@@ -317,7 +317,7 @@ suite('ModelProvider/ModelEndpoint composition invariants', () => {
   test('every endpoint has provider back-reference', () => {
     for (const mp of [MINIMAX, MOONSHOT, ZHIPU, QWEN, DEEPSEEK]) {
       for (const me of mp.endpoints ?? []) {
-        assert.equal(me.provider, mp, `endpoint ${me.key}.provider must point at owner`);
+        assert.equal(me.provider, mp, `endpoint ${me.id}.provider must point at owner`);
       }
     }
   });
@@ -334,6 +334,62 @@ suite('ModelProvider/ModelEndpoint composition invariants', () => {
 
   test('DeepSeek has a single endpoint even though it has no variants', () => {
     assert.equal(DEEPSEEK.endpoints?.length, 1);
-    assert.equal(DEEPSEEK.endpoints?.[0].key, 'deepseek');
+    assert.equal(DEEPSEEK.endpoints?.[0].id, 'deepseek');
+  });
+});
+
+suite('imagePart()', () => {
+  const fakeData = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
+  const fakeMime = 'image/png';
+
+  test('default imageField is "image_url"', () => {
+    const fn = imagePart();
+    const result = fn(fakeData, fakeMime);
+    assert.equal(result.type, 'image_url');
+    assert.ok(typeof (result as any).image_url?.url === 'string');
+    assert.match((result as any).image_url.url, /^data:image\/png;base64,/);
+  });
+
+  test('custom imageField "image"', () => {
+    const fn = imagePart('image');
+    const result = fn(fakeData, fakeMime);
+    assert.equal(result.type, 'image');
+    assert.ok(typeof (result as any).image?.url === 'string');
+    assert.match((result as any).image.url, /^data:image\/png;base64,/);
+  });
+
+  test('base64 encodes correctly', () => {
+    const data = new Uint8Array([0x48, 0x65, 0x6c, 0x6c, 0x6f]); // "Hello"
+    const fn = imagePart();
+    const result = fn(data, 'text/plain');
+    assert.ok((result as any).image_url.url.includes('SGVsbG8='));
+  });
+
+  test('different mimetypes produce correct data URIs', () => {
+    const data = new Uint8Array([0x42]); // 'B'
+
+    const pngFn = imagePart();
+    const pngResult = pngFn(data, 'image/png');
+    assert.match((pngResult as any).image_url.url, /^data:image\/png;base64,/);
+
+    const jpgResult = pngFn(data, 'image/jpeg');
+    assert.match((jpgResult as any).image_url.url, /^data:image\/jpeg;base64,/);
+  });
+
+  test('returns a NEW function each call (stateless)', () => {
+    const fn1 = imagePart();
+    const fn2 = imagePart();
+    assert.notStrictEqual(fn1, fn2);
+
+    const data = new Uint8Array([0x00]);
+    const r1 = fn1(data, 'image/gif');
+    const r2 = fn2(data, 'image/gif');
+    assert.deepEqual(r1, r2);
+  });
+
+  test('empty data produces valid base64 empty string', () => {
+    const fn = imagePart();
+    const result = fn(new Uint8Array(0), 'image/png');
+    assert.equal((result as any).image_url.url, 'data:image/png;base64,');
   });
 });

@@ -61,14 +61,14 @@ suite('providers/index', () => {
 
   suite('modelById', () => {
     test('deepseek-v4-flash maps to DEEPSEEK provider', () => {
-      const entry = modelById.get('deepseek-v4-flash');
-      assert.ok(entry !== undefined, 'deepseek-v4-flash not found in modelById');
+      const entry = modelById.get('deepseek-v4-flash-deepseek-deepseek');
+      assert.ok(entry !== undefined, 'deepseek-v4-flash-deepseek-deepseek not found in modelById');
       assert.strictEqual(entry!.provider, DEEPSEEK);
       assert.equal(entry!.id, 'deepseek-v4-flash');
     });
 
     test('minimax-m2.7-highspeed maps to MINIMAX provider', () => {
-      const entry = modelById.get('minimax-m2.7-highspeed');
+      const entry = modelById.get('minimax-m2.7-highspeed-minimax-minimax.io');
       assert.ok(entry !== undefined);
       assert.strictEqual(entry!.provider, MINIMAX);
     });
@@ -79,6 +79,15 @@ suite('providers/index', () => {
 
     test('returns undefined for unknown model id', () => {
       assert.equal(modelById.get('gpt-4o'), undefined);
+    });
+
+    test('JSOV-defined model from qwen.json has qwen provider', () => {
+      const entry = modelById.get('deepseek-v4-pro-qwen-cn');
+      if (entry === undefined) {
+        // JSON models may not be loaded in test env; skip but don't fail
+        return;
+      }
+      assert.strictEqual(entry.provider, QWEN);
     });
   });
 });

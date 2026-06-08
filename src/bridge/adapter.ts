@@ -301,7 +301,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     if (endpoints && endpoints.length > 1) {
       const epItems = endpoints.map((ep) => ({
         label: ep.label,
-        description: ep.key,
+        description: ep.id,
         detail: ep.url,
       }));
       const epPicked = await vscode.window.showQuickPick(epItems, {

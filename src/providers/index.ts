@@ -1,9 +1,11 @@
+import path from 'node:path';
 import { DEEPSEEK, DEEPSEEK_ENDPOINTS } from './deepseek';
 import { MINIMAX, MINIMAX_ENDPOINTS } from './minimax';
 import { MOONSHOT, MOONSHOT_ENDPOINTS } from './moonshot';
 import { QWEN, QWEN_ENDPOINTS } from './qwen';
 import { ZHIPU, ZHIPU_ENDPOINTS } from './bigmodel';
-import { composeModelProvider } from './utils';
+import { composeModelProvider, modelKey } from './utils';
+import { loadAllJsonModels } from './loader';
 import type { ModelItem, ModelProvider, ModelEndpoint } from './types';
 
 export { DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU };
@@ -17,14 +19,32 @@ composeModelProvider(ZHIPU, ZHIPU_ENDPOINTS);
 
 export const ALL_PROVIDERS: readonly ModelProvider[] = [DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU];
 
+export const providerById = new Map<string, ModelProvider>(ALL_PROVIDERS.map((mp) => [mp.id, mp]));
+
+export const endpointById = new Map<string, ModelEndpoint>(
+  ALL_PROVIDERS.flatMap((mp) => mp.endpoints ?? []).map((me) => [me.id, me]),
+);
+
 export const ALL_MODELS: readonly ModelItem[] = (() => {
   const seen = new Set<string>();
   const result: ModelItem[] = [];
+
+  // JSON models first
+  const modelsDir = path.join(__dirname, '..', '..', 'models');
+  for (const mi of loadAllJsonModels(modelsDir, { providerById, endpointById })) {
+    const key = modelKey(mi);
+    if (!seen.has(key)) {
+      seen.add(key);
+      result.push(mi);
+    }
+  }
+
   for (const mp of ALL_PROVIDERS) {
     for (const me of mp.endpoints ?? []) {
       for (const mi of me.models ?? []) {
-        if (!seen.has(mi.id)) {
-          seen.add(mi.id);
+        const key = modelKey(mi);
+        if (!seen.has(key)) {
+          seen.add(key);
           result.push(mi);
         }
       }
@@ -34,10 +54,4 @@ export const ALL_MODELS: readonly ModelItem[] = (() => {
   return result;
 })();
 
-export const modelById = new Map<string, ModelItem>(ALL_MODELS.map((mi) => [mi.id, mi]));
-
-export const providerById = new Map<string, ModelProvider>(ALL_PROVIDERS.map((mp) => [mp.id, mp]));
-
-export const endpointById = new Map<string, ModelEndpoint>(
-  ALL_PROVIDERS.flatMap((mp) => mp.endpoints ?? []).map((me) => [me.key, me]),
-);
+export const modelById = new Map<string, ModelItem>(ALL_MODELS.map((mi) => [modelKey(mi), mi]));

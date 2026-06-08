@@ -53,7 +53,7 @@ export interface ModelProvider extends ApiTraits {
 }
 
 export interface ModelEndpoint extends ApiTraits {
-  readonly key: string;
+  readonly id: string;
   readonly label: string;
   readonly matchStr?: string;
 
@@ -76,8 +76,42 @@ export interface ModelItem extends ApiTraits {
   endpoint?: ModelEndpoint;
   maxTokensField?: string;
 
+  imageField?: string;
+
+  thinking?: ThinkingConfig;
+  contentTag?: string;
+
   requestExtras?(modelConfig: Record<string, unknown> | undefined): Record<string, unknown>;
   configSchema?(): Record<string, unknown> | undefined;
   createContentParser?(): ContentParser | undefined;
   formatImagePart?(data: Uint8Array, mimeType: string): Record<string, unknown>;
+}
+
+export interface ThinkingOption {
+  readonly value: string;
+  readonly label: string;
+  readonly hint: string;
+  readonly requestFields?: Record<string, unknown>;
+}
+
+export interface ThinkingConfig {
+  readonly default: string;
+  readonly options: readonly ThinkingOption[];
+}
+
+export interface ModelItemJson extends Partial<
+  Omit<
+    ModelItem,
+    | 'requestExtras'
+    | 'configSchema'
+    | 'createContentParser'
+    | 'formatImagePart'
+    | 'provider'
+    | 'endpoint'
+  >
+> {
+  readonly providerId?: string;
+  readonly endpointId?: string;
+  readonly thinking?: ThinkingConfig;
+  readonly contentTag?: string;
 }
