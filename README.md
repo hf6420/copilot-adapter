@@ -107,7 +107,7 @@ The extension reports token usage to VS Code for every request, using one of two
 The chars-to-token ratio used by `provideTokenCount` (VS Code's context-window calculation) starts at a default of **4.0** and is automatically calibrated from real API usage data over time.  Each request that returns exact usage updates the ratio using EMA smoothing (80% old, 20% new).  Only changes ≥ 10% are persisted to avoid noise:
 
 ```
-Chars-per-token ratio calibrated for deepseek: 4.00 → 3.38 (based on API usage: 63200 chars / 18703 tokens)
+Chars-per-token ratio calibrated for deepseek: 4.00 to 3.38 (based on API usage: 63200 chars / 18703 tokens)
 ```
 
 Providers without exact usage data (e.g. MiniMax) keep the static default ratio.

@@ -107,7 +107,7 @@ model: deepseek-v4-pro, tokens: prompt=18576 reasoning=40 completion=57, cache: 
 `provideTokenCount`（VS Code 的上下文窗口计算）使用的字符/Token 比例初始为 **4.0**，会根据每次 API 返回的真实用量自动校准。每次返回精确用量的请求都会用 EMA 平滑方式（旧值 80%、新值 20%）更新比例。为避免噪声，仅当变化 ≥ 10% 时才会存储：
 
 ```
-Chars-per-token ratio calibrated for deepseek: 4.00 → 3.38 (based on API usage: 63200 chars / 18703 tokens)
+Chars-per-token ratio calibrated for deepseek: 4.00 to 3.38 (based on API usage: 63200 chars / 18703 tokens)
 ```
 
 无法获取精确用量的提供商（如 MiniMax）保持静态默认比例。

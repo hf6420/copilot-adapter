@@ -51,7 +51,7 @@ const fakeMime = 'image/png';
 
 suite('bridge/prepare formatImagePart fallback', () => {
   suite('imageInput: true, no explicit formatImagePart', () => {
-    test('default imageField → imagePart("image_url")', () => {
+    test('default imageField to imagePart("image_url")', () => {
       const model: ModelItem = {
         id: 'm1',
         label: 'M1',
@@ -72,7 +72,7 @@ suite('bridge/prepare formatImagePart fallback', () => {
       assert.match((result as any).image_url.url, /^data:image\/png;base64,/);
     });
 
-    test('custom imageField "image" → imagePart("image")', () => {
+    test('custom imageField "image" to imagePart("image")', () => {
       const model: ModelItem = {
         id: 'm2',
         label: 'M2',
@@ -93,7 +93,7 @@ suite('bridge/prepare formatImagePart fallback', () => {
       assert.ok((result as any).image?.url !== undefined);
     });
 
-    test('custom imageField "image_file" → imagePart("image_file")', () => {
+    test('custom imageField "image_file" to imagePart("image_file")', () => {
       const model: ModelItem = {
         id: 'm3',
         label: 'M3',
@@ -136,7 +136,7 @@ suite('bridge/prepare formatImagePart fallback', () => {
   });
 
   suite('imageInput: false', () => {
-    test('no formatImagePart → undefined', () => {
+    test('no formatImagePart to undefined', () => {
       const model: ModelItem = {
         id: 'tx1',
         label: 'TX1',
