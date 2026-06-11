@@ -198,6 +198,14 @@ export class Adapter implements vscode.LanguageModelChatProvider {
         throw new Error(ready.gate.reason);
       }
 
+      if (ready.gate.kind === 'warmup') {
+        channel.info(
+          `[预热] ${modelProvider.label} / ${model.label}: ` +
+            `第 ${ready.gate.round}/${ready.gate.totalRounds} 轮，` +
+            `工具: ${ready.gate.toolName}`,
+        );
+      }
+
       void dumpRequest(
         this.storageUri,
         session.id,
