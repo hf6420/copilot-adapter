@@ -7,7 +7,7 @@ import { ZHIPU, ZHIPU_ENDPOINTS } from './zhipu';
 import { composeModelProvider, modelKey } from './utils';
 import { loadAllJsonModels } from './loader';
 import { Settings } from '../settings';
-import { loadCustomModels } from '../custom/loader';
+import { loadCustomModels, customModelKey } from '../custom/loader';
 import type { ModelItem, ModelProvider, ModelEndpoint } from './types';
 
 export { DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU };
@@ -74,7 +74,7 @@ function buildAllModels(customPath: string): ModelItem[] {
       endpointById: _endpointById,
     });
     for (const mi of customModels) {
-      const key = modelKey(mi);
+      const key = customModelKey(mi);
       if (!seen.has(key)) {
         seen.add(key);
         result.push(mi);

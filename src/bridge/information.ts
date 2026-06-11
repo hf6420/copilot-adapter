@@ -1,6 +1,7 @@
 import vscode from 'vscode';
 import { t } from '../nls';
 import { modelKey } from '../providers/utils';
+import { customModelKey } from '../custom/loader';
 import type { ModelItem } from '../providers/types';
 
 /** Extended chat model information returned to VS Code. */
@@ -25,9 +26,14 @@ export function buildChatInfo(
   const modelProvider = modelItem.provider;
   const schema = modelItem.configSchema?.();
   const notConfigured = !hasKey;
-  const detail = t(modelItem.detailKey);
+  const isCustom = modelItem.detailKey === '_custom';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const customDetail = isCustom ? ((modelItem as any)._detail as string | undefined) ?? '' : '';
+  const detail = isCustom && customDetail ? customDetail : t(modelItem.detailKey);
 
-  const qualifiedId = modelKey(modelItem);
+  const qualifiedId = isCustom
+    ? customModelKey(modelItem)
+    : modelKey(modelItem);
   const infoId = idPrefix ? `${idPrefix}::${qualifiedId}` : qualifiedId;
   const info = {
     id: infoId,

@@ -1,27 +1,17 @@
 import assert from 'node:assert/strict';
 import { suite, test } from 'mocha';
-import { validateModelJson } from '../../../src/custom/loader';
-import type { ModelJsonModule } from '../../../src/providers/loader';
+import { validateCustomModelArray } from '../../../src/custom/loader';
+import type { CustomModelEntry } from '../../../src/custom/loader';
 import type { ThinkingConfig } from '../../../src/providers/types';
 
-function makeModule(overrides?: Partial<ModelJsonModule>): ModelJsonModule {
+function makeEntry(overrides?: Partial<CustomModelEntry>): CustomModelEntry {
   return {
-    providerId: 'qwen',
-    endpointId: 'cn',
-    models: [
-      {
-        id: 'my-model',
-        label: 'My Model',
-        apiId: 'my-model',
-        family: 'custom',
-        version: '1',
-        maxInputTokens: 100_000,
-        maxOutputTokens: 50_000,
-        ability: { reasoning: true, imageInput: false },
-      },
-    ],
+    id: 'my-model',
+    label: 'My Model',
+    provider: 'qwen',
+    endpoints: ['cn'],
     ...overrides,
-  } as ModelJsonModule;
+  };
 }
 
 function makeThinking(): ThinkingConfig {
@@ -34,222 +24,207 @@ function makeThinking(): ThinkingConfig {
   };
 }
 
-suite('custom/loader validateModelJson()', () => {
+suite('custom/loader validateCustomModelArray()', () => {
+  // --- Valid cases ---
 
-  test('valid minimal module passes', () => {
-    const m = makeModule();
-    assert.deepEqual(validateModelJson(m), []);
+  test('valid single entry passes', () => {
+    assert.deepEqual(validateCustomModelArray([makeEntry()]), []);
   });
 
-  test('valid module with thinking passes', () => {
-    const m = makeModule({ thinking: makeThinking() });
-    assert.deepEqual(validateModelJson(m), []);
+  test('valid multiple entries pass', () => {
+    assert.deepEqual(
+      validateCustomModelArray([makeEntry({ id: 'a' }), makeEntry({ id: 'b' })]),
+      [],
+    );
   });
 
-  test('module without thinking passes', () => {
-    const m = makeModule();
-    delete (m as unknown as Record<string, unknown>).thinking;
-    assert.deepEqual(validateModelJson(m), []);
+  test('valid multiple endpoints passes', () => {
+    assert.deepEqual(validateCustomModelArray([makeEntry({ endpoints: ['cn', 'us'] })]), []);
   });
 
-  test('ability is optional', () => {
-    const m = makeModule({
-      models: [{ id: 'm', label: 'M', apiId: 'm' }],
-    });
-    assert.deepEqual(validateModelJson(m), []);
+  test('empty array passes', () => {
+    assert.deepEqual(validateCustomModelArray([]), []);
   });
 
-  test('missing providerId fails', () => {
-    const m = makeModule();
-    delete (m as unknown as Record<string, unknown>).providerId;
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs.some((e) => e.includes('providerId')));
+  test('reasoning and imageInput are optional', () => {
+    assert.deepEqual(validateCustomModelArray([makeEntry()]), []);
   });
 
-  test('missing endpointId fails', () => {
-    const m = makeModule();
-    delete (m as unknown as Record<string, unknown>).endpointId;
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs.some((e) => e.includes('endpointId')));
+  test('thinking is optional', () => {
+    assert.deepEqual(validateCustomModelArray([makeEntry({ thinking: makeThinking() })]), []);
   });
 
-  test('empty providerId fails', () => {
-    const m = makeModule({ providerId: '' });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs.some((e) => e.includes('providerId')));
+  // --- Top-level format ---
+
+  test('non-array fails', () => {
+    assert.ok(validateCustomModelArray({}).length > 0);
   });
 
-  test('missing models array fails', () => {
-    const m = makeModule();
-    delete (m as unknown as Record<string, unknown>).models;
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs.some((e) => e.includes('models')));
+  test('object instead of array fails', () => {
+    assert.ok(validateCustomModelArray({ a: 1 }).length > 0);
   });
 
-  test('missing model id fails', () => {
-    const m = makeModule({
-      models: [{ label: 'L', apiId: 'a' } as unknown as ModelJsonModule['models'][0]],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs[0].includes('models[0].id'));
+  // --- Required fields ---
+
+  test('missing id fails', () => {
+    const m = makeEntry();
+    delete (m as unknown as Record<string, unknown>).id;
+    const errs = validateCustomModelArray([m]);
+    assert.ok(errs.length > 0 && errs[0].includes('[0].id'));
   });
 
-  test('missing model label fails', () => {
-    const m = makeModule({
-      models: [{ id: 'x', apiId: 'a' } as unknown as ModelJsonModule['models'][0]],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs[0].includes('.label'));
+  test('missing label fails', () => {
+    const m = makeEntry();
+    delete (m as unknown as Record<string, unknown>).label;
+    const errs = validateCustomModelArray([m]);
+    assert.ok(errs.length > 0 && errs[0].includes('.label'));
   });
 
-  test('missing model apiId fails', () => {
-    const m = makeModule({
-      models: [{ id: 'x', label: 'L' } as unknown as ModelJsonModule['models'][0]],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs[0].includes('.apiId'));
+  test('missing provider fails', () => {
+    const m = makeEntry();
+    delete (m as unknown as Record<string, unknown>).provider;
+    const errs = validateCustomModelArray([m]);
+    assert.ok(errs.length > 0 && errs[0].includes('.provider'));
   });
+
+  test('empty provider fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ provider: '' })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.provider'));
+  });
+
+  test('missing endpoints fails', () => {
+    const m = makeEntry();
+    delete (m as unknown as Record<string, unknown>).endpoints;
+    const errs = validateCustomModelArray([m]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+  });
+
+  test('endpoints not an array fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ endpoints: 'cn' as unknown as string[] })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+  });
+
+  test('empty endpoints array fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ endpoints: [] })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+  });
+
+  test('endpoints with empty string fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ endpoints: ['cn', ''] })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+  });
+
+  // --- Numeric validation ---
 
   test('non-positive maxInputTokens fails', () => {
-    const m = makeModule({
-      models: [{ id: 'x', label: 'L', apiId: 'a', maxInputTokens: 0 }],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs[0].includes('maxInputTokens'));
+    const errs = validateCustomModelArray([makeEntry({ maxInputTokens: 0 })]);
+    assert.ok(errs.length > 0 && errs[0].includes('maxInputTokens'));
   });
 
   test('fractional maxInputTokens fails', () => {
-    const m = makeModule({
-      models: [{ id: 'x', label: 'L', apiId: 'a', maxInputTokens: 1.5 }],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs[0].includes('maxInputTokens'));
+    const errs = validateCustomModelArray([makeEntry({ maxInputTokens: 1.5 })]);
+    assert.ok(errs.length > 0 && errs[0].includes('maxInputTokens'));
   });
 
-  test('non-boolean ability.reasoning fails', () => {
-    const m = makeModule({
-      models: [
-        { id: 'x', label: 'L', apiId: 'a', ability: { reasoning: 'yes' } } as unknown as ModelJsonModule['models'][0],
-      ],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs.some((e) => e.includes('reasoning')));
+  test('non-positive maxOutputTokens fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ maxOutputTokens: -1 })]);
+    assert.ok(errs.length > 0 && errs[0].includes('maxOutputTokens'));
   });
 
-  test('non-object model entry fails', () => {
-    const m = makeModule({
-      models: ['not-an-object'] as unknown as ModelJsonModule['models'],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs[0].includes('models[0]'));
+  test('non-positive maxTools fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ maxTools: 0 })]);
+    assert.ok(errs.length > 0 && errs[0].includes('maxTools'));
   });
+
+  // --- Flat ability fields ---
+
+  test('non-boolean reasoning fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ reasoning: 'yes' as unknown as boolean })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.reasoning'));
+  });
+
+  test('non-boolean imageInput fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ imageInput: 1 as unknown as boolean })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.imageInput'));
+  });
+
+  // --- Thinking validation ---
 
   test('thinking with missing default fails', () => {
-    const m = makeModule({
-      thinking: {
-        options: [{ value: 'high', label: 'Think', hint: '', requestFields: {} }],
-      } as unknown as ThinkingConfig,
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
+    const errs = validateCustomModelArray([
+      makeEntry({
+        thinking: {
+          options: [{ value: 'high', label: 'Think', hint: '', requestFields: {} }],
+        } as unknown as ThinkingConfig,
+      }),
+    ]);
     assert.ok(errs.some((e) => e.includes('thinking.default')));
   });
 
   test('thinking default not in options fails', () => {
-    const m = makeModule({
-      thinking: {
-        default: 'not-there',
-        options: [{ value: 'high', label: 'Think', hint: '', requestFields: {} }],
-      } as unknown as ThinkingConfig,
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
+    const errs = validateCustomModelArray([
+      makeEntry({
+        thinking: {
+          default: 'not-there',
+          options: [{ value: 'high', label: 'Think', hint: '', requestFields: {} }],
+        } as unknown as ThinkingConfig,
+      }),
+    ]);
     assert.ok(errs.some((e) => e.includes('default')));
   });
 
   test('thinking options must be array', () => {
-    const m = makeModule({
-      thinking: { default: 'high', options: 'not-array' } as unknown as ThinkingConfig,
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
+    const errs = validateCustomModelArray([
+      makeEntry({
+        thinking: { default: 'high', options: 'not-array' } as unknown as ThinkingConfig,
+      }),
+    ]);
     assert.ok(errs.some((e) => e.includes('options')));
   });
 
   test('thinking option missing value fails', () => {
-    const m = makeModule({
-      thinking: {
-        default: 'high',
-        options: [
-          { value: 'high', label: 'Think', hint: '', requestFields: {} },
-          { label: 'None', hint: '', requestFields: {} } as unknown as ThinkingConfig['options'][0],
-        ],
-      },
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
+    const errs = validateCustomModelArray([
+      makeEntry({
+        thinking: {
+          default: 'high',
+          options: [
+            { value: 'high', label: 'Think', hint: '', requestFields: {} },
+            { label: 'None', hint: '', requestFields: {} } as unknown as ThinkingConfig['options'][0],
+          ],
+        },
+      }),
+    ]);
     assert.ok(errs.some((e) => e.includes('.value')));
   });
 
   test('thinking option missing label fails', () => {
-    const m = makeModule({
-      thinking: {
-        default: 'high',
-        options: [
-          { value: 'high', label: 'Think', hint: '', requestFields: {} },
-          { value: 'disabled', hint: '', requestFields: {} } as unknown as ThinkingConfig['options'][0],
-        ],
-      },
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
+    const errs = validateCustomModelArray([
+      makeEntry({
+        thinking: {
+          default: 'high',
+          options: [
+            { value: 'high', label: 'Think', hint: '', requestFields: {} },
+            { value: 'disabled', hint: '', requestFields: {} } as unknown as ThinkingConfig['options'][0],
+          ],
+        },
+      }),
+    ]);
     assert.ok(errs.some((e) => e.includes('.label')));
   });
 
-  test('model-level thinking with missing default fails', () => {
-    const m = makeModule({
-      models: [
-        {
-          id: 'x',
-          label: 'L',
-          apiId: 'a',
-          thinking: {
-            options: [{ value: 'high', label: 'Think', hint: '', requestFields: {} }],
-          } as unknown as ThinkingConfig,
-        },
-      ],
-    });
-    const errs = validateModelJson(m);
-    assert.ok(errs.length > 0);
-    assert.ok(errs.some((e) => e.includes('.thinking')));
+  // --- Non-object entry ---
+
+  test('non-object entry fails', () => {
+    const errs = validateCustomModelArray(['not-an-object' as unknown as CustomModelEntry]);
+    assert.ok(errs.length > 0 && errs[0].includes('[0]'));
   });
 
-  test('empty models array passes', () => {
-    const m = makeModule({ models: [] });
-    assert.deepEqual(validateModelJson(m), []);
-  });
+  // --- Multiple entries ---
 
-  test('multiple models report errors for each', () => {
-    const m = makeModule({
-      models: [
-        { id: '', label: 'L', apiId: 'a' } as unknown as ModelJsonModule['models'][0],
-        { id: 'y', label: '', apiId: 'b' } as unknown as ModelJsonModule['models'][0],
-      ],
-    });
-    const errs = validateModelJson(m);
+  test('multiple entries report errors for each', () => {
+    const errs = validateCustomModelArray([makeEntry({ id: '' }), makeEntry({ label: '' })]);
     assert.equal(errs.length, 2);
-    assert.ok(errs[0].includes('models[0]'));
-    assert.ok(errs[1].includes('models[1]'));
+    assert.ok(errs[0].includes('[0]'));
+    assert.ok(errs[1].includes('[1]'));
   });
 });

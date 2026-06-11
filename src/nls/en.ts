@@ -117,12 +117,19 @@ export const en: Translation = {
 
   'tools.drift': 'The following tools were removed to keep the conversation on track: {0}.',
 
+  // Custom models
+  'customModels.labelPrefix': '[Custom]',
   'customModels.validation.jsonParse': 'Invalid JSON',
-  'customModels.validation.topLevelObject': 'File must contain a JSON object',
+  'customModels.validation.topLevelArray': 'File must contain a JSON array',
   'customModels.validation.requiredString': 'Required non-empty string',
   'customModels.validation.positiveInt': 'Expected a positive integer',
   'customModels.validation.notAnObject': 'Expected an object',
   'customModels.validation.array': 'Expected an array',
   'customModels.validation.boolean': 'Expected a boolean (true/false)',
   'customModels.validation.thinkingDefaultMismatch': 'Default must match one of the options values',
+  'customModels.validation.nonEmptyStringArray': 'All items must be non-empty strings',
+  'customModels.validation.requiredStringArray': 'Must be an array of non-empty strings',
+  'customModels.validation.unknownProvider': 'Unknown provider',
+  'customModels.validation.unknownEndpoint': 'Unknown endpoint',
+  'customModels.validation.endpointNotUnderProvider': 'Endpoint does not belong to provider',
 };
