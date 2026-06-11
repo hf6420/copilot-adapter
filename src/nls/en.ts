@@ -117,8 +117,7 @@ export const en: Translation = {
 
   'tools.drift': 'The following tools were removed to keep the conversation on track: {0}.',
 
-  // Custom models
-  'customModels.labelPrefix': '[Custom]',
+  'customModels.labelPrefix': 'Custom',
   'customModels.validation.jsonParse': 'Invalid JSON',
   'customModels.validation.topLevelArray': 'File must contain a JSON array',
   'customModels.validation.requiredString': 'Required non-empty string',

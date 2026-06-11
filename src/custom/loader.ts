@@ -225,7 +225,7 @@ function groupEntries(reg: Registries, entries: CustomModelEntry[]): ModelJsonMo
 
       group.models.push({
         id: entry.id,
-        label: `${CUSTOM_LABEL_PREFIX} ${entry.label}`,
+        label: `${entry.label} ${CUSTOM_LABEL_PREFIX}`,
         apiId: entry.id,
         family: entry.family ?? 'custom',
         version: entry.version ?? '',

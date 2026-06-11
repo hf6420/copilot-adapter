@@ -112,8 +112,7 @@ export const zh: Translation = {
 
   'tools.drift': '以下工具已从对话中移除以保持上下文连贯：{0}。',
 
-  // Custom models
-  'customModels.labelPrefix': '[自定义]',
+  'customModels.labelPrefix': '自定义',
   'customModels.validation.jsonParse': 'JSON 解析错误',
   'customModels.validation.topLevelArray': '文件内容必须是一个 JSON 数组',
   'customModels.validation.requiredString': '必填，非空字符串',
