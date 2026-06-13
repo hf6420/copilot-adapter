@@ -2,7 +2,7 @@ import vscode from 'vscode';
 import { t } from '../nls';
 import { EXT_ID } from '../defines';
 import { Settings } from '../settings';
-import { ALL_MODELS } from '../providers';
+import { ALL_MODELS } from '../registry';
 import { modelKey } from '../providers/utils';
 
 const VISION_OFF = 'off';

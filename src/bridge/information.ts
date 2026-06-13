@@ -1,7 +1,7 @@
 import vscode from 'vscode';
 import { t } from '../nls';
 import { modelKey } from '../providers/utils';
-import { customModelKey } from '../custom/loader';
+import { customModelKey } from '../registry';
 import type { ModelItem } from '../providers/types';
 
 /** Extended chat model information returned to VS Code. */

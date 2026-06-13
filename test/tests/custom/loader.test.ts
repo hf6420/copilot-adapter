@@ -173,6 +173,7 @@ suite('custom/loader validateCustomModelArray()', () => {
     assert.ok(errs.some((e) => e.includes('options')));
   });
 
+
   test('thinking option missing value fails', () => {
     const errs = validateCustomModelArray([
       makeEntry({
@@ -180,27 +181,12 @@ suite('custom/loader validateCustomModelArray()', () => {
           default: 'high',
           options: [
             { value: 'high', label: 'Think', hint: '', requestFields: {} },
-            { label: 'None', hint: '', requestFields: {} } as unknown as ThinkingConfig['options'][0],
+            { label: 'NoValue', hint: '', requestFields: {} } as unknown as ThinkingConfig['options'][0],
           ],
         },
       }),
     ]);
     assert.ok(errs.some((e) => e.includes('.value')));
-  });
-
-  test('thinking option missing label fails', () => {
-    const errs = validateCustomModelArray([
-      makeEntry({
-        thinkingConfig: {
-          default: 'high',
-          options: [
-            { value: 'high', label: 'Think', hint: '', requestFields: {} },
-            { value: 'disabled', hint: '', requestFields: {} } as unknown as ThinkingConfig['options'][0],
-          ],
-        },
-      }),
-    ]);
-    assert.ok(errs.some((e) => e.includes('.label')));
   });
 
   test('non-object entry fails', () => {

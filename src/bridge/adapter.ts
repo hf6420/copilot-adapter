@@ -2,7 +2,7 @@ import vscode from 'vscode';
 import { EXT_ID } from '../defines';
 import { channel } from '../logger';
 import { t } from '../nls';
-import { ALL_MODELS, ALL_PROVIDERS, modelById } from '../providers';
+import { ALL_MODELS, ALL_PROVIDERS, modelById } from '../registry';
 import { resolveTrait, getEndpoint, resolveEndpoint } from '../providers/utils';
 import { Settings } from '../settings';
 import { buildChatInfo, type ChatInfo, type ReqOptions } from './information';

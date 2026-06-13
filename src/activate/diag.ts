@@ -5,7 +5,7 @@ import { channel } from '../logger';
 import { Settings } from '../settings';
 import { loadCustomModels } from '../custom/loader';
 import { updateDiagnostics, clearAllDiagnostics } from '../custom/diag';
-import { getCustomModels, refreshCustomModels } from '../providers/index';
+import { providerById, endpointById, refreshCustomModels } from '../providers/index';
 import type { Adapter } from '../bridge/adapter';
 
 export function logStartupDiagnostics(context: vscode.ExtensionContext): void {
@@ -23,8 +23,8 @@ export function logStartupDiagnostics(context: vscode.ExtensionContext): void {
 
 function loadAndDiagnose(filePath: string, adapters: Adapter[]): void {
   const { errors } = loadCustomModels(filePath, {
-    providerById: getCustomModels().registries.providerById,
-    endpointById: getCustomModels().registries.endpointById,
+    providerById,
+    endpointById,
   });
 
   const fileUri = vscode.Uri.file(filePath);

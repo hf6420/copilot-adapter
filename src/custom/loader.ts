@@ -2,7 +2,6 @@ import * as fs from 'node:fs';
 import { channel } from '../logger';
 import { t } from '../nls';
 import { loadModelsFromJson } from '../providers/loader';
-import { modelKey } from '../providers/utils';
 import type { ModelItem, ThinkingConfig } from '../providers/types';
 import type { ModelJsonModule } from '../providers/loader';
 import type { ModelProvider, ModelEndpoint } from '../providers/types';
@@ -202,9 +201,6 @@ function parseJsonArray(text: string): { data: unknown[]; parseErrors: Validatio
 
 const CUSTOM_LABEL_PREFIX = t('customModels.labelPrefix');
 
-/** Suffix appended to modelKey for custom models to avoid collisions. */
-const CUSTOM_KEY_SUFFIX = '-custom';
-
 function groupEntries(reg: Registries, entries: CustomModelEntry[]): ModelJsonModule[] {
   const groups = new Map<
     string,
@@ -249,22 +245,6 @@ function groupEntries(reg: Registries, entries: CustomModelEntry[]): ModelJsonMo
   })) as ModelJsonModule[];
 }
 
-/**
- * Load custom models from a JSON file path.
- *
- * Expected format: an array of flat model entries:
- * ```json
- * [
- *   { "id": "my-model", "label": "My Model", "provider": "qwen",
- *     "endpoints": ["cn", "us"], "reasoning": true, "imageInput": false }
- * ]
- * ```
- *
- * - filePath empty → returns empty result
- * - file not found → returns empty result (not an error)
- * - JSON parse error → returns error diagnostics
- * - validation errors → returns error diagnostics
- */
 export function loadCustomModels(filePath: string, reg: Registries): CustomModelsResult {
   if (!filePath) {
     return { models: [], errors: [] };
@@ -343,6 +323,3 @@ export function loadCustomModels(filePath: string, reg: Registries): CustomModel
   return { models, errors: [] };
 }
 
-export function customModelKey(mi: ModelItem): string {
-  return modelKey(mi) + CUSTOM_KEY_SUFFIX;
-}
