@@ -9,7 +9,7 @@ function makeEntry(overrides?: Partial<CustomModelEntry>): CustomModelEntry {
     id: 'my-model',
     label: 'My Model',
     provider: 'qwen',
-    endpoints: ['cn'],
+    endpoint: ['cn'],
     ...overrides,
   };
 }
@@ -38,7 +38,11 @@ suite('custom/loader validateCustomModelArray()', () => {
   });
 
   test('valid multiple endpoints passes', () => {
-    assert.deepEqual(validateCustomModelArray([makeEntry({ endpoints: ['cn', 'us'] })]), []);
+    assert.deepEqual(validateCustomModelArray([makeEntry({ endpoint: ['cn', 'us'] })]), []);
+  });
+
+  test('valid single string endpoint passes', () => {
+    assert.deepEqual(validateCustomModelArray([makeEntry({ endpoint: 'cn' })]), []);
   });
 
   test('empty array passes', () => {
@@ -87,26 +91,31 @@ suite('custom/loader validateCustomModelArray()', () => {
     assert.ok(errs.length > 0 && errs[0].includes('.provider'));
   });
 
-  test('missing endpoints fails', () => {
+  test('missing endpoint fails', () => {
     const m = makeEntry();
-    delete (m as unknown as Record<string, unknown>).endpoints;
+    delete (m as unknown as Record<string, unknown>).endpoint;
     const errs = validateCustomModelArray([m]);
-    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoint'));
   });
 
-  test('endpoints not an array fails', () => {
-    const errs = validateCustomModelArray([makeEntry({ endpoints: 'cn' as unknown as string[] })]);
-    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+  test('endpoint not string or array fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ endpoint: 42 as unknown as string[] })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoint'));
   });
 
-  test('empty endpoints array fails', () => {
-    const errs = validateCustomModelArray([makeEntry({ endpoints: [] })]);
-    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+  test('empty endpoint string fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ endpoint: '' })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoint'));
   });
 
-  test('endpoints with empty string fails', () => {
-    const errs = validateCustomModelArray([makeEntry({ endpoints: ['cn', ''] })]);
-    assert.ok(errs.length > 0 && errs[0].includes('.endpoints'));
+  test('empty endpoint array fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ endpoint: [] })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoint'));
+  });
+
+  test('endpoint array with empty string fails', () => {
+    const errs = validateCustomModelArray([makeEntry({ endpoint: ['cn', ''] })]);
+    assert.ok(errs.length > 0 && errs[0].includes('.endpoint'));
   });
 
   // --- Numeric validation ---

@@ -14,7 +14,7 @@ You can define custom models by writing a JSON configuration file. This is usefu
     "id": "deepseek-v4-pro",              // Required · unique identifier, must be unique across all entries
     "label": "DeepSeek V4 Pro",           // Required · display name shown in the model selector
     "provider": "deepseek",               // Required · provider ID (deepseek | minimax | moonshot | qwen | zhipu)
-    "endpoints": ["deepseek"],            // Required · array of endpoint IDs
+    "endpoint": "deepseek",               // Required · endpoint specifier(s): ID, label, or (partial) URL
 
     "family": "deepseek-v4",              // Optional · model family, default "custom"
     "version": "2025-04",                 // Optional · version string, default ""
@@ -53,7 +53,7 @@ You can define custom models by writing a JSON configuration file. This is usefu
 ]
 ```
 
-2. Open VS Code Settings (`Ctrl/Cmd+,`) and set **Copilot Adapter › Custom Models Path** to the absolute path of your JSON file.
+2. (`Ctrl/Cmd+Shift+P` *Copilot Adapter: Extension Settings*) Or Open VS Code Settings (`Ctrl/Cmd+,`) and set **Copilot Adapter › Custom Models Path** to the absolute path of your JSON file.
 
 3. Reload the **Language Models** panel — your custom models will appear alongside built-in models.
 
@@ -101,9 +101,15 @@ The ID of the built-in provider this model belongs to. Must match one of the sup
 
 ---
 
-### `endpoints` (required, `string[]`)
+### `endpoint` (required, `string | string[]`)
 
-An array of endpoint IDs to apply this model to. Each value must be one of the endpoint IDs supported by the chosen provider.
+Specifies which endpoint(s) this model applies to. Can be a single string or an array of strings. Each value supports:
+
+- **Endpoint ID** — e.g. `"deepseek"`, `"cn"`, `"minimaxi.com"`
+- **Endpoint Label** — e.g. `"api.minimaxi.com"`, `"api.minimax.io"`
+- **URL (full or partial)** — e.g. `"https://api.minimaxi.com/v1/chat/completions"`, `"https://api.minimaxi.com/v1"`, `"api.minimaxi.com"`
+
+Matching is tried in order: ID → Label → URL contains.
 
 **Supported endpoint IDs by provider:**
 
@@ -115,7 +121,7 @@ An array of endpoint IDs to apply this model to. Each value must be one of the e
 | `qwen`     | `cn`, `us`, `sgp`, `eu`                 |
 | `zhipu`    | `bigmodel`, `bigmodel-coding`, `z.ai`, `z.ai-coding` |
 
-**Example:** `["deepseek"]` or `["cn", "us"]`
+**Example:** `"deepseek"`, `["cn", "us"]`, `"api.minimaxi.com"`, `"https://api.moonshot.cn/v1"`
 
 ---
 
@@ -266,14 +272,14 @@ You can define as many models as you need in a single JSON file. Each model can 
     "id": "my-deepseek",
     "label": "My DeepSeek",
     "provider": "deepseek",
-    "endpoints": ["deepseek"],
+    "endpoint": ["deepseek"],
     "thinking": true
   },
   {
     "id": "my-qwen",
     "label": "My Qwen",
     "provider": "qwen",
-    "endpoints": ["cn", "us"],
+    "endpoint": ["cn", "us"],
     "imageInput": true
   }
 ]

@@ -15,7 +15,7 @@ export interface CustomModelEntry {
   id: string;
   label: string;
   provider: string;
-  endpoints: string[];
+  endpoint: string | string[]; // Single endpoint specifier or array. Each can be an endpoint id, label, or (partial) URL.
   family?: string;
   version?: string;
   maxInputTokens?: number;
@@ -56,6 +56,7 @@ export function validateCustomModelEntry(raw: unknown, idx: number): string[] {
 
   if (!isRecord(raw)) {
     errors.push(`${prefix}: ${t('customModels.validation.notAnObject')}`);
+
     return errors;
   }
 
@@ -71,11 +72,16 @@ export function validateCustomModelEntry(raw: unknown, idx: number): string[] {
     errors.push(`${prefix}.provider: ${t('customModels.validation.requiredString')}`);
   }
 
-  if (!isArrayOfStrings(m.endpoints)) {
-    if (Array.isArray(m.endpoints)) {
-      errors.push(`${prefix}.endpoints: ${t('customModels.validation.nonEmptyStringArray')}`);
+  const epRaw = m.endpoint;
+  if (typeof epRaw === 'string') {
+    if (!isNonEmptyString(epRaw)) {
+      errors.push(`${prefix}.endpoint: ${t('customModels.validation.requiredString')}`);
+    }
+  } else if (!isArrayOfStrings(epRaw)) {
+    if (Array.isArray(epRaw)) {
+      errors.push(`${prefix}.endpoint: ${t('customModels.validation.nonEmptyStringArray')}`);
     } else {
-      errors.push(`${prefix}.endpoints: ${t('customModels.validation.requiredStringArray')}`);
+      errors.push(`${prefix}.endpoint: ${t('customModels.validation.requiredStringOrArray')}`);
     }
   }
 
@@ -183,6 +189,7 @@ function parseJsonArray(text: string): { data: unknown[]; parseErrors: Validatio
     const message = err instanceof SyntaxError ? err.message : String(err);
     const lineMatch = message.match(/line\s+(\d+)/i);
     const line = lineMatch ? Number(lineMatch[1]) : 0;
+    
     return {
       data: [],
       parseErrors: [{ message: `${t('customModels.validation.jsonParse')}: ${message}`, line }],
@@ -201,6 +208,30 @@ function parseJsonArray(text: string): { data: unknown[]; parseErrors: Validatio
 
 const CUSTOM_LABEL_PREFIX = t('customModels.labelPrefix');
 
+function resolveEndpointId(
+  input: string,
+  provider: ModelProvider,
+): ModelEndpoint | undefined {
+  if (!provider.endpoints) return undefined;
+
+  // Exact id match
+  let ep = provider.endpoints.find((e) => e.id === input);
+  if (ep) return ep;
+
+  // Exact label match
+  ep = provider.endpoints.find((e) => e.label === input);
+  if (ep) return ep;
+
+  // Input contains endpoint URL (e.g. user types full /chat/completions URL)
+  ep = provider.endpoints.find((e) => e.url && input.includes(e.url));
+  if (ep) return ep;
+
+  // Input contains matchStr (legacy)
+  ep = provider.endpoints.find((e) => e.matchStr && input.includes(e.matchStr));
+
+  return ep;
+}
+
 function groupEntries(reg: Registries, entries: CustomModelEntry[]): ModelJsonModule[] {
   const groups = new Map<
     string,
@@ -211,11 +242,15 @@ function groupEntries(reg: Registries, entries: CustomModelEntry[]): ModelJsonMo
     const provider = reg.providerById.get(entry.provider);
     if (!provider) continue;
 
-    for (const epId of entry.endpoints) {
-      const key = `${entry.provider}\0${epId}`;
+    const eps = typeof entry.endpoint === 'string' ? [entry.endpoint] : entry.endpoint;
+    for (const spec of eps) {
+      const ep = resolveEndpointId(spec, provider);
+      if (!ep) continue;
+
+      const key = `${entry.provider}\0${ep.id}`;
       let group = groups.get(key);
       if (!group) {
-        group = { providerId: entry.provider, endpointId: epId, models: [] };
+        group = { providerId: entry.provider, endpointId: ep.id, models: [] };
         groups.set(key, group);
       }
 
@@ -283,21 +318,15 @@ export function loadCustomModels(filePath: string, reg: Registries): CustomModel
         line: 0,
       });
     } else {
-      for (const epId of e.endpoints) {
-        if (!reg.endpointById.has(epId)) {
+      const provider = reg.providerById.get(e.provider)!;
+      const eps = typeof e.endpoint === 'string' ? [e.endpoint] : e.endpoint;
+      for (const spec of eps) {
+        const matched = resolveEndpointId(spec, provider);
+        if (!matched) {
           refErrors.push({
-            message: `[${i}].endpoints: ${t('customModels.validation.unknownEndpoint')} "${epId}"`,
+            message: `[${i}].endpoint: ${t('customModels.validation.unknownEndpoint')} "${spec}"`,
             line: 0,
           });
-        } else {
-          const provider = reg.providerById.get(e.provider)!;
-          const belongs = provider.endpoints?.some((ep) => ep.id === epId) ?? false;
-          if (!belongs) {
-            refErrors.push({
-              message: `[${i}].endpoints: ${t('customModels.validation.endpointNotUnderProvider')} "${epId}" under "${e.provider}"`,
-              line: 0,
-            });
-          }
         }
       }
     }
@@ -316,6 +345,7 @@ export function loadCustomModels(filePath: string, reg: Registries): CustomModel
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       channel.warn(`Failed to load custom models from ${filePath}:`, err);
+
       return { models: [], errors: [{ message, line: 0 }] };
     }
   }
