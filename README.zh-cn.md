@@ -152,7 +152,6 @@ Chars-per-token ratio calibrated for deepseek: 4.00 to 3.38 (based on API usage:
 | *Copilot Adapter: Set Vision Proxy Model* | 选择视觉代理使用的模型 |
 | *Copilot Adapter: Open Settings* | 跳转至扩展设置页 |
 | *Copilot Adapter: Show Logs* | 打开输出频道 |
-| *Copilot Adapter: View Request Records* | 打开请求 dump 文件所在的文件夹 |
 
 ---
 

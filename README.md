@@ -153,7 +153,6 @@ Providers without exact usage data (e.g. MiniMax) keep the static default ratio.
 | *Copilot Adapter: Set Vision Proxy Model* | Choose the model to use as vision proxy |
 | *Copilot Adapter: Open Settings* | Jump to extension settings |
 | *Copilot Adapter: Show Logs* | Open the output channel |
-| *Copilot Adapter: View Request Records* | Open the folder where request dumps are stored |
 
 ---
 
