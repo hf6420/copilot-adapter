@@ -72,7 +72,6 @@ suite('providers/zhipu', () => {
         ZP_MODELS.map((m) => m.id),
         [
           'glm-5.2',
-          'glm-5.2-1m',
           'glm-5.1',
           'glm-5',
           'glm-5-turbo',
@@ -101,7 +100,6 @@ suite('providers/zhipu', () => {
       const reasoning = ZP_MODELS.filter((m) => m.thinking).map((m) => m.id);
       assert.deepEqual(reasoning, [
         'glm-5.2',
-        'glm-5.2-1m',
         'glm-5.1',
         'glm-5',
         'glm-5-turbo',
@@ -166,7 +164,6 @@ suite('providers/zhipu', () => {
       const textIds = ZP_MODELS.filter((m) => !m.imageInput).map((m) => m.id);
       assert.deepEqual(textIds, [
         'glm-5.2',
-        'glm-5.2-1m',
         'glm-5.1',
         'glm-5',
         'glm-5-turbo',
