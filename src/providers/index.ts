@@ -11,6 +11,7 @@ export { MINIMAX } from './minimax';
 export { MOONSHOT } from './moonshot';
 export { QWEN } from './qwen';
 export { ZHIPU } from './zhipu';
+export { CUSTOM } from './custom';
 export type { ModelProvider, ModelEndpoint, ModelItem } from './types';
 
 export { ALL_PROVIDERS, providerById, endpointById, ALL_MODELS, modelById } from '../registry';

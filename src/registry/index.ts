@@ -12,9 +12,10 @@ import {
 } from './builtin';
 import { loadBuiltinJSONModels } from './builtin-json';
 import type { ModelItem, Registries } from './types';
+import { CUSTOM } from '../providers/custom';
 
 export { ALL_PROVIDERS, providerById, endpointById };
-export { DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU };
+export { DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU, CUSTOM };
 export type { ModelItem };
 
 export function modelKey(mi: ModelItem): string {

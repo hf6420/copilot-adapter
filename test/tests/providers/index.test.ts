@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { suite, test } from 'mocha';
-import { ALL_MODELS, ALL_PROVIDERS, providerById, modelById, DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU } from '../../../src/registry';
+import { ALL_MODELS, ALL_PROVIDERS, providerById, modelById, DEEPSEEK, MINIMAX, MOONSHOT, QWEN, ZHIPU, CUSTOM } from '../../../src/registry';
 
 suite('providers/index', () => {
   suite('ALL_PROVIDERS', () => {
-    test('has exactly 5 providers', () => {
-      assert.equal(ALL_PROVIDERS.length, 5);
+    test('has exactly 6 providers', () => {
+      assert.equal(ALL_PROVIDERS.length, 6);
     });
 
     test('first provider is DEEPSEEK', () => {
@@ -26,6 +26,10 @@ suite('providers/index', () => {
 
     test('fifth provider is ZHIPU', () => {
       assert.strictEqual(ALL_PROVIDERS[4], ZHIPU);
+    });
+
+    test('sixth provider is CUSTOM', () => {
+      assert.strictEqual(ALL_PROVIDERS[5], CUSTOM);
     });
   });
 
@@ -50,12 +54,16 @@ suite('providers/index', () => {
       assert.strictEqual(providerById.get('zhipu'), ZHIPU);
     });
 
+    test('maps "custom": CUSTOM', () => {
+      assert.strictEqual(providerById.get('custom'), CUSTOM);
+    });
+
     test('returns undefined for unknown provider id', () => {
       assert.equal(providerById.get('unknown-provider'), undefined);
     });
 
-    test('has exactly 5 entries', () => {
-      assert.equal(providerById.size, 5);
+    test('has exactly 6 entries', () => {
+      assert.equal(providerById.size, 6);
     });
   });
 
