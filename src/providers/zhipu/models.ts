@@ -19,6 +19,32 @@ const BM_THINKING_CONFIG: ThinkingConfig = {
   ],
 };
 
+// GLM-5.2 exposes reasoning_effort (high/max) on top of the thinking switch,
+// mirroring DeepSeek's effort levels.
+const BM_EFFORT_THINKING_CONFIG: ThinkingConfig = {
+  default: 'high',
+  options: [
+    {
+      value: 'high',
+      label: 'think.high',
+      hint: 'think.high.hint',
+      requestFields: { thinking: { type: 'enabled' }, reasoning_effort: 'high' },
+    },
+    {
+      value: 'max',
+      label: 'think.max',
+      hint: 'think.max.hint',
+      requestFields: { thinking: { type: 'enabled' }, reasoning_effort: 'max' },
+    },
+    {
+      value: 'none',
+      label: 'think.none',
+      hint: 'think.none.hint',
+      requestFields: { thinking: { type: 'disabled' } },
+    },
+  ],
+};
+
 const BM_THINK_BASE = {
   family: 'glm',
   provider: ZHIPU,
@@ -26,6 +52,15 @@ const BM_THINK_BASE = {
   imageInput: false,
   maxTools: 128,
   thinkingConfig: BM_THINKING_CONFIG,
+};
+
+const BM_EFFORT_BASE = {
+  family: 'glm',
+  provider: ZHIPU,
+  thinking: true,
+  imageInput: false,
+  maxTools: 128,
+  thinkingConfig: BM_EFFORT_THINKING_CONFIG,
 };
 
 const BM_PLAIN_BASE = {
@@ -54,6 +89,16 @@ const BM_VISION_PLAIN_BASE = {
 };
 
 export const ZP_MODELS: readonly ModelItem[] = [
+  {
+    ...BM_EFFORT_BASE,
+    id: 'glm-5.2',
+    label: 'GLM-5.2',
+    apiId: 'glm-5.2',
+    version: '5.2',
+    maxInputTokens: 872_000,
+    maxOutputTokens: 128_000,
+    detailKey: 'model.glm-5.2.detail',
+  },
   {
     ...BM_THINK_BASE,
     id: 'glm-5.1',
