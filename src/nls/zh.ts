@@ -41,7 +41,8 @@ export const zh: Translation = {
   'model.qwen-plus-us.detail': '均衡型模型——仅在 US 区域端点可用',
   'model.qwen-flash-us.detail': '快速低成本模型——仅在 US 区域端点可用',
 
-  'model.glm-5.1.detail': '最新旗舰',
+  'model.glm-5.2.detail': '最新旗舰——Coding 开源 SOTA',
+  'model.glm-5.1.detail': '高智能基座——Coding 能力对齐 Claude',
   'model.glm-5.detail': '高智能基座——擅长 Agentic 长程规划与执行',
   'model.glm-5-turbo.detail': '龙虾增强基座——长程任务执行连续性好',
   'model.glm-4.7.detail': '高智能模型——通用对话、推理与智能体能力全面升级',

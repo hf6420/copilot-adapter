@@ -71,6 +71,8 @@ suite('providers/zhipu', () => {
       assert.deepEqual(
         ZP_MODELS.map((m) => m.id),
         [
+          'glm-5.2',
+          'glm-5.2-1m',
           'glm-5.1',
           'glm-5',
           'glm-5-turbo',
@@ -98,6 +100,8 @@ suite('providers/zhipu', () => {
     test('thinking-capable models match the documented set', () => {
       const reasoning = ZP_MODELS.filter((m) => m.thinking).map((m) => m.id);
       assert.deepEqual(reasoning, [
+        'glm-5.2',
+        'glm-5.2-1m',
         'glm-5.1',
         'glm-5',
         'glm-5-turbo',
@@ -161,6 +165,8 @@ suite('providers/zhipu', () => {
     test('text-only models do not accept images', () => {
       const textIds = ZP_MODELS.filter((m) => !m.imageInput).map((m) => m.id);
       assert.deepEqual(textIds, [
+        'glm-5.2',
+        'glm-5.2-1m',
         'glm-5.1',
         'glm-5',
         'glm-5-turbo',
