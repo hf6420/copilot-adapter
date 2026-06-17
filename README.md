@@ -18,9 +18,10 @@ Extend VS Code's native Copilot Chat with third-party AI models. Switch between 
   - [Vision Proxy](#vision-proxy)
   - [Prefix Cache Hit Rate](#prefix-cache-hit-rate)
   - [Context Window](#context-window)
-
+  - [Custom Models](#custom-models)
 - [Configuration Reference](#configuration-reference)
 - [Commands](#commands)
+- [Notes](#notes)
 
 ---
 
@@ -113,6 +114,18 @@ Chars-per-token ratio calibrated for deepseek: 4.00 to 3.38 (based on API usage:
 
 Providers without exact usage data (e.g. MiniMax) keep the static default ratio.
 
+### Custom Models
+
+VS Code Copilot Chat's official **Custom Endpoint** only supports basic model configuration (name, endpoint, API key) — it lacks vision proxy, customizable thinking modes, and cache hit rate logging. Copilot Adapter's **Custom Models** fills these gaps:
+
+- **Vision Proxy** — text-only models can accept images via an automatic vision-proxy pipeline.
+- **Customizable Thinking Modes** — configure per-model reasoning effort with vendor-specific request body shapes (DeepSeek, Qwen, Anthropic, etc.), all selectable from the model picker.
+- **Cache Hit Rate Logging** — monitor prefix-cache efficiency (hit/miss rates per request) in the output channel.
+
+Bring any OpenAI-compatible model into Copilot Chat by defining its metadata (name, endpoint, capabilities, token limits) directly in the configuration file.  Thinking models (`"thinking": true`) get automatic reasoning-effort configuration based on the model ID, with full customization available when needed.
+
+For a step-by-step guide with screenshots, see [How to Add a Custom Model](docs/add-custom-model.md).  Ready-to-copy templates for DeepSeek, OpenAI, Anthropic, Qwen, Zhipu, MiniMax, Gemini, Grok and more are available in [`custom-models-template.jsonc`](docs/custom-models-template.jsonc).
+
 ---
 
 ## Configuration Reference
@@ -159,3 +172,9 @@ Providers without exact usage data (e.g. MiniMax) keep the static default ratio.
 ## License
 
 [MIT](LICENSE)
+
+---
+
+## Notes
+
+**Profile isolation:** If you use VS Code [Profiles](https://code.visualstudio.com/docs/editor/profiles), the official Copilot Chat configuration is isolated per profile — and Copilot Adapter's configuration follows the same rule.  API keys, model groups, and custom model definitions are all scoped to the active profile.

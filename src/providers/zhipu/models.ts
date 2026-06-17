@@ -1,49 +1,6 @@
-import type { ModelItem, ThinkingConfig } from '../types';
+import type { ModelItem } from '../types';
 import { ZHIPU } from './provider';
-
-const BM_THINKING_CONFIG: ThinkingConfig = {
-  default: 'adaptive',
-  options: [
-    {
-      value: 'adaptive',
-      label: 'think.adaptive',
-      hint: 'think.adaptive.hint',
-      requestFields: { thinking: { type: 'enabled' } },
-    },
-    {
-      value: 'disabled',
-      label: 'think.none',
-      hint: 'think.none.hint',
-      requestFields: { thinking: { type: 'disabled' } },
-    },
-  ],
-};
-
-// GLM-5.2 exposes reasoning_effort (high/max) on top of the thinking switch,
-// mirroring DeepSeek's effort levels.
-const BM_EFFORT_THINKING_CONFIG: ThinkingConfig = {
-  default: 'high',
-  options: [
-    {
-      value: 'high',
-      label: 'think.high',
-      hint: 'think.high.hint',
-      requestFields: { thinking: { type: 'enabled' }, reasoning_effort: 'high' },
-    },
-    {
-      value: 'max',
-      label: 'think.max',
-      hint: 'think.max.hint',
-      requestFields: { thinking: { type: 'enabled' }, reasoning_effort: 'max' },
-    },
-    {
-      value: 'none',
-      label: 'think.none',
-      hint: 'think.none.hint',
-      requestFields: { thinking: { type: 'disabled' } },
-    },
-  ],
-};
+import { ZHIPU_THINKING, ZHIPU_GLM52_THINKING } from '../defines';
 
 const BM_THINK_BASE = {
   family: 'glm',
@@ -51,16 +8,16 @@ const BM_THINK_BASE = {
   thinking: true,
   imageInput: false,
   maxTools: 128,
-  thinkingConfig: BM_THINKING_CONFIG,
+  thinkingConfig: ZHIPU_THINKING,
 };
 
-const BM_EFFORT_BASE = {
+const BM_GLM52_BASE = {
   family: 'glm',
   provider: ZHIPU,
   thinking: true,
   imageInput: false,
   maxTools: 128,
-  thinkingConfig: BM_EFFORT_THINKING_CONFIG,
+  thinkingConfig: ZHIPU_GLM52_THINKING,
 };
 
 const BM_PLAIN_BASE = {
@@ -77,7 +34,7 @@ const BM_VISION_THINK_BASE = {
   thinking: true,
   imageInput: true,
   maxTools: 128,
-  thinkingConfig: BM_THINKING_CONFIG,
+  thinkingConfig: ZHIPU_THINKING,
 };
 
 const BM_VISION_PLAIN_BASE = {
@@ -90,7 +47,7 @@ const BM_VISION_PLAIN_BASE = {
 
 export const ZP_MODELS: readonly ModelItem[] = [
   {
-    ...BM_EFFORT_BASE,
+    ...BM_GLM52_BASE,
     id: 'glm-5.2',
     label: 'GLM-5.2',
     apiId: 'glm-5.2',

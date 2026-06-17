@@ -177,6 +177,200 @@
             }
           }
         }
+      },
+      {
+        "vendor": "copilot-adapter-custom",
+        "displayName": "Custom Models",
+        "configuration": {
+          "type": "object",
+          "required": [
+            "apiKey"
+          ],
+          "properties": {
+            "apiKey": {
+              "type": "string",
+              "secret": true,
+              "minLength": 1,
+              "description": "API key for the models",
+              "title": "API Key"
+            },
+            "models": {
+              "type": "array",
+              "defaultSnippets": [
+                {
+                  "label": "New Model",
+                  "description": "Add a new custom model configuration",
+                  "body": [
+                    {
+                      "id": "$1",
+                      "name": "$2",
+                      "url": "$3",
+                      "toolCalling": "^${4|true,false|}",
+                      "vision": "^${5|true,false|}",
+                      "maxInputTokens": "^${6:128000}",
+                      "maxOutputTokens": "^${7:16000}"
+                    }
+                  ]
+                }
+              ],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for the model"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Display name of the model"
+                  },
+                  "url": {
+                    "type": "string",
+                    "pattern": "^https?://.+",
+                    "patternErrorMessage": "URL must start with http:// or https://",
+                    "markdownDescription": "URL endpoint for the model.\n\n**Important:** Base URLs default to Chat Completions API. Explicit API paths are respected: `/chat/completions`, `/responses`, and `/v1/messages` (Anthropic-compatible). Use the `apiType` property to override the request/response format independently of the URL."
+                  },
+                  "apiType": {
+                    "type": "string",
+                    "enum": [
+                      "chat-completions",
+                      "responses",
+                      "messages"
+                    ],
+                    "enumItemLabels": [
+                      "Chat Completions",
+                      "Responses",
+                      "Messages"
+                    ],
+                    "enumDescriptions": [
+                      "Chat Completions API",
+                      "Responses API",
+                      "Messages API"
+                    ],
+                    "title": "API Type",
+                    "markdownDescription": "Request/response format used to talk to this endpoint:\n- `chat-completions`: Chat Completions API (default).\n- `responses`: Responses API.\n- `messages`: Messages API.\n\nWhen omitted, falls back to the group-level `apiType`, then to the URL path."
+                  },
+                  "toolCalling": {
+                    "type": "boolean",
+                    "description": "Whether the model supports tool calling"
+                  },
+                  "maxTools": {
+                    "type": "number",
+                    "description": "Maximum number of tools that can be called in a single request. Only applicable if `toolCalling` is true. If not set, tool calling is enabled with no specific limit."
+                  },
+                  "vision": {
+                    "type": "boolean",
+                    "description": "Whether the model supports vision capabilities"
+                  },
+                  "maxInputTokens": {
+                    "type": "number",
+                    "description": "Maximum number of input tokens supported by the model"
+                  },
+                  "maxOutputTokens": {
+                    "type": "number",
+                    "description": "Maximum number of output tokens supported by the model"
+                  },
+                  "editTools": {
+                    "type": "array",
+                    "description": "List of edit tools supported by the model. If this is not configured, the editor will try multiple edit tools and pick the best one.\n\n- 'find-replace': Find and replace text in a document.\n- 'multi-find-replace': Find and replace text in a document.\n- 'apply-patch': A file-oriented diff format used by some OpenAI models\n- 'code-rewrite': A general but slower editing tool that allows the model to rewrite and code snippet and provide only the replacement to the editor.",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "find-replace",
+                        "multi-find-replace",
+                        "apply-patch",
+                        "code-rewrite"
+                      ]
+                    }
+                  },
+                  "thinking": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether the model supports thinking capabilities"
+                  },
+                  "thinkingTag": {
+                    "type": "string",
+                    "description": "An optional tag included in the request when thinking mode is enabled, allowing the model to adjust its response format or behavior accordingly."
+                  },
+                  "streaming": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether the model supports streaming responses. Defaults to true."
+                  },
+                  "zeroDataRetentionEnabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "Whether Zero Data Retention (ZDR) is enabled for this endpoint. When `true`, `previous_response_id` will not be sent in requests via Responses API."
+                  },
+                  "supportsReasoningEffort": {
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "markdownDescription": "Simple form: flat array of effort level strings, e.g. `[\"low\", \"high\"]`. Each level auto-generates request fields using the `reasoningEffortFormat` (defaults to `chat-completions`). The first element is the default. Levels supported by mainstream OpenAI-compatible servers are `minimal`, `low`, `medium`, `high`.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "markdownDescription": "Full form: a ThinkingConfig object for complete control over options, labels, hints, and request body shape.",
+                        "required": ["default", "options"],
+                        "properties": {
+                          "default": {
+                            "type": "string",
+                            "description": "Default thinking mode value."
+                          },
+                          "options": {
+                            "type": "array",
+                            "description": "Available thinking mode options.",
+                            "items": {
+                              "type": "object",
+                              "required": ["value"],
+                              "properties": {
+                                "value": { "type": "string", "description": "The option value sent in the request." },
+                                "label": { "type": "string", "description": "Display label for this option." },
+                                "hint": { "type": "string", "description": "Secondary description shown below the label." },
+                                "requestFields": {
+                                  "type": "object",
+                                  "description": "Arbitrary fields merged into the request body when this option is selected.",
+                                  "additionalProperties": true
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "reasoningEffortFormat": {
+                    "type": "string",
+                    "enum": [
+                      "chat-completions",
+                      "responses"
+                    ],
+                    "markdownDescription": "Body shape used to forward the reasoning effort to the model. `chat-completions` sends a top-level `reasoning_effort` string. `responses` sends a nested `reasoning.effort` object. When unset the format follows the URL: `/responses` → nested, otherwise top-level."
+                  },
+                  "requestHeaders": {
+                    "type": "object",
+                    "description": "Additional HTTP headers to include with requests to this model. These reserved headers are not allowed and ignored if present: forbidden request headers (https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_request_header), forwarding headers ('forwarded', 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto'), and others ('api-key', 'authorization', 'content-type', 'openai-intent', 'x-github-api-version', 'x-initiator', 'x-interaction-id', 'x-interaction-type', 'x-onbehalf-extension-id', 'x-request-id', 'x-vscode-user-agent-library-version'). Pattern-based forbidden headers ('proxy-*', 'sec-*', 'x-http-method*' with forbidden methods) are also blocked.",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "url",
+                  "toolCalling",
+                  "vision",
+                  "maxInputTokens",
+                  "maxOutputTokens"
+                ]
+              }
+            }
+          }
+        }
       }
     ],
     "commands": [

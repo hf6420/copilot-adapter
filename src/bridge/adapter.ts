@@ -19,6 +19,8 @@ import {
 } from './tally';
 import { ApiError } from '../client/error';
 import { seedManagedGroup } from './managed';
+import { CUSTOM, buildCustomModels } from '../providers/custom';
+import type { ModelItem, ModelProvider } from '../providers/types';
 
 type PrepareOptions = vscode.PrepareLanguageModelChatModelOptions;
 
@@ -82,6 +84,8 @@ export class Adapter implements vscode.LanguageModelChatProvider {
   private readonly picker: VisionModelPicker;
   private readonly groupSecrets = new Map<string, GroupSecrets>();
   private readonly prefixToKey = new Map<string, string>();
+  /** Dynamically built models from custom provider's models[] config, keyed by modelKey. */
+  private readonly dynamicModels = new Map<string, ModelItem>();
 
   private nextPrefix = 0;
   private visionProxyAvailable = true;
@@ -133,25 +137,52 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     _token: vscode.CancellationToken,
   ): Promise<ChatInfo[]> {
     const opts = _options as GroupOptions;
-    const providerModels = registry.ALL_MODELS.filter(
-      (m) => m.provider.id === this.filteredProviderId,
-    );
-    if (providerModels.length === 0) return [];
-
     const groupCfg = opts.configuration;
-    const modelProvider = providerModels[0]?.provider;
 
     if (groupCfg === undefined) {
       return [];
     }
 
     const apiKey = typeof groupCfg['apiKey'] === 'string' ? (groupCfg['apiKey'] as string) : '';
-    const apiEndpoint =
-      typeof groupCfg['apiEndpoint'] === 'string' ? (groupCfg['apiEndpoint'] as string) : '';
     const hasKey = apiKey.length > 0;
 
     if (!hasKey) {
       return [];
+    }
+
+    // Collect visible models. For the custom provider, models come from the
+    // `models[]` array in the configuration; for other providers they come from
+    // the static registry.
+    let visibleModels: ModelItem[];
+    let modelProvider: ModelProvider;
+
+    if (this.filteredProviderId === 'custom') {
+      modelProvider = CUSTOM;
+      const rawModels = groupCfg['models'];
+      if (!Array.isArray(rawModels) || rawModels.length === 0) {
+        return [];
+      }
+      visibleModels = buildCustomModels(rawModels as Parameters<typeof buildCustomModels>[0]);
+      this.dynamicModels.clear();
+      for (const m of visibleModels) {
+        this.dynamicModels.set(registry.modelKey(m), m);
+      }
+    } else {
+      const providerModels = registry.ALL_MODELS.filter(
+        (m) => m.provider.id === this.filteredProviderId,
+      );
+      if (providerModels.length === 0) return [];
+      modelProvider = providerModels[0]?.provider;
+
+      const apiEndpoint =
+        typeof groupCfg['apiEndpoint'] === 'string' ? (groupCfg['apiEndpoint'] as string) : '';
+      const resolvedEndpoint = apiEndpoint
+        ? resolveEndpoint(modelProvider, apiEndpoint)
+        : undefined;
+      const activeEndpointId = resolvedEndpoint?.id ?? modelProvider.endpoints?.[0]?.id;
+      visibleModels = activeEndpointId
+        ? providerModels.filter((m) => m.endpoint?.id === activeEndpointId)
+        : providerModels;
     }
 
     // Retrieve prefix for this apiKey (pre-registered by configureApiKey or a previous call)
@@ -160,7 +191,6 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       const prefix = this.nextPrefix === 0 ? '' : String(this.nextPrefix);
       secrets = {
         apiKey,
-        apiEndpoint: apiEndpoint.length > 0 ? apiEndpoint : undefined,
         prefix,
         label: opts.group ?? modelProvider.label,
       };
@@ -169,23 +199,13 @@ export class Adapter implements vscode.LanguageModelChatProvider {
         this.prefixToKey.set(prefix, apiKey);
       }
       this.nextPrefix++;
-    } else {
-      secrets.apiEndpoint = apiEndpoint.length > 0 ? apiEndpoint : undefined;
     }
-
-    const resolvedEndpoint = apiEndpoint ? resolveEndpoint(modelProvider, apiEndpoint) : undefined;
-    const activeEndpointId = resolvedEndpoint?.id ?? modelProvider.endpoints?.[0]?.id;
-    const visibleModels = activeEndpointId
-      ? providerModels.filter((m) => m.endpoint?.id === activeEndpointId)
-      : providerModels;
 
     const idPrefix = secrets.prefix;
 
-    const result = visibleModels.map(
+    return visibleModels.map(
       (model) => buildChatInfo(model, hasKey, this.visionProxyAvailable, idPrefix) as ChatInfo,
     );
-
-    return result;
   }
 
   async provideLanguageModelChatResponse(
@@ -196,7 +216,8 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     token: vscode.CancellationToken,
   ): Promise<void> {
     const { modelId, prefix } = this.resolveModelIdentity(modelInfo.id);
-    const model = registry.modelById.get(modelId);
+    const model = registry.modelById.get(modelId) ?? this.dynamicModels.get(modelId);
+
     if (!model) {
       throw new Error(t('err.unknownModel', modelInfo.id));
     }
@@ -220,7 +241,9 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       logVerboseMessages(messages, options.tools);
     }
 
-    const apiUrl = getEndpoint(modelProvider, secrets.apiEndpoint);
+    // For custom models, use the URL from the model item itself (set from config).
+    // For built-in providers, resolve via getEndpoint.
+    const apiUrl = resolveTrait(model, 'url') ?? getEndpoint(modelProvider, secrets.apiEndpoint);
     const session = Session.fromMessages(messages);
     try {
       const ready = await assembleChatReq({
@@ -290,7 +313,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     _token: vscode.CancellationToken,
   ): Promise<number> {
     const { modelId } = this.resolveModelIdentity(modelInfo.id);
-    const entry = registry.modelById.get(modelId);
+    const entry = registry.modelById.get(modelId) ?? this.dynamicModels.get(modelId);
     const defaultRatio = entry
       ? (resolveTrait(entry, 'tokenRatio') ?? Settings.tokenRatio() ?? DEFAULT_CHARS_PER_TOKEN)
       : (Settings.tokenRatio() ?? DEFAULT_CHARS_PER_TOKEN);
