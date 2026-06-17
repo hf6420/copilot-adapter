@@ -42,8 +42,7 @@ export const en: Translation = {
   'model.qwen-plus-us.detail': 'Balanced model — only available on the US region endpoint',
   'model.qwen-flash-us.detail': 'Fast, low-cost model — only available on the US region endpoint',
 
-  'model.glm-5.2.detail':
-    'Latest flagship — open-source Coding SOTA',
+  'model.glm-5.2.detail': 'Latest flagship — open-source Coding SOTA',
   'model.glm-5.1.detail': 'High-intelligence base — Coding on par with Claude',
   'model.glm-5.detail': 'High-intelligence base model — agentic long-horizon planning',
   'model.glm-5-turbo.detail': 'Lobster-tuned base model — optimized for long-task execution',

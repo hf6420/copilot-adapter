@@ -60,6 +60,32 @@ export const ZHIPU_THINKING: ThinkingConfig = {
   ],
 };
 
+// GLM-5.2 exposes reasoning_effort (high/max) on top of the thinking switch,
+// mirroring DeepSeek's effort levels.
+export const ZHIPU_GLM52_THINKING: ThinkingConfig = {
+  default: 'high',
+  options: [
+    {
+      value: 'high',
+      label: 'think.high',
+      hint: 'think.high.hint',
+      requestFields: { thinking: { type: 'enabled' }, reasoning_effort: 'high' },
+    },
+    {
+      value: 'max',
+      label: 'think.max',
+      hint: 'think.max.hint',
+      requestFields: { thinking: { type: 'enabled' }, reasoning_effort: 'max' },
+    },
+    {
+      value: 'none',
+      label: 'think.none',
+      hint: 'think.none.hint',
+      requestFields: { thinking: { type: 'disabled' } },
+    },
+  ],
+};
+
 export const MINIMAX_THINKING: ThinkingConfig = {
   default: 'adaptive',
   options: [
@@ -164,6 +190,7 @@ export const MODEL_THINKING_MAP: ReadonlyMap<string, ThinkingConfig> = new Map([
   ['qwen3.6-plus', QWEN_THINKING],
 
   // Zhipu / GLM
+  ['glm-5.2', ZHIPU_GLM52_THINKING],
   ['glm-5.1', ZHIPU_THINKING],
   ['glm-5.1-vision', ZHIPU_THINKING],
 
