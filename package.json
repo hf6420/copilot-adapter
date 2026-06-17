@@ -2,7 +2,7 @@
   "name": "copilot-adapter",
   "displayName": "Copilot Adapter",
   "description": "AI Models Adapter for Copilot Chat",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "Eowl",
   "license": "MIT",
   "icon": "assets/icon.png",
@@ -314,7 +314,10 @@
                       {
                         "type": "object",
                         "markdownDescription": "Full form: a ThinkingConfig object for complete control over options, labels, hints, and request body shape.",
-                        "required": ["default", "options"],
+                        "required": [
+                          "default",
+                          "options"
+                        ],
                         "properties": {
                           "default": {
                             "type": "string",
@@ -325,11 +328,22 @@
                             "description": "Available thinking mode options.",
                             "items": {
                               "type": "object",
-                              "required": ["value"],
+                              "required": [
+                                "value"
+                              ],
                               "properties": {
-                                "value": { "type": "string", "description": "The option value sent in the request." },
-                                "label": { "type": "string", "description": "Display label for this option." },
-                                "hint": { "type": "string", "description": "Secondary description shown below the label." },
+                                "value": {
+                                  "type": "string",
+                                  "description": "The option value sent in the request."
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "description": "Display label for this option."
+                                },
+                                "hint": {
+                                  "type": "string",
+                                  "description": "Secondary description shown below the label."
+                                },
                                 "requestFields": {
                                   "type": "object",
                                   "description": "Arbitrary fields merged into the request body when this option is selected.",
