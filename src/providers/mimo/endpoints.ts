@@ -17,9 +17,9 @@ export const MIMO_ENDPOINTS: readonly ModelEndpoint[] = [
   ),
   composeModelEndpoint(
     {
-      id: 'mimo-token-plan-spg',
+      id: 'mimo-token-plan-sgp',
       label: 'MIMO Token Plan Singapore Cluster',
-      url: 'https://token-plan-spg.xiaomimimo.com/v1',
+      url: 'https://token-plan-sgp.xiaomimimo.com/v1',
     },
     MIMO_MODELS,
   ),

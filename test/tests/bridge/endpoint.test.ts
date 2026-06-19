@@ -109,10 +109,10 @@ suite('bridge/endpoint URL resolution (resolveTrait + getEndpoint)', () => {
   });
 
   test('resolveTrait ?? getEndpoint: resolveTrait wins when endpoint is set', () => {
-    const m = makeModel('mimo-token-plan-spg');
+    const m = makeModel('mimo-token-plan-sgp');
     // resolveTrait returns the endpoint url
     const url = resolveTrait(m, 'url') ?? getEndpoint(MIMO, 'mimo-token-plan-cn');
-    assert.equal(url, 'https://token-plan-spg.xiaomimimo.com/v1');
+    assert.equal(url, 'https://token-plan-sgp.xiaomimimo.com/v1');
   });
 
   test('getEndpoint with valid endpoint id returns correct url', () => {
@@ -121,8 +121,8 @@ suite('bridge/endpoint URL resolution (resolveTrait + getEndpoint)', () => {
       'https://token-plan-cn.xiaomimimo.com/v1',
     );
     assert.equal(
-      getEndpoint(MIMO, 'mimo-token-plan-spg'),
-      'https://token-plan-spg.xiaomimimo.com/v1',
+      getEndpoint(MIMO, 'mimo-token-plan-sgp'),
+      'https://token-plan-sgp.xiaomimimo.com/v1',
     );
     assert.equal(
       getEndpoint(MIMO, 'mimo-token-plan-ams'),
@@ -194,9 +194,9 @@ suite('bridge/endpoint provideLanguageModelChatInformation filtering', () => {
   });
 
   test('falls back to groupCfg when secrets is undefined', () => {
-    const result = filterVisibleModels('mimo', undefined, 'mimo-token-plan-spg');
+    const result = filterVisibleModels('mimo', undefined, 'mimo-token-plan-sgp');
     assert.equal(result.count, 2);
-    assert.deepEqual(result.endpointIds, ['mimo-token-plan-spg']);
+    assert.deepEqual(result.endpointIds, ['mimo-token-plan-sgp']);
   });
 
   test('falls back to first endpoint when both are undefined', () => {
@@ -212,7 +212,7 @@ suite('bridge/endpoint provideLanguageModelChatInformation filtering', () => {
   });
 
   test('each endpoint returns exactly 2 models', () => {
-    for (const epId of ['mimo', 'mimo-token-plan-cn', 'mimo-token-plan-spg', 'mimo-token-plan-ams']) {
+    for (const epId of ['mimo', 'mimo-token-plan-cn', 'mimo-token-plan-sgp', 'mimo-token-plan-ams']) {
       const result = filterVisibleModels('mimo', epId, undefined);
       assert.equal(
         result.count,
