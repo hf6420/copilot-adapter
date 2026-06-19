@@ -190,11 +190,11 @@ suite('providers/mimo endpoints', () => {
     assert.equal(MIMO_ENDPOINTS.length, 4);
   });
 
-  test('endpoint ids contain "mimo", "mimo-token-plan-cn", "mimo-token-plan-spg", "mimo-token-plan-ams"', () => {
+  test('endpoint ids contain "mimo", "mimo-token-plan-cn", "mimo-token-plan-sgp", "mimo-token-plan-ams"', () => {
     const ids = MIMO_ENDPOINTS.map((ep) => ep.id);
     assert.ok(ids.includes('mimo'));
     assert.ok(ids.includes('mimo-token-plan-cn'));
-    assert.ok(ids.includes('mimo-token-plan-spg'));
+    assert.ok(ids.includes('mimo-token-plan-sgp'));
     assert.ok(ids.includes('mimo-token-plan-ams'));
   });
 

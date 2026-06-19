@@ -194,13 +194,13 @@
               "enum": [
                 "mimo",
                 "mimo-token-plan-cn",
-                "mimo-token-plan-spg",
+                "mimo-token-plan-sgp",
                 "mimo-token-plan-ams"
               ],
               "enumDescriptions": [
                 "%copilot-adapter.provider.mimo.apiEndpoint.option.mimo%",
                 "%copilot-adapter.provider.mimo.apiEndpoint.option.mimo-token-plan-cn%",
-                "%copilot-adapter.provider.mimo.apiEndpoint.option.mimo-token-plan-spg%",
+                "%copilot-adapter.provider.mimo.apiEndpoint.option.mimo-token-plan-sgp%",
                 "%copilot-adapter.provider.mimo.apiEndpoint.option.mimo-token-plan-ams%"
               ],
               "description": "%copilot-adapter.provider.mimo.apiEndpoint.description%"
