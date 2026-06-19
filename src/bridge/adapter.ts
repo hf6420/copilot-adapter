@@ -174,6 +174,18 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       );
       if (providerModels.length === 0) return [];
       modelProvider = providerModels[0]?.provider;
+
+      const apiEndpoint =
+        typeof groupCfg['apiEndpoint'] === 'string' ? (groupCfg['apiEndpoint'] as string) : '';
+      const effectiveEndpoint =
+        this.groupSecrets.get(apiKey)?.apiEndpoint ?? (apiEndpoint || undefined);
+      const resolvedEndpoint = effectiveEndpoint
+        ? resolveEndpoint(modelProvider, effectiveEndpoint)
+        : undefined;
+      const activeEndpointId = resolvedEndpoint?.id ?? modelProvider.endpoints?.[0]?.id;
+      visibleModels = activeEndpointId
+        ? providerModels.filter((m) => m.endpoint?.id === activeEndpointId)
+        : providerModels;
     }
 
     // Retrieve prefix for this apiKey (pre-registered by configureApiKey or a previous call)
@@ -193,19 +205,6 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       }
       this.nextPrefix++;
     }
-
-    // Resolve active endpoint: prefer secrets (set by configureApiKey), then
-    // groupCfg (set by VS Code managed group), then fallback to first endpoint.
-    const effectiveEndpoint =
-      secrets.apiEndpoint ??
-      (typeof groupCfg['apiEndpoint'] === 'string' ? (groupCfg['apiEndpoint'] as string) : undefined);
-    const resolvedEndpoint = effectiveEndpoint
-      ? resolveEndpoint(modelProvider, effectiveEndpoint)
-      : undefined;
-    const activeEndpointId = resolvedEndpoint?.id ?? modelProvider.endpoints?.[0]?.id;
-    visibleModels = activeEndpointId
-      ? providerModels.filter((m) => m.endpoint?.id === activeEndpointId)
-      : providerModels;
 
     const idPrefix = secrets.prefix;
 
