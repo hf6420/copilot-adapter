@@ -179,6 +179,24 @@
         }
       },
       {
+        "vendor": "copilot-adapter-mimo",
+        "displayName": "Xiaomi MIMO",
+        "configuration": {
+          "type": "object",
+          "required": [
+            "apiKey"
+          ],
+          "properties": {
+            "apiKey": {
+              "type": "string",
+              "title": "%copilot-adapter.provider.mimo.apiKey.title%",
+              "description": "%copilot-adapter.provider.mimo.apiKey.description%",
+              "secret": true
+            }
+          }
+        }
+      },
+      {
         "vendor": "copilot-adapter-custom",
         "displayName": "Custom Models",
         "configuration": {
