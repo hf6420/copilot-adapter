@@ -155,8 +155,8 @@ suite('providers/mimo provider traits', () => {
     assert.equal(MIMO.thinkingField, 'reasoning_content');
   });
 
-  test('apiKeyHint is "sk-..."', () => {
-    assert.equal(MIMO.apiKeyHint, 'sk-...');
+  test('apiKeyHint is "sk-... or tp-..."', () => {
+    assert.equal(MIMO.apiKeyHint, 'sk-... or tp-...');
   });
 
   test('provider url is default mimo endpoint', () => {
