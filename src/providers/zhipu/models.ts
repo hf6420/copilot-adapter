@@ -45,6 +45,17 @@ const BM_VISION_PLAIN_BASE = {
   maxTools: 128,
 };
 
+export const ZHIPU_GLM_4_7: ModelItem =  {
+  ...BM_THINK_BASE,
+  id: 'glm-4.7',
+  label: 'GLM-4.7',
+  apiId: 'glm-4.7',
+  version: '4.7',
+  maxInputTokens: 200_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.glm-4.7.detail',
+} as ModelItem
+
 export const ZP_MODELS: readonly ModelItem[] = [
   {
     ...BM_GLM52_BASE,
@@ -86,16 +97,7 @@ export const ZP_MODELS: readonly ModelItem[] = [
     maxOutputTokens: 128_000,
     detailKey: 'model.glm-5-turbo.detail',
   },
-  {
-    ...BM_THINK_BASE,
-    id: 'glm-4.7',
-    label: 'GLM-4.7',
-    apiId: 'glm-4.7',
-    version: '4.7',
-    maxInputTokens: 200_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.glm-4.7.detail',
-  },
+  ZHIPU_GLM_4_7,
   {
     ...BM_PLAIN_BASE,
     id: 'glm-4.7-flashx',

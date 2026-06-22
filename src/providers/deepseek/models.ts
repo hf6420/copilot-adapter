@@ -11,25 +11,29 @@ const DS_BASE = {
   thinkingConfig: DEEPSEEK_THINKING,
 };
 
+export const DEEPSEEK_V4_PRO: ModelItem = {
+  ...DS_BASE,
+  id: 'deepseek-v4-pro',
+  label: 'DeepSeek V4 Pro',
+  apiId: 'deepseek-v4-pro',
+  version: '4',
+  maxInputTokens: 616_000,
+  maxOutputTokens: 384_000,
+  detailKey: 'model.deepseek-v4-pro.detail',
+} as ModelItem
+
+export const DEEPSEEK_V4_FLASH: ModelItem =   {
+  ...DS_BASE,
+  id: 'deepseek-v4-flash',
+  label: 'DeepSeek V4 Flash',
+  apiId: 'deepseek-v4-flash',
+  version: '4',
+  maxInputTokens: 616_000,
+  maxOutputTokens: 384_000,
+  detailKey: 'model.deepseek-v4-flash.detail',
+} as ModelItem
+
 export const DS_MODELS: readonly ModelItem[] = [
-  {
-    ...DS_BASE,
-    id: 'deepseek-v4-flash',
-    label: 'DeepSeek V4 Flash',
-    apiId: 'deepseek-v4-flash',
-    version: '4',
-    maxInputTokens: 616_000,
-    maxOutputTokens: 384_000,
-    detailKey: 'model.deepseek-v4-flash.detail',
-  },
-  {
-    ...DS_BASE,
-    id: 'deepseek-v4-pro',
-    label: 'DeepSeek V4 Pro',
-    apiId: 'deepseek-v4-pro',
-    version: '4',
-    maxInputTokens: 616_000,
-    maxOutputTokens: 384_000,
-    detailKey: 'model.deepseek-v4-pro.detail',
-  },
+  DEEPSEEK_V4_PRO,
+  DEEPSEEK_V4_FLASH
 ] as ModelItem[];
