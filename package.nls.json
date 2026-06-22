@@ -42,6 +42,7 @@
   "copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine": "ByteDance Volcengine",
   "copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine-coding-plan": "ByteDance Volcengine Coding Plan",
   "copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-ap-southeast": "BytePlus ModelArk(ap-southeast)",
+  "copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-ap-southeast-coding-plan": "BytePlus ModelArk Coding Plan(ap-southeast)",
   "copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-eu-west": "BytePlus ModelArk(eu-west)",
   "copilot-adapter.command.visionProxy": "Copilot Adapter: Configure Vision Proxy",
   "copilot-adapter.command.settings": "Copilot Adapter: Extension Settings",

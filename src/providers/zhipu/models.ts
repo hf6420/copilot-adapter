@@ -67,18 +67,20 @@ export const ZHIPU_GLM_5_2: ModelItem = {
   detailKey: 'model.glm-5.2.detail',
 } as ModelItem
 
+export const ZHIPU_GLM_5_1: ModelItem = {
+  ...BM_THINK_BASE,
+  id: 'glm-5.1',
+  label: 'GLM-5.1',
+  apiId: 'glm-5.1',
+  version: '5.1',
+  maxInputTokens: 200_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.glm-5.1.detail',
+} as ModelItem
+
 export const ZP_MODELS: readonly ModelItem[] = [
   ZHIPU_GLM_5_2,
-  {
-    ...BM_THINK_BASE,
-    id: 'glm-5.1',
-    label: 'GLM-5.1',
-    apiId: 'glm-5.1',
-    version: '5.1',
-    maxInputTokens: 200_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.glm-5.1.detail',
-  },
+  ZHIPU_GLM_5_1,
   {
     ...BM_THINK_BASE,
     id: 'glm-5',

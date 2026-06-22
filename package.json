@@ -231,12 +231,14 @@
                 "volcengine",
                 "volcengine-coding-plan",
                 "bytepuls-ap-southeast",
+                "bytepuls-ap-southeast-coding-plan",
                 "bytepuls-eu-west"
               ],
               "enumDescriptions": [
                 "%copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine%",
                 "%copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine-coding-plan%",
                 "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-ap-southeast%",
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-ap-southeast-coding-plan%",
                 "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-eu-west%"
               ],
               "description": "%copilot-adapter.provider.bytedance.apiEndpoint.description%"

@@ -33,7 +33,7 @@ const MS_K27_BASE = {
   maxTokensField: 'max_completion_tokens',
 };
 
-export const MS_K2_7_CODE: ModelItem =   {
+export const MS_K2_7_CODE: ModelItem = {
   ...MS_K27_BASE,
   id: 'kimi-k2.7-code',
   label: 'Kimi K2.7 Code',
@@ -42,9 +42,9 @@ export const MS_K2_7_CODE: ModelItem =   {
   maxInputTokens: 256_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.7-code.detail',
-} as ModelItem
+} as ModelItem;
 
-export const MS_K2_6: ModelItem =   {
+export const MS_K2_6: ModelItem = {
   ...MS_K26_BASE,
   id: 'kimi-k2.6',
   label: 'Kimi K2.6',
@@ -53,20 +53,22 @@ export const MS_K2_6: ModelItem =   {
   maxInputTokens: 256_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.6.detail',
-} as ModelItem
+} as ModelItem;
+
+export const MS_K2_5: ModelItem = {
+  ...MS_BASE,
+  id: 'kimi-k2.5',
+  label: 'Kimi K2.5',
+  apiId: 'kimi-k2.5',
+  version: '2.5',
+  maxInputTokens: 256_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.kimi-k2.5.detail',
+} as ModelItem;
 
 export const MS_MODELS: readonly ModelItem[] = [
   MS_K2_6,
-  {
-    ...MS_BASE,
-    id: 'kimi-k2.5',
-    label: 'Kimi K2.5',
-    apiId: 'kimi-k2.5',
-    version: '2.5',
-    maxInputTokens: 256_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.kimi-k2.5.detail',
-  },
+  MS_K2_5,
   MS_K2_7_CODE,
   {
     ...MS_K27_BASE,
