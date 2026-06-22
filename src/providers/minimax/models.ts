@@ -28,6 +28,27 @@ const MM_M3_BASE = {
   contentTag: 'think',
 };
 
+export const MM_M3: ModelItem = {
+  ...MM_M3_BASE,
+  id: 'minimax-m3',
+  label: 'MiniMax M3',
+  maxTokensField: 'max_completion_tokens',
+  apiId: 'MiniMax-M3',
+  version: '3',
+  maxInputTokens: 1_000_000,
+  maxOutputTokens: 40960,
+  detailKey: 'model.minimax-m3.detail',
+} as ModelItem
+
+export const MM_M2_7: ModelItem = {
+  ...MM_BASE,
+  id: 'minimax-m2.7',
+  label: 'MiniMax M2.7',
+  apiId: 'MiniMax-M2.7',
+  version: '2.7',
+  detailKey: 'model.minimax-m2.7.detail',
+} as ModelItem
+
 export const MM_MODELS: readonly ModelItem[] = [
   {
     ...MM_BASE,
@@ -69,14 +90,7 @@ export const MM_MODELS: readonly ModelItem[] = [
     version: '2.5',
     detailKey: 'model.minimax-m2.5-highspeed.detail',
   },
-  {
-    ...MM_BASE,
-    id: 'minimax-m2.7',
-    label: 'MiniMax M2.7',
-    apiId: 'MiniMax-M2.7',
-    version: '2.7',
-    detailKey: 'model.minimax-m2.7.detail',
-  },
+  MM_M2_7,
   {
     ...MM_BASE,
     id: 'minimax-m2.7-highspeed',
@@ -85,15 +99,5 @@ export const MM_MODELS: readonly ModelItem[] = [
     version: '2.7',
     detailKey: 'model.minimax-m2.7-highspeed.detail',
   },
-  {
-    ...MM_M3_BASE,
-    id: 'minimax-m3',
-    label: 'MiniMax M3',
-    maxTokensField: 'max_completion_tokens',
-    apiId: 'MiniMax-M3',
-    version: '3',
-    maxInputTokens: 1_000_000,
-    maxOutputTokens: 40960,
-    detailKey: 'model.minimax-m3.detail',
-  },
+  MM_M3
 ] as ModelItem[];

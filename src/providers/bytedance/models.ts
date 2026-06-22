@@ -3,7 +3,9 @@ import { BYTEDANCE } from './provider';
 import { VOLCENGINE_THINKING } from '../defines';
 
 import { DEEPSEEK_V4_PRO, DEEPSEEK_V4_FLASH } from '../deepseek/models';
-import { ZHIPU_GLM_4_7 } from '../zhipu/models'
+import { ZHIPU_GLM_4_7, ZHIPU_GLM_5_2 } from '../zhipu/models'
+import { MM_M3, MM_M2_7 } from '../minimax/models'
+import { MS_K2_7_CODE, MS_K2_6} from '../moonshot/models'
 
 const DOUBAO_SEED_BASE = {
   family: 'doubao-seed',
@@ -98,6 +100,22 @@ export const VOLCENGINE_MODELS: readonly ModelItem[] = [
   DEEPSEEK_V4_PRO_260425,
   DEEPSEEK_V4_FLASH_260425,
   ZHIPU_GLM_4_7_251222
+] as ModelItem[];
+
+export const VOLCENGINE_CODING_PLAN_MODELS: readonly ModelItem[] = [
+  DOUBAO_SEED_2_0_PRO_260215,
+  DOUBAO_SEED_2_0_MINI_260428,
+  DOUBAO_SEED_2_0_MINI_260215,
+  DOUBAO_SEED_2_0_LITE_260428,
+  DOUBAO_SEED_2_0_LITE_260215,
+  DOUBAO_SEED_2_0_CODE,
+  DEEPSEEK_V4_PRO,
+  DEEPSEEK_V4_FLASH,
+  ZHIPU_GLM_5_2,
+  MM_M2_7,
+  MM_M3,
+  MS_K2_7_CODE,
+  MS_K2_6
 ] as ModelItem[];
 
 const DOLA_SEED_BASE = {

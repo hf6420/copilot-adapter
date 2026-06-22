@@ -56,17 +56,19 @@ export const ZHIPU_GLM_4_7: ModelItem =  {
   detailKey: 'model.glm-4.7.detail',
 } as ModelItem
 
+export const ZHIPU_GLM_5_2: ModelItem = {
+  ...BM_GLM52_BASE,
+  id: 'glm-5.2',
+  label: 'GLM-5.2',
+  apiId: 'glm-5.2',
+  version: '5.2',
+  maxInputTokens: 872_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.glm-5.2.detail',
+} as ModelItem
+
 export const ZP_MODELS: readonly ModelItem[] = [
-  {
-    ...BM_GLM52_BASE,
-    id: 'glm-5.2',
-    label: 'GLM-5.2',
-    apiId: 'glm-5.2',
-    version: '5.2',
-    maxInputTokens: 872_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.glm-5.2.detail',
-  },
+  ZHIPU_GLM_5_2,
   {
     ...BM_THINK_BASE,
     id: 'glm-5.1',

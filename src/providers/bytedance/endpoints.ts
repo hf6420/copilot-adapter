@@ -1,6 +1,6 @@
 import type { ModelEndpoint } from '../types';
 import { composeModelEndpoint } from '../utils';
-import { VOLCENGINE_MODELS, MODELARK_MODELS } from './models';
+import { VOLCENGINE_MODELS, VOLCENGINE_CODING_PLAN_MODELS, MODELARK_MODELS } from './models';
 
 export const BYTEDANCE_ENDPOINTS: readonly ModelEndpoint[] = [
   composeModelEndpoint(
@@ -10,6 +10,14 @@ export const BYTEDANCE_ENDPOINTS: readonly ModelEndpoint[] = [
       url: 'https://ark.cn-beijing.volces.com/api/v3',
     },
     VOLCENGINE_MODELS,
+  ),
+  composeModelEndpoint(
+    {
+      id: 'volcengine-coding-plan',
+      label: 'Volcengine',
+      url: 'https://ark.cn-beijing.volces.com/api/coding/v3',
+    },
+    VOLCENGINE_CODING_PLAN_MODELS,
   ),
   composeModelEndpoint(
     {
