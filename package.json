@@ -28,6 +28,10 @@
     "qwen",
     "bigmodel",
     "glm",
+    "z.ai",
+    "bytedance",
+    "byteplus",
+    "language-models",
     "language model"
   ],
   "activationEvents": [
@@ -209,6 +213,44 @@
               "type": "string",
               "title": "%copilot-adapter.provider.mimo.apiKey.title%",
               "description": "%copilot-adapter.provider.mimo.apiKey.description%",
+              "secret": true
+            }
+          }
+        }
+      },
+      {
+        "vendor": "copilot-adapter-bytedance",
+        "displayName": "ByteDance",
+        "configuration": {
+          "type": "object",
+          "required": [
+            "apiEndpoint",
+            "apiKey"
+          ],
+          "properties": {
+            "apiEndpoint": {
+              "type": "string",
+              "title": "%copilot-adapter.provider.bytedance.apiEndpoint.title%",
+              "enum": [
+                "volcengine",
+                "volcengine-coding-plan",
+                "bytepuls-ap-southeast",
+                "bytepuls-ap-southeast-coding-plan",
+                "bytepuls-eu-west"
+              ],
+              "enumDescriptions": [
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine%",
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine-coding-plan%",
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-ap-southeast%",
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-ap-southeast-coding-plan%",
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-eu-west%"
+              ],
+              "description": "%copilot-adapter.provider.bytedance.apiEndpoint.description%"
+            },
+            "apiKey": {
+              "type": "string",
+              "title": "%copilot-adapter.provider.bytedance.apiKey.title%",
+              "description": "%copilot-adapter.provider.bytedance.apiKey.description%",
               "secret": true
             }
           }

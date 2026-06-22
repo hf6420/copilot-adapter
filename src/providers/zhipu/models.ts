@@ -45,27 +45,42 @@ const BM_VISION_PLAIN_BASE = {
   maxTools: 128,
 };
 
+export const ZHIPU_GLM_4_7: ModelItem = {
+  ...BM_THINK_BASE,
+  id: 'glm-4.7',
+  label: 'GLM-4.7',
+  apiId: 'glm-4.7',
+  version: '4.7',
+  maxInputTokens: 200_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.glm-4.7.detail',
+} as ModelItem;
+
+export const ZHIPU_GLM_5_2: ModelItem = {
+  ...BM_GLM52_BASE,
+  id: 'glm-5.2',
+  label: 'GLM-5.2',
+  apiId: 'glm-5.2',
+  version: '5.2',
+  maxInputTokens: 872_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.glm-5.2.detail',
+} as ModelItem;
+
+export const ZHIPU_GLM_5_1: ModelItem = {
+  ...BM_THINK_BASE,
+  id: 'glm-5.1',
+  label: 'GLM-5.1',
+  apiId: 'glm-5.1',
+  version: '5.1',
+  maxInputTokens: 200_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.glm-5.1.detail',
+} as ModelItem;
+
 export const ZP_MODELS: readonly ModelItem[] = [
-  {
-    ...BM_GLM52_BASE,
-    id: 'glm-5.2',
-    label: 'GLM-5.2',
-    apiId: 'glm-5.2',
-    version: '5.2',
-    maxInputTokens: 872_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.glm-5.2.detail',
-  },
-  {
-    ...BM_THINK_BASE,
-    id: 'glm-5.1',
-    label: 'GLM-5.1',
-    apiId: 'glm-5.1',
-    version: '5.1',
-    maxInputTokens: 200_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.glm-5.1.detail',
-  },
+  ZHIPU_GLM_5_2,
+  ZHIPU_GLM_5_1,
   {
     ...BM_THINK_BASE,
     id: 'glm-5',
@@ -86,16 +101,7 @@ export const ZP_MODELS: readonly ModelItem[] = [
     maxOutputTokens: 128_000,
     detailKey: 'model.glm-5-turbo.detail',
   },
-  {
-    ...BM_THINK_BASE,
-    id: 'glm-4.7',
-    label: 'GLM-4.7',
-    apiId: 'glm-4.7',
-    version: '4.7',
-    maxInputTokens: 200_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.glm-4.7.detail',
-  },
+  ZHIPU_GLM_4_7,
   {
     ...BM_PLAIN_BASE,
     id: 'glm-4.7-flashx',
