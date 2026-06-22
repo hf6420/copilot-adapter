@@ -1,6 +1,6 @@
 import type { ModelEndpoint } from '../types';
 import { composeModelEndpoint } from '../utils';
-import { VOLCENGINE_MODELS } from './models';
+import { VOLCENGINE_MODELS, MODELARK_MODELS } from './models';
 
 export const BYTEDANCE_ENDPOINTS: readonly ModelEndpoint[] = [
   composeModelEndpoint(
@@ -10,5 +10,21 @@ export const BYTEDANCE_ENDPOINTS: readonly ModelEndpoint[] = [
       url: 'https://ark.cn-beijing.volces.com/api/v3',
     },
     VOLCENGINE_MODELS,
+  ),
+  composeModelEndpoint(
+    {
+      id: 'bytepuls-ap-southeast',
+      label: 'BytePlus ModelArk(ap-southeast-1)',
+      url: 'https://ark.ap-southeast.bytepluses.com/api/v3',
+    },
+    MODELARK_MODELS,
+  ),
+  composeModelEndpoint(
+    {
+      id: 'bytepuls-eu-west',
+      label: 'BytePlus ModelArk(eu-west-1)',
+      url: 'https://ark.eu-west.bytepluses.com/api/v3',
+    },
+    MODELARK_MODELS,
   )
 ];

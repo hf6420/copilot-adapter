@@ -77,6 +77,11 @@ export const en: Translation = {
   'model.doubao-seed-2.0-lite.detail': 'Balances generation quality and response speed, making it a strong general-purpose production model.',
   'model.doubao-seed-2.0-code.detail': 'Precise code generation capabilities, along with task scheduling and logical coordination. (Multimodal visual understanding)',
 
+  'model.dola-seed-2.0-pro.detail': 'Focused on long-chain reasoning and stability in complex task execution, designed for complex real-world business scenarios.',
+  'model.dola-seed-2.0-mini.detail': 'Balances generation quality and response speed, making it a strong general-purpose production model.',
+  'model.dola-seed-2.0-lite.detail': 'Balances generation quality and response speed, making it a strong general-purpose production model.',
+  'model.dola-seed-2.0-code.detail': 'Precise code generation capabilities, along with task scheduling and logical coordination. (Multimodal visual understanding)',
+
   'auth.keyInput': 'Enter {0} API Key',
   'auth.keyInputHinted': 'Enter {0} API Key (format: {1})',
   'auth.keyHint': 'API Key...',

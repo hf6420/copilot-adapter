@@ -17,8 +17,8 @@ const DOUBAO_SEED_BASE = {
 
 export const DOUBAO_SEED_2_0_PRO_260215: ModelItem = {
   ...DOUBAO_SEED_BASE,
-  id: 'doubao-seed-2.0-pro',
-  label: 'Doubao Seed 2.0 Pro (260215)',
+  id: 'doubao-seed-2-0-pro-260215',
+  label: 'Doubao Seed 2.0 Pro 260215',
   apiId: 'doubao-seed-2-0-pro-260215',
   version: '2.0',
   maxInputTokens: 256_000,
@@ -28,8 +28,8 @@ export const DOUBAO_SEED_2_0_PRO_260215: ModelItem = {
 
 export const DOUBAO_SEED_2_0_MINI_260428: ModelItem = {
   ...DOUBAO_SEED_BASE,
-  id: 'doubao-seed-2.0-mini',
-  label: 'Doubao Seed 2.0 Mini (260428)',
+  id: 'doubao-seed-2-0-mini-260428',
+  label: 'Doubao Seed 2.0 Mini 260428',
   apiId: 'doubao-seed-2-0-mini-260428',
   version: '2.0',
   maxInputTokens: 256_000,
@@ -40,14 +40,14 @@ export const DOUBAO_SEED_2_0_MINI_260428: ModelItem = {
 export const DOUBAO_SEED_2_0_MINI_260215: ModelItem = {
   ...DOUBAO_SEED_2_0_MINI_260428,
   id: 'doubao-seed-2.0-mini-260215',
-  label: 'Doubao Seed 2.0 Mini (260215)',
+  label: 'Doubao Seed 2.0 Mini 260215',
   apiId: 'doubao-seed-2-0-mini-260215',
 } as ModelItem;
 
 export const DOUBAO_SEED_2_0_LITE_260428 : ModelItem = {
   ...DOUBAO_SEED_BASE,
-  id: 'doubao-seed-2.0-lite',
-  label: 'Doubao Seed 2.0 Lite (260428)',
+  id: 'doubao-seed-2-0-lite-260428',
+  label: 'Doubao Seed 2.0 Lite 260428',
   apiId: 'doubao-seed-2-0-lite-260428',
   version: '2.0',
   maxInputTokens: 256_000,
@@ -58,13 +58,13 @@ export const DOUBAO_SEED_2_0_LITE_260428 : ModelItem = {
 export const DOUBAO_SEED_2_0_LITE_260215: ModelItem = {
   ...DOUBAO_SEED_2_0_LITE_260428,
   id: 'doubao-seed-2.0-lite-260215',
-  label: 'Doubao Seed 2.0 Lite (260215)',
+  label: 'Doubao Seed 2.0 Lite 260215',
   apiId: 'doubao-seed-2-0-lite-260215',
 } as ModelItem;
 
 export const DOUBAO_SEED_2_0_CODE: ModelItem = {
   ...DOUBAO_SEED_BASE,
-  id: 'doubao-seed-2.0-code',
+  id: 'doubao-seed-2-0-code-preview-260215',
   label: 'Doubao Seed 2.0 Code',
   apiId: 'doubao-seed-2-0-code-preview-260215',
   version: '2.0',
@@ -95,6 +95,94 @@ export const VOLCENGINE_MODELS: readonly ModelItem[] = [
   DOUBAO_SEED_2_0_LITE_260428,
   DOUBAO_SEED_2_0_LITE_260215,
   DOUBAO_SEED_2_0_CODE,
+  DEEPSEEK_V4_PRO_260425,
+  DEEPSEEK_V4_FLASH_260425,
+  ZHIPU_GLM_4_7_251222
+] as ModelItem[];
+
+const DOLA_SEED_BASE = {
+  family: 'dola-seed',
+  provider: BYTEDANCE,
+  thinking: true,
+  imageInput: true,
+  maxTools: 128,
+  thinkingConfig: VOLCENGINE_THINKING,
+  maxTokensField: 'max_completion_tokens',
+}
+
+export const DOLA_SEED_2_0_PRO_260328: ModelItem = {
+  ...DOLA_SEED_BASE,
+  id: 'seed-2-0-pro-260328',
+  label: 'Dola Seed 2.0 Pro 260328',
+  apiId: 'seed-2-0-pro-260328',
+  version: '2.0',
+  maxInputTokens: 256_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.dola-seed-2.0-pro.detail',
+} as ModelItem;
+
+export const DOLA_SEED_2_0_LITE_260428: ModelItem = {
+  ...DOLA_SEED_BASE,
+  id: 'seed-2-0-lite-260428',
+  label: 'Dola Seed 2.0 Lite 260428',
+  apiId: 'seed-2-0-lite-260428',
+  version: '2.0',
+  maxInputTokens: 256_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.dola-seed-2.0-lite.detail',
+} as ModelItem;
+
+export const DOLA_SEED_2_0_LITE_260228: ModelItem = {
+  ...DOLA_SEED_BASE,
+  id: 'seed-2-0-lite-260228',
+  label: 'Dola Seed 2.0 Lite 260228',
+  apiId: 'seed-2-0-lite-260228',
+  version: '2.0',
+  maxInputTokens: 256_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.dola-seed-2.0-lite.detail',
+} as ModelItem;
+
+export const DOLA_SEED_2_0_MINI_260428: ModelItem = {
+  ...DOLA_SEED_BASE,
+  id: 'seed-2-0-mini-260428',
+  label: 'Dola Seed 2.0 Mini 260428',
+  apiId: 'seed-2-0-mini-260428',
+  version: '2.0',
+  maxInputTokens: 256_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.dola-seed-2.0-mini.detail',
+} as ModelItem;
+
+export const DOLA_SEED_2_0_MINI_260215: ModelItem = {
+  ...DOLA_SEED_BASE,
+  id: 'seed-2-0-mini-260215',
+  label: 'Dola Seed 2.0 Mini 260215',
+  apiId: 'seed-2-0-mini-260215',
+  version: '2.0',
+  maxInputTokens: 256_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.dola-seed-2.0-mini.detail',
+} as ModelItem;
+
+export const DOLA_SEED_2_0_CODE_260328: ModelItem = {
+  ...DOLA_SEED_BASE,
+  id: 'seed-2-0-code-preview-260328',
+  label: 'Dola Seed 2.0 Code 260328',
+  apiId: 'seed-2-0-code-preview-260328',
+  version: '2.0',
+  maxInputTokens: 256_000,
+  maxOutputTokens: 128_000,
+  detailKey: 'model.dola-seed-2.0-code.detail',
+} as ModelItem;
+
+export const MODELARK_MODELS: readonly ModelItem[] = [
+  DOLA_SEED_2_0_PRO_260328,
+  DOLA_SEED_2_0_LITE_260428,
+  DOLA_SEED_2_0_LITE_260228,
+  DOLA_SEED_2_0_MINI_260428,
+  DOLA_SEED_2_0_MINI_260215,
+  DOLA_SEED_2_0_CODE_260328,
   DEEPSEEK_V4_PRO_260425,
   DEEPSEEK_V4_FLASH_260425,
   ZHIPU_GLM_4_7_251222

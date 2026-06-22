@@ -216,7 +216,7 @@
       },
       {
         "vendor": "copilot-adapter-bytedance",
-        "displayName": "Bytedance(Volcengine, Byteplus)",
+        "displayName": "ByteDance",
         "configuration": {
           "type": "object",
           "required": [
@@ -228,10 +228,14 @@
               "type": "string",
               "title": "%copilot-adapter.provider.bytedance.apiEndpoint.title%",
               "enum": [
-                "volcengine"
+                "volcengine",
+                "bytepuls-ap-southeast",
+                "bytepuls-eu-west"
               ],
               "enumDescriptions": [
-                "%copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine%"
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.volcengine%",
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-ap-southeast%",
+                "%copilot-adapter.provider.bytedance.apiEndpoint.option.bytepuls-eu-west%"
               ],
               "description": "%copilot-adapter.provider.bytedance.apiEndpoint.description%"
             },
