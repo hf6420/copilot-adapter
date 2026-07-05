@@ -57,6 +57,16 @@ export interface ThinkingConfig {
   readonly options: readonly ThinkingOption[];
 }
 
+export type PricingCurrency = 'USD' | 'CNY';
+
+export type PriceCategory = 'low' | 'medium' | 'high' | 'very_high';
+
+export interface ModelPricing {
+	cacheHitInput: number;
+	cacheMissInput: number;
+	output: number;
+}
+
 export interface ModelItem extends ApiTraits {
   readonly id: string;
   readonly label: string;
@@ -83,6 +93,8 @@ export interface ModelItem extends ApiTraits {
   readonly maxTools?: number;
 
   readonly contentTag?: string;
+
+  pricing?: Readonly<Record<PricingCurrency, ModelPricing>>;
 
   requestExtras?(modelConfig: Record<string, unknown> | undefined): Record<string, unknown>;
   configSchema?(): Record<string, unknown> | undefined;

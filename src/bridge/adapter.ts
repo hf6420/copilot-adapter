@@ -209,7 +209,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     const idPrefix = secrets.prefix;
 
     return visibleModels.map(
-      (model) => buildChatInfo(model, hasKey, this.visionProxyAvailable, idPrefix) as ChatInfo,
+      (model) => buildChatInfo(model, hasKey, this.visionProxyAvailable, idPrefix, Settings.pricingCurrency()) as ChatInfo,
     );
   }
 

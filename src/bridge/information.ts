@@ -1,12 +1,18 @@
 import vscode from 'vscode';
 import { t } from '../nls';
 import { modelKey } from '../providers/utils';
-import type { ModelItem } from '../providers/types';
+import type { ModelItem, ModelPricing, PricingCurrency } from '../providers/types';
 
 /** Extended chat model information returned to VS Code. */
 export interface ChatInfo extends vscode.LanguageModelChatInformation {
+  readonly isBYOK: true;
+  readonly isUserSelectable: boolean;
   statusIcon?: vscode.ThemeIcon;
   configurationSchema?: Record<string, unknown>;
+
+  readonly inputCost?: string;
+  readonly outputCost?: string;
+  readonly cacheCost?: string;
 }
 
 /** Extended request options from VS Code's language model chat. */
@@ -21,6 +27,7 @@ export function buildChatInfo(
   hasKey: boolean,
   hasVisionProxy = false,
   idPrefix = '',
+  pricingCurrency?: PricingCurrency,
 ): ChatInfo {
   const modelProvider = modelItem.provider;
   const schema = modelItem.configSchema?.();
@@ -36,6 +43,8 @@ export function buildChatInfo(
     version: modelItem.version,
     maxInputTokens: modelItem.maxInputTokens,
     maxOutputTokens: modelItem.maxOutputTokens,
+    isBYOK: true,
+    isUserSelectable: true,
     capabilities: {
       imageInput: modelItem.imageInput || hasVisionProxy,
       toolCalling: modelItem.maxTools ?? (modelItem.maxTools === undefined ? true : false),
@@ -44,9 +53,32 @@ export function buildChatInfo(
     detail: detail,
     statusIcon: notConfigured ? new vscode.ThemeIcon('warning') : undefined,
     configurationSchema: schema,
+    ...toModelCostInfo(modelItem.pricing, pricingCurrency),
   } as unknown as ChatInfo;
 
   return info;
+}
+
+function toModelCostInfo(
+  pricing: Readonly<Record<PricingCurrency, ModelPricing>> | undefined,
+  currency?: PricingCurrency,
+): Pick<ChatInfo, 'inputCost' | 'outputCost' | 'cacheCost'> {
+  if (!currency || !pricing) {
+    return {};
+  }
+
+  const p = pricing[currency];
+  if (!p) {
+    return {};
+  }
+  
+  const symbol = currency === 'CNY' ? '¥' : '$';
+
+  return {
+    inputCost: `${symbol}${p.cacheMissInput}`,
+    outputCost: `${symbol}${p.output}`,
+    cacheCost: `${symbol}${p.cacheHitInput}`,
+  };
 }
 
 export function resolveModelConfig(options: ReqOptions): Record<string, unknown> {
