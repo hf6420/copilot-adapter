@@ -65,6 +65,10 @@ export const ZHIPU_GLM_5_2: ModelItem = {
   maxInputTokens: 872_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.glm-5.2.detail',
+  pricing: {
+    USD: { cacheHitInput: 0.26, cacheMissInput: 1.4, output: 4.4 },
+    CNY: { cacheHitInput: 2, cacheMissInput: 8, output: 28 },
+  },
 } as ModelItem;
 
 export const ZHIPU_GLM_5_1: ModelItem = {
@@ -76,6 +80,14 @@ export const ZHIPU_GLM_5_1: ModelItem = {
   maxInputTokens: 200_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.glm-5.1.detail',
+  pricing: {
+    USD: { cacheHitInput: 0.26, cacheMissInput: 1.4, output: 4.4 },
+    CNY: {
+      cacheHitInput: '1.3(<32K)/2(>=32K)',
+      cacheMissInput: '6(<32K)/8(>=32K)',
+      output: '24(<32K)/28(>=32K)',
+    },
+  },
 } as ModelItem;
 
 export const ZP_MODELS: readonly ModelItem[] = [
@@ -90,6 +102,14 @@ export const ZP_MODELS: readonly ModelItem[] = [
     maxInputTokens: 200_000,
     maxOutputTokens: 128_000,
     detailKey: 'model.glm-5.detail',
+    pricing: {
+      USD: { cacheHitInput: 0.2, cacheMissInput: 1, output: 3.2 },
+      CNY: {
+        cacheHitInput: '1(<32K)/1.5(>=32K)',
+        cacheMissInput: '4(<32K)/6(>=32K)',
+        output: '18(<32K)/22(>=32K)',
+      },
+    },
   },
   {
     ...BM_THINK_BASE,
@@ -100,6 +120,14 @@ export const ZP_MODELS: readonly ModelItem[] = [
     maxInputTokens: 200_000,
     maxOutputTokens: 128_000,
     detailKey: 'model.glm-5-turbo.detail',
+    pricing: {
+      USD: { cacheHitInput: 0.24, cacheMissInput: 1.2, output: 4.0 },
+      CNY: {
+        cacheHitInput: '1.2(<32K)/1.8(>=32K)',
+        cacheMissInput: '5(<32K)/7(>=32K)',
+        output: '22(<32K)/26(>=32K)',
+      },
+    },
   },
   ZHIPU_GLM_4_7,
   {

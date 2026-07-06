@@ -8,6 +8,7 @@ export const ZHIPU_ENDPOINTS: readonly ModelEndpoint[] = [
       id: 'bigmodel',
       label: 'open.bigmodel.cn (standard)',
       url: 'https://open.bigmodel.cn/api/paas/v4',
+      pricingCurrency: 'CNY',
     },
     ZP_MODELS,
   ),
@@ -20,7 +21,12 @@ export const ZHIPU_ENDPOINTS: readonly ModelEndpoint[] = [
     ZP_MODELS,
   ),
   composeModelEndpoint(
-    { id: 'z.ai', label: 'api.z.ai (standard)', url: 'https://api.z.ai/api/paas/v4' },
+    {
+      id: 'z.ai',
+      label: 'api.z.ai (standard)',
+      url: 'https://api.z.ai/api/paas/v4',
+      pricingCurrency: 'USD',
+    },
     ZP_MODELS,
   ),
   composeModelEndpoint(
