@@ -1,5 +1,6 @@
 import vscode from 'vscode';
 import { EXT_ID } from './defines';
+import type { PricingCurrency } from './providers/types';
 
 const LEVEL_OFF = 'off' as const;
 const LEVEL_INFO = 'info' as const;
@@ -86,5 +87,12 @@ export class Settings {
 
   static tokenRatioCalibrationThreshold(): number {
     return this.section().get<number>('tokenRatioCalibrationThreshold', 0.1);
+  }
+
+  static pricingCurrency(): PricingCurrency {
+    const raw = this.section().get<string>('pricingCurrency', '');
+    if (raw === 'CNY' || raw === 'USD') return raw;
+
+    return vscode.env.language.toLowerCase().startsWith('zh') ? 'CNY' : 'USD';
   }
 }

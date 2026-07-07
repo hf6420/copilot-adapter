@@ -632,8 +632,20 @@
           "default": false,
           "description": "%copilot-adapter.config.toolWarmup.description%"
         },
-        "copilot-adapter.maxWarmupRounds": {
+        "copilot-adapter.pricingCurrency": {
           "order": 13,
+          "type": "string",
+          "default": "",
+          "enum": ["", "CNY", "USD"],
+          "enumItemLabels": [
+            "%copilot-adapter.config.pricingCurrency.auto%",
+            "CNY (¥)",
+            "USD ($)"
+          ],
+          "markdownDescription": "%copilot-adapter.config.pricingCurrency.description%"
+        },
+        "copilot-adapter.maxWarmupRounds": {
+          "order": 14,
           "type": "number",
           "default": 3,
           "minimum": 1,

@@ -24,6 +24,14 @@ export interface ApiTraits {
   usageSchema?: UsageSchema;
 }
 
+export type PricingCurrency = 'USD' | 'CNY';
+
+export type BillingMode = 'api' | 'plan';
+
+export type PriceCategory = 'low' | 'medium' | 'high' | 'very_high' | 'plan';
+
+export type PriceValue = number | string;
+
 export interface ModelProvider extends ApiTraits {
   readonly id: string;
   readonly label: string;
@@ -43,6 +51,9 @@ export interface ModelEndpoint extends ApiTraits {
 
   provider?: ModelProvider;
   models?: readonly ModelItem[];
+
+  pricingCurrency?: PricingCurrency;
+  billing?: BillingMode;
 }
 
 export interface ThinkingOption {
@@ -55,6 +66,12 @@ export interface ThinkingOption {
 export interface ThinkingConfig {
   readonly default: string;
   readonly options: readonly ThinkingOption[];
+}
+
+export interface ModelPricing {
+  cacheHitInput: PriceValue;
+  cacheMissInput: PriceValue;
+  output: PriceValue;
 }
 
 export interface ModelItem extends ApiTraits {
@@ -83,6 +100,9 @@ export interface ModelItem extends ApiTraits {
   readonly maxTools?: number;
 
   readonly contentTag?: string;
+
+  pricing?: Readonly<Partial<Record<PricingCurrency, ModelPricing>>>;
+  priceCategory?: PriceCategory;
 
   requestExtras?(modelConfig: Record<string, unknown> | undefined): Record<string, unknown>;
   configSchema?(): Record<string, unknown> | undefined;

@@ -20,7 +20,7 @@ import {
 import { ApiError } from '../client/error';
 import { seedManagedGroup } from './managed';
 import { CUSTOM, buildCustomModels } from '../providers/custom';
-import type { ModelItem, ModelProvider } from '../providers/types';
+import type { ModelItem, ModelProvider, PricingCurrency } from '../providers/types';
 
 type PrepareOptions = vscode.PrepareLanguageModelChatModelOptions;
 
@@ -156,6 +156,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     let visibleModels: ModelItem[];
     let modelProvider: ModelProvider;
     let providerModels: ModelItem[] = [];
+    let resolvedPricingCurrency: PricingCurrency | undefined = Settings.pricingCurrency();
 
     if (this.filteredProviderId === 'custom') {
       modelProvider = CUSTOM;
@@ -184,6 +185,11 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       visibleModels = activeEndpointId
         ? providerModels.filter((m) => m.endpoint?.id === activeEndpointId)
         : providerModels;
+
+      resolvedPricingCurrency =
+        resolvedEndpoint?.billing === 'plan'
+          ? undefined
+          : (resolvedEndpoint?.pricingCurrency ?? Settings.pricingCurrency());
     }
 
     // Retrieve prefix for this apiKey (pre-registered by configureApiKey or a previous call)
@@ -209,7 +215,14 @@ export class Adapter implements vscode.LanguageModelChatProvider {
     const idPrefix = secrets.prefix;
 
     return visibleModels.map(
-      (model) => buildChatInfo(model, hasKey, this.visionProxyAvailable, idPrefix) as ChatInfo,
+      (model) =>
+        buildChatInfo(
+          model,
+          hasKey,
+          this.visionProxyAvailable,
+          idPrefix,
+          resolvedPricingCurrency,
+        ) as ChatInfo,
     );
   }
 
@@ -283,7 +296,6 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       // preventing calibration from ever triggering.
       if (promptTokens > 0) {
         try {
-          // defaultRatio cascade: model trait → user setting → hard-coded default
           const defaultRatio =
             resolveTrait(model, 'tokenRatio') ?? Settings.tokenRatio() ?? DEFAULT_CHARS_PER_TOKEN;
           const bodyChars = countMessageChars(messages);
