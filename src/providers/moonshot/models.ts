@@ -41,6 +41,9 @@ export const MS_K2_7_CODE: ModelItem = {
   maxInputTokens: 256_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.7-code.detail',
+  pricing: {
+    CNY: { default: { cacheInput: 1.30, input: 6.50, output: 27.00 } },
+  },
 } as ModelItem;
 
 export const MS_K2_7_CODE_HIGHSPEED: ModelItem = {
@@ -52,6 +55,9 @@ export const MS_K2_7_CODE_HIGHSPEED: ModelItem = {
   maxInputTokens: 256_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.7-code.detail',
+  pricing: {
+    CNY: { default: { cacheInput: 2.60, input: 13.00, output: 54.00 } },
+  },
 } as ModelItem;
 
 export const MS_K2_6: ModelItem = {
@@ -63,6 +69,9 @@ export const MS_K2_6: ModelItem = {
   maxInputTokens: 256_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.6.detail',
+  pricing: {
+    CNY: { default: { cacheInput: 1.10, input: 6.50, output: 27.00 } },
+  },
 } as ModelItem;
 
 export const MS_K2_5: ModelItem = {
@@ -74,6 +83,9 @@ export const MS_K2_5: ModelItem = {
   maxInputTokens: 256_000,
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.5.detail',
+  pricing: {
+    CNY: { default: { cacheInput: 0.70, input: 4.00, output: 21.00 } },
+  },
 } as ModelItem;
 
 export const MS_MODELS: readonly ModelItem[] = [
@@ -81,14 +93,4 @@ export const MS_MODELS: readonly ModelItem[] = [
   MS_K2_5,
   MS_K2_7_CODE,
   MS_K2_7_CODE_HIGHSPEED,
-  {
-    ...MS_K27_BASE,
-    id: 'kimi-k2.7-code-highspeed',
-    label: 'Kimi K2.7 High-Speed',
-    apiId: 'kimi-k2.7-code-highspeed',
-    version: '2.7',
-    maxInputTokens: 256_000,
-    maxOutputTokens: 128_000,
-    detailKey: 'model.kimi-k2.7-code-highspeed.detail',
-  },
 ] as ModelItem[];
