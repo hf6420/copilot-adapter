@@ -131,6 +131,12 @@ Bring any OpenAI-compatible model into Copilot Chat by defining its metadata (na
 
 For a step-by-step guide with screenshots, see [How to Add a Custom Model](docs/add-custom-model.md).  Ready-to-copy templates for DeepSeek, OpenAI, Anthropic, Qwen, Zhipu, MiniMax, Gemini, Grok and more are available in [`custom-models-template.jsonc`](docs/custom-models-template.jsonc).
 
+### Account Balance Display
+
+For supported providers (DeepSeek, Moonshot), the extension can display your account balance on each model's information card. When a balance endpoint is configured, the balance label appears at the bottom of the model hover card in the Language Models panel.
+
+The balance query result is cached to avoid excessive API calls. You can control the cache duration via the `copilot-adapter.balanceCacheTime` setting. Changing it to `Off (no cache)` fetches the balance on every model list refresh.
+
 ---
 
 ## Configuration Reference
@@ -148,6 +154,7 @@ For a step-by-step guide with screenshots, see [How to Add a Custom Model](docs/
 | `copilot-adapter.tokenRatioAutoCalibrate` | `true` | Auto-tune ratio from actual API usage data over time |
 | `copilot-adapter.tokenRatioCalibrationThreshold` | `0.1` | Minimum relative change (1–100%) to persist auto-calibrated ratio |
 | `copilot-adapter.toolWarmup` | `false` | Send fake `activate_*` tool calls before real requests (improves tool stability on some models) |
+| `copilot-adapter.balanceCacheTime` | `60` | Cache duration (seconds) for account balance queries. `0` disables caching — see [Account Balance Display](#account-balance-display) |
 | `copilot-adapter.maxWarmupRounds` | `3` | Max warmup rounds per request (requires `toolWarmup` on) |
 | `copilot-adapter.debugMode` | `"off"` | Log verbosity: `off` / `info` / `meta` / `verbose` |
 
@@ -174,12 +181,12 @@ For a step-by-step guide with screenshots, see [How to Add a Custom Model](docs/
 
 ---
 
-## License
-
-[MIT](LICENSE)
-
----
-
 ## Notes
 
 **Profile isolation:** If you use VS Code [Profiles](https://code.visualstudio.com/docs/editor/profiles), the official Copilot Chat configuration is isolated per profile — and Copilot Adapter's configuration follows the same rule.  API keys, model groups, and custom model definitions are all scoped to the active profile.
+
+---
+
+## License
+
+[MIT](LICENSE)
