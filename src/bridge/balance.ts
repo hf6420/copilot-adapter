@@ -49,7 +49,6 @@ export function getCachedBalance(
 }
 
 async function queryDeepSeekBalance(apiKey: string, url: string): Promise<BalanceResult> {
-
   const response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -84,7 +83,11 @@ async function queryDeepSeekBalance(apiKey: string, url: string): Promise<Balanc
   };
 }
 
-async function queryMoonshotBalance(apiKey: string, url: string, currency: string): Promise<BalanceResult> {
+async function queryMoonshotBalance(
+  apiKey: string,
+  url: string,
+  currency: string,
+): Promise<BalanceResult> {
   const response = await fetch(url, {
     method: 'GET',
     headers: {

@@ -1,7 +1,13 @@
 import vscode from 'vscode';
 import { t } from '../nls';
 import { modelKey } from '../providers/utils';
-import type { BillingMode, ModelItem, ModelPricing, PriceCategory, PricingCurrency } from '../providers/types';
+import type {
+  BillingMode,
+  ModelItem,
+  ModelPricing,
+  PriceCategory,
+  PricingCurrency,
+} from '../providers/types';
 
 export interface ChatInfo extends vscode.LanguageModelChatInformation {
   readonly isBYOK: true;
@@ -52,7 +58,13 @@ export function buildChatInfo(
   );
 
   // Build category with balance info and/or credits unit
-  const category = buildCategory(balance, modelItem.pricing, pricingCurrency, modelItem.endpoint?.billing, balanceCurrency);
+  const category = buildCategory(
+    balance,
+    modelItem.pricing,
+    pricingCurrency,
+    modelItem.endpoint?.billing,
+    balanceCurrency,
+  );
 
   const info = {
     id: infoId,
@@ -82,7 +94,18 @@ function toModelCostInfo(
   pricing: Readonly<Partial<Record<PricingCurrency, ModelPricing>>> | undefined,
   priceCategory: PriceCategory | undefined,
   currency?: PricingCurrency,
-): Pick<ChatInfo, 'inputCost' | 'outputCost' | 'cacheCost' | 'cacheWriteCost' | 'longContextInputCost' | 'longContextOutputCost' | 'longContextCacheCost' | 'longContextCacheWriteCost' | 'priceCategory'> {
+): Pick<
+  ChatInfo,
+  | 'inputCost'
+  | 'outputCost'
+  | 'cacheCost'
+  | 'cacheWriteCost'
+  | 'longContextInputCost'
+  | 'longContextOutputCost'
+  | 'longContextCacheCost'
+  | 'longContextCacheWriteCost'
+  | 'priceCategory'
+> {
   if (!currency || !pricing) {
     return priceCategory ? { priceCategory } : {};
   }

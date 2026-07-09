@@ -24,7 +24,7 @@ export const MIMO_MODELS: readonly ModelItem[] = [
     detailKey: 'model.mimo-v2.5-pro.detail',
     pricing: {
       USD: { default: { cacheInput: 0.0036, input: 0.435, output: 0.87 } },
-      CNY: { default: { cacheInput: 0.025, input: 3.00, output: 6.00 } },
+      CNY: { default: { cacheInput: 0.025, input: 3.0, output: 6.0 } },
     },
     priceCategory: 'low',
   },
@@ -40,7 +40,7 @@ export const MIMO_MODELS: readonly ModelItem[] = [
     detailKey: 'model.mimo-v2.5.detail',
     pricing: {
       USD: { default: { cacheInput: 0.0028, input: 0.14, output: 0.28 } },
-      CNY: { default: { cacheInput: 0.02, input: 1.00, output: 2.00 } },
+      CNY: { default: { cacheInput: 0.02, input: 1.0, output: 2.0 } },
     },
     priceCategory: 'low',
   },
