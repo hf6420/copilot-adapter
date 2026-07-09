@@ -42,6 +42,7 @@ export const MS_K2_7_CODE: ModelItem = {
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.7-code.detail',
   pricing: {
+    USD: { default: { cacheInput: 0.19, input: 0.95, output: 4.00 } },
     CNY: { default: { cacheInput: 1.30, input: 6.50, output: 27.00 } },
   },
   priceCategory: 'high',
@@ -57,6 +58,7 @@ export const MS_K2_7_CODE_HIGHSPEED: ModelItem = {
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.7-code.detail',
   pricing: {
+    USD: { default: { cacheInput: 0.38, input: 1.90, output: 8.00 } },
     CNY: { default: { cacheInput: 2.60, input: 13.00, output: 54.00 } },
   },
   priceCategory: 'very_high',
@@ -72,6 +74,7 @@ export const MS_K2_6: ModelItem = {
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.6.detail',
   pricing: {
+    USD: { default: { cacheInput: 0.16, input: 0.95, output: 4.00 } },
     CNY: { default: { cacheInput: 1.10, input: 6.50, output: 27.00 } },
   },
   priceCategory: 'high',
@@ -87,6 +90,7 @@ export const MS_K2_5: ModelItem = {
   maxOutputTokens: 128_000,
   detailKey: 'model.kimi-k2.5.detail',
   pricing: {
+    USD: { default: { cacheInput: 0.10, input: 0.60, output: 3.00 } },
     CNY: { default: { cacheInput: 0.70, input: 4.00, output: 21.00 } },
   },
   priceCategory: 'high',
