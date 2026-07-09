@@ -1,7 +1,7 @@
 import vscode from 'vscode';
 import { t } from '../nls';
 import { modelKey } from '../providers/utils';
-import type { ModelItem, ModelPricing, PriceCategory, PricingCurrency } from '../providers/types';
+import type { BillingMode, ModelItem, ModelPricing, PriceCategory, PricingCurrency } from '../providers/types';
 
 export interface ChatInfo extends vscode.LanguageModelChatInformation {
   readonly isBYOK: true;
@@ -19,6 +19,7 @@ export interface ChatInfo extends vscode.LanguageModelChatInformation {
   readonly longContextCacheWriteCost?: number;
   readonly priceCategory?: PriceCategory;
   readonly category?: string;
+  readonly pricing?: string;
 }
 
 /** Extended request options from VS Code's language model chat. */
@@ -35,6 +36,7 @@ export function buildChatInfo(
   idPrefix = '',
   pricingCurrency?: PricingCurrency,
   balance?: string,
+  balanceCurrency?: string,
 ): ChatInfo {
   const modelProvider = modelItem.provider;
   const schema = modelItem.configSchema?.();
@@ -48,6 +50,9 @@ export function buildChatInfo(
     modelItem.endpoint?.billing === 'plan' ? 'plan' : modelItem.priceCategory,
     pricingCurrency,
   );
+
+  // Build category with balance info and/or credits unit
+  const category = buildCategory(balance, modelItem.pricing, pricingCurrency, modelItem.endpoint?.billing, balanceCurrency);
 
   const info = {
     id: infoId,
@@ -67,7 +72,7 @@ export function buildChatInfo(
     statusIcon: notConfigured ? new vscode.ThemeIcon('warning') : undefined,
     configurationSchema: schema,
     ...costInfo,
-    ...(balance ? { category: t('balance.label', balance) } : {}),
+    ...(category ? { category } : {}),
   } as unknown as ChatInfo;
 
   return info;
@@ -101,6 +106,30 @@ function toModelCostInfo(
     longContextCacheWriteCost: p.longContext?.cacheWrite,
     ...(priceCategory ? { priceCategory } : {}),
   };
+}
+
+function buildCategory(
+  balance: string | undefined,
+  pricing: Readonly<Partial<Record<PricingCurrency, ModelPricing>>> | undefined,
+  pricingCurrency: PricingCurrency | undefined,
+  billing: BillingMode | undefined,
+  balanceCurrency?: string,
+): string | undefined {
+  // balanceCurrency from API response takes highest priority,
+  // then endpoint/settings pricingCurrency
+  const effectiveCurrency = (balanceCurrency as PricingCurrency | undefined) ?? pricingCurrency;
+
+  const parts: string[] = [];
+
+  if (balance) {
+    parts.push(t('balance.label', balance));
+  }
+
+  if (pricing && effectiveCurrency && billing !== 'plan') {
+    parts.push(t('balance.creditsUnit', effectiveCurrency));
+  }
+
+  return parts.length > 0 ? parts.join(' ') : undefined;
 }
 
 export function resolveModelConfig(options: ReqOptions): Record<string, unknown> {
