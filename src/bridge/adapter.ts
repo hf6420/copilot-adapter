@@ -20,8 +20,8 @@ import {
 import { ApiError } from '../client/error';
 import { seedManagedGroup } from './managed';
 import { CUSTOM, buildCustomModels } from '../providers/custom';
-import { getCachedBalance, queryBalance } from './balance';
-import { getCachedPlanUsage, queryPlanUsage } from './plans';
+import { getCachedBalance, queryBalance, isBalanceErrorSentinel } from './balance';
+import { getCachedPlanUsage, queryPlanUsage, isPlanUsageErrorSentinel } from './plans';
 import type { ModelItem, ModelProvider, PricingCurrency } from '../providers/types';
 
 type PrepareOptions = vscode.PrepareLanguageModelChatModelOptions;
@@ -256,8 +256,10 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       if (endpointId && activeEndpoint?.billing !== 'plan' && activeEndpoint?.links?.balance) {
         const cached = getCachedBalance(apiKey, endpointId);
         if (cached) {
-          balance = cached.display;
-          balanceCurrency = cached.currency;
+          if (!isBalanceErrorSentinel(cached)) {
+            balance = cached.display;
+            balanceCurrency = cached.currency;
+          }
         } else {
           // Fire query in background; when complete VS Code will re-request info
           const sampleModel = visibleModels[0];
@@ -277,7 +279,9 @@ export class Adapter implements vscode.LanguageModelChatProvider {
       if (endpointId && activeEndpoint?.billing === 'plan' && activeEndpoint?.links?.usage) {
         const cached = getCachedPlanUsage(apiKey, endpointId);
         if (cached) {
-          planUsage = cached.display;
+          if (!isPlanUsageErrorSentinel(cached)) {
+            planUsage = cached.display;
+          }
         } else {
           const sampleModel = visibleModels[0];
           if (sampleModel) {
@@ -452,7 +456,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
 
       queryBalance(apiKey, endpointId, balanceLinks)
         .then((result) => {
-          if (result.display !== 'N/A') {
+          if (!isBalanceErrorSentinel(result)) {
             this.changeEmitter.fire();
           }
         })
@@ -495,7 +499,7 @@ export class Adapter implements vscode.LanguageModelChatProvider {
 
       queryPlanUsage(apiKey, endpointId, usageLinks)
         .then((result) => {
-          if (result.display !== '') {
+          if (!isPlanUsageErrorSentinel(result)) {
             this.changeEmitter.fire();
           }
         })
