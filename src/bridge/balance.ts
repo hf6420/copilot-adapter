@@ -26,6 +26,14 @@ function defaultTtlMs(): number {
   return Settings.balanceCacheTime() * 1000;
 }
 
+const ERROR_CACHE_TTL_MS = 30_000;
+
+const ERROR_SENTINEL: BalanceResult = { display: '' };
+
+export function isBalanceErrorSentinel(r: BalanceResult): boolean {
+  return r === ERROR_SENTINEL;
+}
+
 const cache = new Map<string, CacheEntry>();
 
 function cacheKey(apiKey: string, endpointId: string): string {
@@ -40,7 +48,10 @@ export function getCachedBalance(
   const entry = cache.get(cacheKey(apiKey, endpointId));
   if (!entry) return undefined;
 
-  if (Date.now() - entry.timestamp > ttlMs) {
+  // Error sentinels use their own shorter TTL so they eventually expire.
+  const effectiveTtl = entry.data === ERROR_SENTINEL ? ERROR_CACHE_TTL_MS : ttlMs;
+
+  if (Date.now() - entry.timestamp > effectiveTtl) {
     cache.delete(cacheKey(apiKey, endpointId));
     return undefined;
   }
@@ -127,7 +138,7 @@ export async function queryBalance(
   links?: ServiceLinks,
 ): Promise<BalanceResult> {
   const url = links?.balance;
-  if (!url) return { display: 'N/A' };
+  if (!url) return ERROR_SENTINEL;
 
   try {
     let result: BalanceResult;
@@ -139,7 +150,7 @@ export async function queryBalance(
     } else if (endpointId === 'moonshot.ai') {
       result = await queryMoonshotBalance(apiKey, url, 'USD');
     } else {
-      return { display: 'N/A' };
+      return ERROR_SENTINEL;
     }
 
     cache.set(cacheKey(apiKey, endpointId), {
@@ -152,6 +163,11 @@ export async function queryBalance(
     const msg = err instanceof Error ? err.message : String(err);
     channel.warn(`Balance query failed for ${endpointId}: ${msg}`);
 
-    return { display: 'N/A' };
+    cache.set(cacheKey(apiKey, endpointId), {
+      data: ERROR_SENTINEL,
+      timestamp: Date.now(),
+    });
+
+    return ERROR_SENTINEL;
   }
 }

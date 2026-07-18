@@ -43,6 +43,7 @@ export function buildChatInfo(
   pricingCurrency?: PricingCurrency,
   balance?: string,
   balanceCurrency?: string,
+  planUsage?: string,
 ): ChatInfo {
   const modelProvider = modelItem.provider;
   const schema = modelItem.configSchema?.();
@@ -57,13 +58,14 @@ export function buildChatInfo(
     pricingCurrency,
   );
 
-  // Build category with balance info and/or credits unit
+  // Build category with balance info, credits unit and/or plan usage
   const category = buildCategory(
     balance,
     modelItem.pricing,
     pricingCurrency,
     modelItem.endpoint?.billing,
     balanceCurrency,
+    planUsage,
   );
 
   const info = {
@@ -137,6 +139,7 @@ function buildCategory(
   pricingCurrency: PricingCurrency | undefined,
   billing: BillingMode | undefined,
   balanceCurrency?: string,
+  planUsage?: string,
 ): string | undefined {
   // balanceCurrency from API response takes highest priority,
   // then endpoint/settings pricingCurrency
@@ -150,6 +153,10 @@ function buildCategory(
 
   if (pricing && effectiveCurrency && billing !== 'plan') {
     parts.push(t('balance.creditsUnit', effectiveCurrency));
+  }
+
+  if (planUsage) {
+    parts.push(planUsage);
   }
 
   return parts.length > 0 ? parts.join(' ') : undefined;

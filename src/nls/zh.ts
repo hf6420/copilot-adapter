@@ -13,10 +13,12 @@ export const zh: Translation = {
   'model.deepseek-v4-pro.detail': '深度推理模型',
 
   'model.kimi-k3.detail': 'Kimi K3 是 Kimi 迄今能力最强的旗舰模型',
-  'model.kimi-k2.7-code.detail': 'Kimi K2.7 Code 是 Kimi 迄今最智能的 Coding 模型',
+  'model.kimi-k2.7-code.detail':
+    'Kimi K2.7 Code 是 Kimi 的 Coding 模型，在长上下文中更可靠地遵循指令，能以更高的成功率完成编程任务，同时支持文本、图片与视频输入，思考模式，对话与 Agent 任务。',
   'model.kimi-k2.7-code-highspeed.detail':
     'Kimi K2.7 Code 高速版， 与 Kimi K2.7 Code 是同一个模型，但输出速度约为普通版的 5-6 倍',
-  'model.kimi-k2.6.detail': '最新旗舰——长程代码编写与推理能力增强',
+  'model.kimi-k2.6.detail':
+    'Kimi K2.6 是 Kimi 的通用模型，Kimi K2.6 的通用 Agent、代码、视觉理解等综合能力得到全面提升',
   'model.kimi-k2.5.detail': '深度推理模型，支持图像',
   'model.kimi.think.enabledAlways': '思考模式',
   'model.kimi.think.enabledAlways.hint':
@@ -106,6 +108,8 @@ export const zh: Translation = {
   'think.none.hint': '无推理步骤',
   'think.adaptive': '自适应',
   'think.adaptive.hint': '模型自动调整推理深度',
+  'think.low': '低',
+  'think.low.hint': '适合简单任务',
   'think.high': '高',
   'think.high.hint': '适合日常任务',
   'think.max': '最大',
@@ -141,6 +145,10 @@ export const zh: Translation = {
 
   'balance.label': '余额：{0}',
   'balance.creditsUnit': '额度单位：{0}',
+
+  'plan.usage.window': '{0}：{1}/{2}',
+  'plan.usage.weekly': '周：{0}/{1}',
+  'plan.usage.total': '总量：{0}/{1}',
 
   'tools.drift': '以下工具已从对话中移除以保持上下文连贯：{0}。',
 };
