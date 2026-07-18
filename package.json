@@ -165,11 +165,13 @@
               "title": "%copilot-adapter.provider.moonshot.apiEndpoint.title%",
               "enum": [
                 "moonshot.cn",
-                "moonshot.ai"
+                "moonshot.ai",
+                "kimi-code"
               ],
               "enumDescriptions": [
                 "%copilot-adapter.provider.moonshot.apiEndpoint.option.moonshot.cn%",
-                "%copilot-adapter.provider.moonshot.apiEndpoint.option.moonshot.ai%"
+                "%copilot-adapter.provider.moonshot.apiEndpoint.option.moonshot.ai%",
+                "%copilot-adapter.provider.moonshot.apiEndpoint.option.kimi-code%"
               ],
               "description": "%copilot-adapter.provider.moonshot.apiEndpoint.description%"
             },
