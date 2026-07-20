@@ -14,10 +14,11 @@ export const en: Translation = {
 
   'model.kimi-k3.detail': 'Kimi K3 is Kimi’s most capable flagship model to date',
   'model.kimi-k2.7-code.detail':
-    'Kimi K2.7 Code is an open-source, coding-focused agentic model developed by Moonshot AI',
+    'Kimi K2.7 Code is Kimi’s dedicated coding model. It follows instructions more reliably in long contexts, completes coding tasks with higher success rates. ',
   'model.kimi-k2.7-code-highspeed.detail':
     'Kimi K2.7 Code High-Speed Edition, the same model as Kimi K2.7 Code, but with output speed about 5-6 times faster than the standard version',
-  'model.kimi-k2.6.detail': 'Latest flagship — enhanced long-range coding & reasoning',
+  'model.kimi-k2.6.detail':
+    'Kimi K2.6 is Kimi’s general-purpose model, possessing stronger and more stable long-term code writing capabilities',
   'model.kimi-k2.5.detail': 'Deep reasoning model with vision support',
   'model.kimi.think.enabledAlways': 'Thinking Mode',
   'model.kimi.think.enabledAlways.hint':
@@ -115,6 +116,8 @@ export const en: Translation = {
   'think.none.hint': 'No reasoning steps; fastest output',
   'think.adaptive': 'Adaptive',
   'think.adaptive.hint': 'Model auto-adjusts reasoning depth',
+  'think.low': 'Low',
+  'think.low.hint': 'Suitable for simple tasks',
   'think.high': 'High',
   'think.high.hint': 'Good for day-to-day coding tasks',
   'think.max': 'Max',
@@ -151,6 +154,10 @@ export const en: Translation = {
 
   'balance.label': 'Balance: {0}',
   'balance.creditsUnit': 'Credits Unit: {0}',
+
+  'plan.usage.window': '{0}: {1}/{2}',
+  'plan.usage.weekly': 'Weekly: {0}/{1}',
+  'plan.usage.total': 'Total: {0}/{1}',
 
   'tools.drift': 'The following tools were removed to keep the conversation on track: {0}.',
 };

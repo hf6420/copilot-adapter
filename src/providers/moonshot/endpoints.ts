@@ -1,6 +1,6 @@
 import type { ModelEndpoint } from '../types';
 import { composeModelEndpoint } from '../utils';
-import { MS_MODELS } from './models';
+import { MS_MODELS, MS_KC_MODELS } from './models';
 
 export const MOONSHOT_ENDPOINTS: readonly ModelEndpoint[] = [
   composeModelEndpoint(
@@ -22,5 +22,15 @@ export const MOONSHOT_ENDPOINTS: readonly ModelEndpoint[] = [
       links: { balance: 'https://api.moonshot.ai/v1/users/me/balance' },
     },
     MS_MODELS,
+  ),
+  composeModelEndpoint(
+    {
+      id: 'kimi-code',
+      label: 'Kimi Code',
+      url: 'https://api.kimi.com/coding/v1',
+      billing: 'plan',
+      links: { usage: 'https://api.kimi.com/coding/v1/usages' },
+    },
+    MS_KC_MODELS,
   ),
 ];
