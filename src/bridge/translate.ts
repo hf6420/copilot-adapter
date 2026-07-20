@@ -126,24 +126,6 @@ export function translateTools(
   return result.length > 0 ? result : undefined;
 }
 
-export function countMsgChars(messages: Msg[]): number {
-  let n = 0;
-  for (const m of messages) {
-    if (typeof m.content === 'string') {
-      n += m.content.length;
-    } else {
-      for (const p of m.content) {
-        if (typeof p['text'] === 'string') n += (p['text'] as string).length;
-      }
-    }
-    if (m.tool_calls) {
-      for (const tc of m.tool_calls) n += tc.function.arguments.length + tc.function.name.length;
-    }
-  }
-
-  return n;
-}
-
 function toRole(role: vscode.LanguageModelChatMessageRole): 'user' | 'assistant' {
   return role === vscode.LanguageModelChatMessageRole.Assistant ? 'assistant' : 'user';
 }

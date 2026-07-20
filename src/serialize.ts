@@ -30,7 +30,7 @@ export function sortKeys<T>(value: T): T {
 }
 
 export function pack(value: unknown): string {
-  return sanitize(JSON.stringify(sortKeys(value)) ?? 'null');
+  return sanitize(JSON.stringify(sortKeys(value)));
 }
 
 export function packPretty(value: unknown): string {

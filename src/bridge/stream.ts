@@ -44,6 +44,7 @@ export async function forwardStream(
   try {
     while (true) {
       let yieldedContent = false;
+      contentText = '';
       reasoningText = '';
       promptTokens = 0;
       toolCallCount = 0;

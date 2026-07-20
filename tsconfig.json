@@ -3,7 +3,7 @@
     "module": "commonjs",
     "target": "ES2022",
     "lib": ["ES2022"],
-    "outDir": "dist",
+    "outDir": "out",
     "rootDir": "src",
     "types": ["node"],
     "strict": true,
@@ -15,5 +15,5 @@
     "declaration": true
   },
   "include": ["src", "vscode.proposed.languageModelThinkingPart.d.ts"],
-  "exclude": ["node_modules", "dist", "test", "out-test"]
+  "exclude": ["node_modules", "out", "test", "out-test"]
 }

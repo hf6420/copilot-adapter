@@ -38,7 +38,7 @@
     "onUri",
     "onStartupFinished"
   ],
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "languageModelChatProviders": [
       {
@@ -680,13 +680,15 @@
     }
   },
   "scripts": {
-    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true, maxRetries: process.platform === 'win32' ? 10 : 0 })\"",
+    "clean": "node -e \"const fs=require('node:fs');['out','dist'].forEach(d=>fs.rmSync(d,{recursive:true,force:true,maxRetries:process.platform==='win32'?10:0}))\"",
     "compile": "npm run clean && tsc -p ./",
     "watch": "npm run clean && tsc -watch -p ./",
     "lint": "eslint src/",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "package": "vsce package -o dist/",
+    "prepackage": "node -e \"require('node:fs').mkdirSync('dist',{recursive:true})\"",
+    "package": "npm run prepackage && vsce package -o dist/copilot-adapter.vsix",
+    "build": "npm run compile && npm run package",
     "test": "TS_NODE_PROJECT=tsconfig.test.json vscode-test"
   },
   "devDependencies": {

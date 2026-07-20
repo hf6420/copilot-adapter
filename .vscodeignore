@@ -14,4 +14,4 @@ tsconfig.json
 tsconfig.test.json
 vscode.proposed.languageModelThinkingPart.d.ts
 package-lock.json
-dist/*.vsix
+dist/copilot-adapter.vsix

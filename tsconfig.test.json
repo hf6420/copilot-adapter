@@ -7,5 +7,5 @@
   },
   "files": ["vscode.proposed.languageModelThinkingPart.d.ts"],
   "include": ["src/**/*", "test/**/*"],
-  "exclude": ["node_modules", "dist", "out-test"]
+  "exclude": ["node_modules", "out", "out-test"]
 }

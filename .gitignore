@@ -1,9 +1,8 @@
 node_modules/
-dist/
+out/
 *.tsbuildinfo
 .vscode-test/
 .vscode/extensions.json
-*.vsix
 .env
 .env.*
 coverage/

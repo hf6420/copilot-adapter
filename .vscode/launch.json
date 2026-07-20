@@ -10,7 +10,7 @@
         "--user-data-dir=${workspaceFolder}/.vscode-test/user-data",
         "${workspaceFolder}/../test-extension"
       ],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
       "preLaunchTask": "${defaultBuildTask}"
     }
   ]
